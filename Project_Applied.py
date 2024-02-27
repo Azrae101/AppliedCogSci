@@ -1,32 +1,51 @@
 # Project for Applied Cognitive Science
 # Clara Holst and Ola Budrewicz 
 
-list_of_definitions = ["def1","def2","def3","def4"]
+# Imports
+import tkinter as tk
 
-list_of_terms = ["term1","term2","term3","term4"]
+# Define your lists
+list_of_display = ["a", "b", "c", "d"]
+list_of_answers = ["1", "2", "3", "4"]
 
-print("Welcome!")
+# Create a Tkinter application window
+window = tk.Tk()
+window.title("Display Definitions")
 
-# User input
-while True: # while is running:
-   
-    user_input = input(" ")
+# Function to update the label text
+def update_label():
+    if list_of_display:
+        label_text.set(list_of_display[0])
+    else:
+        label_text.set("No more definitions.")
 
-    # Remove term
-    if user_input.lower() == "term1":
-        list_of_definitions.remove("def1")
-        print("removed def1")
-    elif user_input.lower() == "term2":
-        list_of_definitions.remove("def2")
-        print("removed def2")
-    elif user_input.lower() == "term3":
-        list_of_definitions.remove("def3")
-        print("removed def3")
-    elif user_input.lower() == "term4":
-        list_of_definitions.remove("def4")
-        print("removed def4")
-    
-    # Quit
-    if user_input.lower() == "q" or user_input.lower() == "quit" or user_input.lower() == "exit" or user_input.lower() == "quit game" or user_input.lower() == "exit game":
-        exit()
-        # or break
+# Create and pack a label to display the definition
+label_text = tk.StringVar()
+label = tk.Label(window, textvariable=label_text, font=("Arial", 12))
+label.pack(padx=20, pady=20)
+
+# Update the label with the first definition
+update_label()
+
+# User input handling
+def handle_input(event):
+    user_input = entry.get().lower()
+    entry.delete(0, tk.END)  # Clear the entry field after each enter
+
+    if user_input == "q" or user_input in ["quit", "exit", "quit game", "exit game"]:
+        window.quit()
+    elif user_input in list_of_answers:
+        term_index = list_of_answers.index(user_input)
+        if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
+            list_of_display.pop(0)
+            list_of_answers.pop(0)  # Ensure both lists are synchronized
+            update_label()
+
+# Entry widget to take user input
+entry = tk.Entry(window, font=("Arial", 12))
+entry.pack(padx=20, pady=10)
+entry.focus_set()
+entry.bind("<Return>", handle_input)
+
+# Run the Tkinter event loop
+window.mainloop()
