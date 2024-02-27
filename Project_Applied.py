@@ -1,8 +1,3 @@
 # Project for Applied Cognitive Science
+# Clara Holst and Ola Budrewicz 
 
-# Clara Holst
-
-print("Hello World")
-
-# He
-# 123
