@@ -4,6 +4,5 @@
 
 print("Hello World")
 
-# Hello World
-# LLEOEOEO
+# He
 # 123
