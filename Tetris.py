@@ -15,12 +15,12 @@ list_of_answers = ["1", "2", "3", "4"]
 
 # Create a Tkinter application window
 window = tk.Tk()
-window.title("Quiz")
-window.geometry("300x500")
+window.title("Tetris")
+window.geometry("350x600")
 
 # Create a canvas to draw animation
-canvas = tk.Canvas(window, bg="white", width=300, height=500)
-canvas.pack()
+canvas = tk.Canvas(window, bg="white", width=300, height=500)  # Adjust canvas height
+canvas.grid(row=0, column=0, padx=20, pady=20)
 
 # Function to update the label text and animate
 def update_label():
@@ -28,11 +28,11 @@ def update_label():
     if list_of_display:
         canvas.delete("label", "box")  # Delete previous label and box
         # Create a rectangle box around the text
-        box_id = canvas.create_rectangle(50, 20, 250, 50, fill="lightblue", tags="box")
+        box_id = canvas.create_rectangle(50, 20, 250, 50, fill="skyblue", tags="box")
         label_id = canvas.create_text(150, 35, text=list_of_display[0], font=("Arial", 12), anchor='n', tags="label")
         animate_label(label_id, box_id, 20)  # Start animation
-    else:
-        label_text.set("No more questions \nYou answered " + str(questions) + " questions")
+    #else:
+    #    label_text.set("No more questions \nYou answered " + str(questions) + " questions")
 
 # Function to animate the label and box falling down
 def animate_label(label_id, box_id, y_position):
@@ -48,19 +48,20 @@ def handle_input(event):
     user_input = entry.get().lower()
     entry.delete(0, tk.END)  # Clear the entry field after each enter
 
-    if user_input == "q" or user_input in ["quit", "exit", "quit game", "exit game"]:
+    if user_input.lower() == "q" or user_input.lower() in ["quit", "exit", "quit game", "exit game"]:
         window.quit()
     elif user_input in list_of_answers:
         term_index = list_of_answers.index(user_input)
         if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
             list_of_display.pop(0)
             list_of_answers.pop(0)  # Ensure both lists are synchronized
-            update_label()
+            canvas.delete("label", "box")  # Remove displayed label and box from canvas
+            update_label()  # Update the label with the next definition
             questions += 1  # Increment questions by 1
 
 # Entry widget to take user input
 entry = tk.Entry(window, font=("Arial", 12))
-entry.pack(padx=20, pady=10, side=tk.BOTTOM, fill=tk.X)
+entry.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
 entry.focus_set()
 entry.bind("<Return>", handle_input)
 
