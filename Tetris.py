@@ -24,21 +24,22 @@ canvas.pack()
 
 # Function to update the label text and animate
 def update_label():
-    global label_id
+    global label_id, box_id
     if list_of_display:
-        label_text.set(list_of_display[0])
-        label_id = canvas.create_text(150, 20, text=list_of_display[0], font=("Arial", 12), anchor='n')
-        animate_label(label_id, 20)  # Start animation
+        canvas.delete("label", "box")  # Delete previous label and box
+        # Create a rectangle box around the text
+        box_id = canvas.create_rectangle(50, 20, 250, 50, fill="lightblue", tags="box")
+        label_id = canvas.create_text(150, 35, text=list_of_display[0], font=("Arial", 12), anchor='n', tags="label")
+        animate_label(label_id, box_id, 20)  # Start animation
     else:
         label_text.set("No more questions \nYou answered " + str(questions) + " questions")
 
-# Function to animate the label falling down
-def animate_label(label_id, y_position):
+# Function to animate the label and box falling down
+def animate_label(label_id, box_id, y_position):
     if y_position < 480:  # Bottom threshold
         canvas.move(label_id, 0, movement_speed)
-        window.after(20, animate_label, label_id, canvas.coords(label_id)[1])
-    else:
-        canvas.delete(label_id)
+        canvas.move(box_id, 0, movement_speed)
+        window.after(20, animate_label, label_id, box_id, canvas.coords(label_id)[1])
 
 # User input handling
 def handle_input(event):
@@ -57,14 +58,9 @@ def handle_input(event):
             update_label()
             questions += 1  # Increment questions by 1
 
-# Create and pack a label to display the definition
-label_text = tk.StringVar()
-label = tk.Label(window, textvariable=label_text, font=("Arial", 12))
-label.pack(padx=20, pady=10)
-
 # Entry widget to take user input
 entry = tk.Entry(window, font=("Arial", 12))
-entry.pack(padx=20, pady=10)
+entry.pack(padx=20, pady=10, side=tk.BOTTOM, fill=tk.X)
 entry.focus_set()
 entry.bind("<Return>", handle_input)
 
