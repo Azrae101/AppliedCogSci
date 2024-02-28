@@ -7,7 +7,7 @@ import tkinter as tk
 
 # Variables
 questions = 0
-movement_speed = 5
+movement_speed = 10
 
 # Define your lists
 list_of_display = ["a", "b", "c", "d"]
@@ -65,9 +65,9 @@ def animate_label(label_id, box_id, y_position):
             entry.destroy()
             canvas.delete("label", "box")  # Delete previous label and box
             if questions == 0:
-                canvas.create_text(150, 300, text="No more questions\nYou answered 0 questions", font=("Arial", 12), anchor='center', tags="label")
+                canvas.create_text(150, 300, text="You answered 0 questions", font=("Arial", 12), anchor='center', tags="label")
             elif questions < 0:
-                canvas.create_text(150, 300, text=("No more questions \nYou answered " + str(questions) + " questions"), font=("Arial", 12), anchor='center', tags="label")
+                canvas.create_text(150, 300, text=("You answered " + str(questions) + " questions"), font=("Arial", 12), anchor='center', tags="label")
 
 # User Input
 def handle_input(event):
