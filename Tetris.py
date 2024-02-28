@@ -7,7 +7,7 @@ import tkinter as tk
 
 # Variables
 questions = 1
-movement_speed = 2  # Adjust as needed
+movement_speed = 10  # Adjust as needed
 
 # Define your lists
 list_of_display = ["a", "b", "c", "d"]
@@ -29,19 +29,27 @@ def update_label():
         canvas.delete("label", "box")  # Delete previous label and box
         # Create a rectangle box around the text
         box_id = canvas.create_rectangle(50, 20, 250, 50, fill="skyblue", tags="box")
-        label_id = canvas.create_text(150, 35, text=list_of_display[0], font=("Arial", 12), anchor='n', tags="label")
+        # Calculate the center of the box
+        box_center_x = (50 + 250) / 2
+        box_center_y = (20 + 50) / 2
+        # Create the text at the center of the box
+        label_id = canvas.create_text(box_center_x, box_center_y, text=list_of_display[0], font=("Arial", 12), anchor='center', tags="label")
         animate_label(label_id, box_id, 20)  # Start animation
-    #else:
-    #    label_text.set("No more questions \nYou answered " + str(questions) + " questions")
+    else:
+        canvas.delete("label", "box")  # Delete previous label and box
+        message = "No more questions\nYou answered " + str(questions) + " questions"
+        label_id = canvas.create_text(150, 250, text=message, font=("Arial", 12), anchor='center', tags="label")
 
 # Function to animate the label and box falling down
 def animate_label(label_id, box_id, y_position):
-    if y_position < 480:  # Bottom threshold
+    if y_position < 460:  # Bottom threshold
         canvas.move(label_id, 0, movement_speed)
         canvas.move(box_id, 0, movement_speed)
-        window.after(20, animate_label, label_id, box_id, canvas.coords(label_id)[1])
+        window.after(20, animate_label, label_id, box_id, y_position + movement_speed)
+    else:
+        print("Reached bottom threshold")
 
-# User input handling
+# User Input
 def handle_input(event):
     global questions  # Declare questions as a global variable
 
@@ -51,13 +59,14 @@ def handle_input(event):
     if user_input.lower() == "q" or user_input.lower() in ["quit", "exit", "quit game", "exit game"]:
         window.quit()
     elif user_input in list_of_answers:
-        term_index = list_of_answers.index(user_input)
-        if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
-            list_of_display.pop(0)
-            list_of_answers.pop(0)  # Ensure both lists are synchronized
-            canvas.delete("label", "box")  # Remove displayed label and box from canvas
-            update_label()  # Update the label with the next definition
-            questions += 1  # Increment questions by 1
+        if list_of_answers:  # Check if list_of_answers is not empty
+            term_index = list_of_answers.index(user_input)
+            if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
+                list_of_display.pop(0)
+                list_of_answers.pop(0)  # Ensure both lists are synchronized
+                canvas.delete("label", "box")  # Remove displayed label and box from canvas
+                update_label()  # Update the label with the next definition
+                questions += 1  # Increment questions by 1
 
 # Entry widget to take user input
 entry = tk.Entry(window, font=("Arial", 12))
