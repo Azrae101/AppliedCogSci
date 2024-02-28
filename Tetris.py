@@ -49,6 +49,12 @@ def animate_label(label_id, box_id, y_position):
     else:
         print("Reached bottom threshold")
 
+# Function to add the next element from list_of_display
+def add_next_element():
+    if len(list_of_display) >= 2:
+        list_of_display.pop(1)
+        update_label()
+
 # User Input
 def handle_input(event):
     global questions  # Declare questions as a global variable
@@ -76,6 +82,9 @@ entry.bind("<Return>", handle_input)
 
 # Update the label with the first definition
 update_label()
+
+# Add the next element after 10 seconds
+window.after(1000, add_next_element)
 
 # Run the Tkinter event loop
 window.mainloop()
