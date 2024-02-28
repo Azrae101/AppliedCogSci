@@ -6,7 +6,7 @@
 import tkinter as tk
 
 # Variables
-questions = 1
+questions = 0
 movement_speed = 5
 
 # Define your lists
@@ -15,7 +15,7 @@ list_of_answers = ["1", "2", "3", "4"]
 
 # Create a Tkinter application window
 window = tk.Tk()
-window.title("Tetris")
+window.title("Before they fall")
 window.geometry("350x600")
 
 # Entry widget to take user input
@@ -39,32 +39,35 @@ def update_label():
         box_center_y = (20 + 50) / 2
         # Create the text at the center of the box
         label_id = canvas.create_text(box_center_x, box_center_y, text=list_of_display[0], font=("Arial", 12), anchor='center', tags="label")
-        initial_y_position = 20
+        initial_y_position = 20  # Reset initial y-position
         animate_label(label_id, box_id, initial_y_position)  # Start animation
         entry.bind("<Return>", handle_input)
-        # Reset y-position
-        initial_y_position = 20
 
 # Function to animate the label and box falling down
 def animate_label(label_id, box_id, y_position):
     global initial_y_position
-    if y_position < 460:  # Bottom threshold
-        canvas.move(label_id, 0, movement_speed)
-        canvas.move(box_id, 0, movement_speed)
-        window.after(20, animate_label, label_id, box_id, y_position + movement_speed)
-    else:
-        initial_y_position = 20  # Reset initial y-position
-        canvas.delete(label_id, box_id)  # Delete label and box when they reach the bottom
-        print("Reached bottom threshold")
-        # Display Game Over message
-        canvas.create_text(150, 225, text="Game Over", font=("Arial", 20), fill="red", tags="game_over")
-        # Remove the entry widget when the game is over
-        entry.destroy()
-        canvas.delete("label", "box")  # Delete previous label and box
-        if questions == 1:
-            canvas.create_text(150, 300, text="You answered 0 questions", font=("Arial", 12), anchor='center', tags="label")
-        elif questions < 1:
-            canvas.create_text(150, 300, text=("You answered " + str(questions) + " questions"), font=("Arial", 12), anchor='center', tags="label")
+    bbox = canvas.bbox(label_id)  # Get the bounding box of the label
+    
+    if bbox is not None:  # Check if bbox is not None
+        label_height = bbox[3] - bbox[1]  # Calculate the height of the label text
+        
+        if y_position + label_height < 480:  
+            canvas.move(label_id, 0, movement_speed)
+            canvas.move(box_id, 0, movement_speed)
+            window.after(20, animate_label, label_id, box_id, y_position + movement_speed)
+        else:
+            initial_y_position = 20  # Reset initial y-position
+            canvas.delete(label_id, box_id)  # Delete label and box when they reach the bottom
+            print("Reached bottom threshold")
+            # Display Game Over message
+            canvas.create_text(150, 225, text="Game Over", font=("Arial", 20), fill="red", tags="game_over")
+            # Remove the entry widget when the game is over
+            entry.destroy()
+            canvas.delete("label", "box")  # Delete previous label and box
+            if questions == 0:
+                canvas.create_text(150, 300, text="No more questions\nYou answered 0 questions", font=("Arial", 12), anchor='center', tags="label")
+            elif questions < 0:
+                canvas.create_text(150, 300, text=("No more questions \nYou answered " + str(questions) + " questions"), font=("Arial", 12), anchor='center', tags="label")
 
 # User Input
 def handle_input(event):
