@@ -17,10 +17,25 @@ list_of_answers = ["1", "2", "3", "4"]
 window = tk.Tk()
 window.title("Quiz")
 
+# defining the function which shows the answer
+def give_up():
+    global l_giveup
+    l_giveup = tk.Label(text = list_of_answers[0])
+    l_giveup.pack()
+    b_giveup.pack_forget() # hides the button
+    
+
+# creating the "give up" button
+b_giveup = tk.Button(
+    text = "Give up",
+    command = give_up)
+b_giveup.pack(side = tk.BOTTOM) # to ensure that the button is always at the bottom
+
 # Function to update the label text
 def update_label():
     if list_of_display:
         label_text.set(list_of_display[0])
+        b_giveup.pack() # repacks the "give up" button
     else:
         label_text.set("No more questions \nYou answered " + str(questions) + " questions")
 
@@ -48,6 +63,7 @@ def handle_input(event):
             list_of_answers.pop(0)  # Ensure both lists are synchronized
             update_label()
             questions += 1  # Increment questions by 1
+            l_giveup.pack_forget() # clears the (previous) answer
 
 # Entry widget to take user input
 entry = tk.Entry(window, font=("Arial", 12))
