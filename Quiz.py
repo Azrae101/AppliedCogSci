@@ -22,22 +22,24 @@ def give_up():
     global l_giveup
     l_giveup = tk.Label(text = list_of_answers[0])
     l_giveup.pack()
-    b_giveup.pack_forget() # hides the button
+    b_giveup.pack_forget() # hides the button to display the answer
     
 
 # creating the "give up" button
 b_giveup = tk.Button(
     text = "Give up",
     command = give_up)
-b_giveup.pack(side = tk.BOTTOM) # to ensure that the button is always at the bottom
+b_giveup.pack()
 
 # Function to update the label text
 def update_label():
     if list_of_display:
         label_text.set(list_of_display[0])
+        b_giveup.pack_forget() # hides the button to make it display in the middle, after the entry box
         b_giveup.pack() # repacks the "give up" button
     else:
         label_text.set("No more questions \nYou answered " + str(questions) + " questions")
+        b_giveup.pack_forget() # hides the button at the end of the quiz
 
 # Create and pack a label to display the definition
 label_text = tk.StringVar()
@@ -67,7 +69,7 @@ def handle_input(event):
 
 # Entry widget to take user input
 entry = tk.Entry(window, font=("Arial", 12))
-entry.pack(padx=20, pady=10)
+entry.pack(padx=20, pady=10, side = tk.BOTTOM)
 entry.focus_set()
 entry.bind("<Return>", handle_input)
 
