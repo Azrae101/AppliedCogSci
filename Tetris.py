@@ -16,15 +16,15 @@ list_of_answers = ["1", "2", "3", "4"]
 # Create a Tkinter application window
 window = tk.Tk()
 window.title("Tetris")
-window.geometry("350x600")
+window.geometry("520x680")
 
 # Create a canvas to draw animation
-canvas = tk.Canvas(window, bg="white", width=300, height=500)  # Adjust canvas height
+canvas = tk.Canvas(window, bg="white", width=480, height=580)  # Adjust canvas height
 canvas.grid(row=0, column=0, padx=20, pady=20)
 
 # Function to update the label text and animate
 def update_label():
-    global label_id, box_id
+    global label_id, box_id, current_index
     if list_of_display:
         canvas.delete("label", "box")  # Delete previous label and box
         # Create a rectangle box around the text
@@ -35,6 +35,8 @@ def update_label():
         # Create the text at the center of the box
         label_id = canvas.create_text(box_center_x, box_center_y, text=list_of_display[0], font=("Arial", 12), anchor='center', tags="label")
         animate_label(label_id, box_id, 20)  # Start animation
+        if len(list_of_display) > 1:
+            window.after(5000, add_next_element)  # Schedule adding the next element after 5 seconds
     else:
         canvas.delete("label", "box")  # Delete previous label and box
         message = "No more questions\nYou answered " + str(questions) + " questions"
@@ -42,18 +44,28 @@ def update_label():
 
 # Function to animate the label and box falling down
 def animate_label(label_id, box_id, y_position):
-    if y_position < 460:  # Bottom threshold
+    if y_position < 540:  # Bottom threshold
         canvas.move(label_id, 0, movement_speed)
         canvas.move(box_id, 0, movement_speed)
-        window.after(20, animate_label, label_id, box_id, y_position + movement_speed)
-    else:
-        print("Reached bottom threshold")
+        window.after(10, animate_label, label_id, box_id, y_position + movement_speed)
 
 # Function to add the next element from list_of_display
 def add_next_element():
+    global current_index
     if len(list_of_display) >= 2:
-        list_of_display.pop(1)
-        update_label()
+        canvas.delete("next_label", "next_box")  # Delete previous next label and box
+        # Create a rectangle box around the next text
+        next_box_id = canvas.create_rectangle(50, 70, 250, 100, fill="lightgreen", tags="next_box")
+        # Calculate the center of the next box
+        next_box_center_x = (50 + 250) / 2
+        next_box_center_y = (70 + 100) / 2
+        # Create the next text at the center of the next box
+        next_label_id = canvas.create_text(next_box_center_x, next_box_center_y, text=list_of_display[1], font=("Arial", 12), anchor='center', tags="next_label")
+        animate_label(next_label_id, next_box_id, 70)  # Start animation for the next label
+        list_of_display.pop(1)  # Remove the first element from the list
+        window.after(5000, add_next_element)  # Schedule adding the next next element after 5 seconds
+    else:
+        canvas.delete("next_label", "next_box")  # Delete previous next label and box
 
 # User Input
 def handle_input(event):
@@ -82,9 +94,6 @@ entry.bind("<Return>", handle_input)
 
 # Update the label with the first definition
 update_label()
-
-# Add the next element after 10 seconds
-window.after(1000, add_next_element)
 
 # Run the Tkinter event loop
 window.mainloop()
