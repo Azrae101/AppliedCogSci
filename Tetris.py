@@ -26,6 +26,9 @@ canvas.grid(row=0, column=0, padx=20, pady=20)
 # Dictionary to store the positions of elements
 element_positions = {}
 
+# Global variable to store label_id
+label_id = None
+
 # Function to generate random spawn points
 def generate_random_spawn():
     while True:
@@ -37,29 +40,38 @@ def generate_random_spawn():
         if all(not intersect((x1, y1, x2, y2), pos) for pos in element_positions.values()):
             return x1, y1, x2, y2
 
-# Update the update_label() function to use random spawn points
+# Function to update the label with the next definition
 def update_label():
     global label_id, box_id
 
-    if list_of_display:
-        canvas.delete("label", "box")  # Delete previous label and box
-        # Generate random spawn points
+    if not list_of_display:  # Check if list_of_display is empty
+        # Update the text of the existing label
+        display_element = list_of_display.pop(0)
+        canvas.itemconfig(label_id, text=display_element)
+        # Update the position of the box
         x1, y1, x2, y2 = generate_random_spawn()
-        # Create a rectangle box around the text with random spawn points
-        box_id = canvas.create_rectangle(x1, y1, x2, y2, fill="skyblue", tags="box")
-        # Calculate the center of the box
+        canvas.coords(box_id, x1, y1, x2, y2)
+        # Update the position of the label
         box_center_x = (x1 + x2) / 2
         box_center_y = (y1 + y2) / 2
-        # Create the text at the center of the box
-        label_id = canvas.create_text(box_center_x, box_center_y, text=list_of_display[0], font=("Arial", 12), anchor='center', tags="label")
-        element_positions[label_id] = (x1, y1, x2, y2)  # Store position of the current element
-        animate_label(label_id, box_id, y1)  # Start animation
-        if len(list_of_display) > 1:
-            window.after(1000, add_next_element)  # Schedule adding the next element after x seconds
+        canvas.coords(label_id, box_center_x, box_center_y)
+        element_positions[label_id] = (x1, y1, x2, y2)  # Update position of the current element
     else:
-        canvas.delete("label", "box")  # Delete previous label and box
-        message = "No more questions\nYou answered " + str(questions) + " questions"
-        label_id = canvas.create_text(150, 250, text=message, font=("Arial", 12), anchor='center', tags="label")
+        # Create a rectangle box around the next text
+        next_box_id = canvas.create_rectangle(50, 70, 250, 100, fill="skyblue", tags="next_box")
+        # Calculate the center of the next box
+        next_box_center_x = (50 + 250) / 2
+        next_box_center_y = (70 + 100) / 2
+        # Create the next text at the center of the next box
+        next_label_id = canvas.create_text(next_box_center_x, next_box_center_y, text=list_of_display[0], font=("Arial", 12), anchor='center', tags="next_label")
+        element_positions[next_label_id] = (50, 70, 250, 100)  # Store position of the next element
+        animate_label(next_label_id, next_box_id, 70)  # Start animation for the next label
+        list_of_display.pop(0)  # Remove the first element from the list
+        if len(list_of_display) >= 1:
+            window.after(1000, add_next_element)  # Schedule adding the next element after x seconds
+        else:
+            message = "No more questions\nYou answered " + str(questions) + " questions"
+            canvas.create_text(150, 250, text=message, font=("Arial", 12), anchor='center', tags="message")
 
 def animate_label(label_id, box_id, y_position):
     global element_positions
@@ -87,7 +99,6 @@ def animate_label(label_id, box_id, y_position):
 
 # Function to add the next element from list_of_display
 def add_next_element():
-    global current_index
     if len(list_of_display) >= 2:
         # Create a rectangle box around the next text
         next_box_id = canvas.create_rectangle(50, 70, 250, 100, fill="skyblue", tags="next_box")
@@ -100,17 +111,24 @@ def add_next_element():
         animate_label(next_label_id, next_box_id, 70)  # Start animation for the next label
         list_of_display.pop(1)  # Remove the first element from the list
         window.after(1000, add_next_element)  # Schedule adding the next next element after 5 seconds
-    else:
-        canvas.delete("next_label", "next_box")  # Delete previous next label and box
 
 # Function to check for collisions between elements
 def check_collision():
-    # Check for collision between the first and second elements only
-    current_position = list(element_positions.values())[0]
-    next_position = list(element_positions.values())[1]
+    global label_id
 
-    if intersect(current_position, next_position):
-        print("Collision detected between the first and second elements!")
+    user_input = entry.get().lower()
+    if user_input in list_of_answers:
+        term_index = list_of_answers.index(user_input)
+        if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
+            list_of_display.pop(0)
+            list_of_answers.pop(0)  # Ensure both lists are synchronized
+            entry.delete(0, tk.END)  # Clear the entry field after each enter
+            update_label()  # Update the label with the next definition
+            global questions
+            questions += 1  # Increment questions by 1
+        else:
+            # Incorrect answer, do not remove label and box
+            entry.delete(0, tk.END)  # Clear the entry field after each enter
 
 # Function to check if two rectangles intersect
 def intersect(rect1, rect2):
@@ -118,7 +136,6 @@ def intersect(rect1, rect2):
     x3, y3, x4, y4 = rect2
     return not (x2 < x3 or x4 < x1 or y2 < y3 or y4 < y1)
 
-# User Input
 def handle_input(event):
     global questions  # Declare questions as a global variable
 
@@ -128,7 +145,7 @@ def handle_input(event):
     if user_input.lower() == "q" or user_input.lower() in ["quit", "exit", "quit game", "exit game"]:
         window.quit()
     elif user_input in list_of_answers:
-        if list_of_answers:  # Check if list_of_answers is not empty
+        if list_of_display:  # Check if list_of_display is not empty
             term_index = list_of_answers.index(user_input)
             if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
                 list_of_display.pop(0)
@@ -136,6 +153,9 @@ def handle_input(event):
                 canvas.delete("label", "box")  # Remove displayed label and box from canvas
                 update_label()  # Update the label with the next definition
                 questions += 1  # Increment questions by 1
+            else:
+                # Incorrect answer, do not remove label and box
+                entry.delete(0, tk.END)  # Clear the entry field after each enter
 
 # Entry widget to take user input
 entry = tk.Entry(window, font=("Arial", 12))
