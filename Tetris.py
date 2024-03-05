@@ -28,16 +28,18 @@ element_positions = {}
 
 # Function to generate random spawn points
 def generate_random_spawn():
-    x1 = random.randint(50, 250)  
-    y1 = random.randint(20, 50)  
-    x2 = x1 + 200                  
-    y2 = y1 + 30              
-    return x1, y1, x2, y2
+    while True:
+        x1 = random.randint(50, 250)
+        y1 = random.randint(20, 50)
+        x2 = x1 + 200
+        y2 = y1 + 30
+        # Check if the generated spawn point has enough space between elements
+        if all(not intersect((x1, y1, x2, y2), pos) for pos in element_positions.values()):
+            return x1, y1, x2, y2
 
 # Update the update_label() function to use random spawn points
 def update_label():
-    global label_id, box_id, element_positions
-    element_positions = {}  # Reset element positions
+    global label_id, box_id
 
     if list_of_display:
         canvas.delete("label", "box")  # Delete previous label and box
