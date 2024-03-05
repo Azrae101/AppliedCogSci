@@ -101,7 +101,6 @@ def check_collision():
 
 # Function to check if two rectangles intersect
 def intersect(rect1, rect2):
-    margin = 10
     x1, y1, x2, y2 = rect1
     x3, y3, x4, y4 = rect2
     return not (x2 < x3 - margin or x4 < x1 + margin or y2 < y3 - margin or y4 < y1 + margin)
