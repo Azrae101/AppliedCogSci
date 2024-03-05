@@ -87,7 +87,7 @@ def add_next_element():
         element_positions[next_label_id] = (50, 70, 250, 100)  # Store position of the next element
         animate_label(next_label_id, next_box_id, 70)  # Start animation for the next label
         list_of_display.pop(1)  # Remove the first element from the list
-        window.after(1000, add_next_element)  # Schedule adding the next next element after 5 seconds
+        window.after(5000, add_next_element)  # Schedule adding the next next element after 5 seconds
     else:
         canvas.delete("next_label", "next_box")  # Delete previous next label and box
 
