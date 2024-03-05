@@ -31,7 +31,7 @@ box_id = None
 count = 0
 
 # Function to generate random spawn points
-def generate_random_spawn(label_id, box_id):
+def generate_random_spawn():
     while True:
         x1 = random.randint(50, 250)
         y1 = random.randint(20, 50)
@@ -39,9 +39,6 @@ def generate_random_spawn(label_id, box_id):
         y2 = y1 + 30
         # Check if the generated spawn point has enough space between elements
         if all(not intersect((x1, y1, x2, y2), pos) for pos in element_positions.values()):
-            # Update element positions dictionary with label and box IDs
-            element_positions[label_id] = (x1, y1, x2, y2)
-            element_positions[box_id] = (x1, y1, x2, y2)
             return x1, y1, x2, y2
 
 # Function to update the label with the next definition
@@ -56,14 +53,18 @@ def update_label():
         # Update the text of the existing label
         display_element = list_of_display[count]
         canvas.itemconfig(label_id, text=display_element)
-        # Update the position of the box
-        x1, y1, x2, y2 = generate_random_spawn(label_id, box_id)
-        canvas.coords(box_id, x1, y1, x2, y2)
-        # Update the position of the label
+        # Generate random spawn point for the new element
+        x1, y1, x2, y2 = generate_random_spawn()
+        # Create the rectangle box around the label
+        canvas.create_rectangle(x1, y1, x2, y2, fill="skyblue", tags=box_id)
+        # Calculate the center of the box
         box_center_x = (x1 + x2) / 2
         box_center_y = (y1 + y2) / 2
-        canvas.coords(label_id, box_center_x, box_center_y)
-        element_positions[label_id] = (x1, y1, x2, y2)  # Update position of the current element
+        # Create the label text at the center of the box
+        canvas.create_text(box_center_x, box_center_y, text=display_element, font=("Arial", 12), anchor='center', tags=label_id)
+        # Update the element_positions dictionary with the new label and box IDs
+        element_positions[label_id] = (x1, y1, x2, y2)
+        element_positions[box_id] = (x1, y1, x2, y2)
     else:
         # Create a rectangle box around the next text
         next_box_id = canvas.create_rectangle(50, 70, 250, 100, fill="skyblue", tags="next_box")
@@ -75,7 +76,7 @@ def update_label():
         element_positions[next_label_id] = (50, 70, 250, 100)  # Store position of the next element
         animate_label(next_label_id, next_box_id, 70)  # Start animation for the next label
         if len(list_of_display) >= 1:
-            window.after(1000, add_next_element)  # Schedule adding the next element after x seconds
+            window.after(1000, add_next_element) 
 
 # The movement of the labels
 def animate_label(label_id, box_id, y_position):
@@ -111,9 +112,6 @@ def add_next_element():
         next_label_id = "label_" + str(count + 1)
         next_box_id = "box_" + str(count + 1)
 
-        print("Label ID:", next_label_id)
-        print("Box ID:", next_box_id)
-
         # Create a rectangle box around the next text
         next_box_id = canvas.create_rectangle(50, 70, 250, 100, fill="skyblue", tags="next_box")
         # Calculate the center of the next box
@@ -124,6 +122,7 @@ def add_next_element():
         element_positions[next_label_id] = (50, 70, 250, 100)  # Store position of the next element
         animate_label(next_label_id, next_box_id, 70)  # Start animation for the next label
         count += 1
+        # Time before new element 
         window.after(1000, add_next_element)
 
 # Function to check for collisions between elements
@@ -168,7 +167,7 @@ def delete_element():
     else:
         print("Not found in element_positions or not at the top of the list.")
 
-def handle_input(event):
+def handle_input():
     global questions
 
     user_input = entry.get().lower()
