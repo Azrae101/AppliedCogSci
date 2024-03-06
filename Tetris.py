@@ -10,8 +10,11 @@ movement_speed = 10  # Adjust as needed
 list_of_display = ["a", "b", "c", "d"]
 list_of_answers = ["1", "2", "3", "4"]
 
-# Random order of displayed items
-random.shuffle(list_of_display)
+# Shuffle indices for synchronization
+indices = list(range(len(list_of_display)))
+random.shuffle(indices)
+shuffled_display = [list_of_display[i] for i in indices]
+shuffled_answers = [list_of_answers[i] for i in indices]
 
 # Create a Tkinter application window
 window = tk.Tk()
@@ -49,9 +52,9 @@ def update_label():
     label_id = "label_" + str(count)
     box_id = "box_" + str(count)
 
-    if not list_of_display:  # Check if list_of_display is not empty
+    if not shuffled_display:  # Check if list_of_display is not empty
         # Update the text of the existing label
-        display_element = list_of_display[count]
+        display_element = shuffled_display[count]
         canvas.itemconfig(label_id, text=display_element)
         # Generate random spawn point for the new element
         x1, y1, x2, y2 = generate_random_spawn()
@@ -72,11 +75,11 @@ def update_label():
         next_box_center_x = (50 + 250) / 2
         next_box_center_y = (70 + 100) / 2
         # Create the next text at the center of the next box
-        next_label_id = canvas.create_text(next_box_center_x, next_box_center_y, text=list_of_display[0], font=("Arial", 12), anchor='center', tags="next_label")
+        next_label_id = canvas.create_text(next_box_center_x, next_box_center_y, text=shuffled_display[0], font=("Arial", 12), anchor='center', tags="next_label")
         element_positions[next_label_id] = (50, 70, 250, 100)  # Store position of the next element
         animate_label(next_label_id, next_box_id, 70)  # Start animation for the next label
-        if len(list_of_display) >= 1:
-            window.after(1000, add_next_element) 
+        if len(shuffled_display) >= 1:
+            window.after(1000, add_next_element)
 
 # The movement of the labels
 def animate_label(label_id, box_id, y_position):
@@ -106,8 +109,8 @@ def animate_label(label_id, box_id, y_position):
 # Function to add the next element from list_of_display
 def add_next_element():
     global count
-    
-    if len(list_of_display) >= count + 2:
+
+    if len(shuffled_display) >= count + 2:
         # Generate unique IDs for label and box
         next_label_id = "label_" + str(count + 1)
         next_box_id = "box_" + str(count + 1)
@@ -118,7 +121,7 @@ def add_next_element():
         next_box_center_x = (50 + 250) / 2
         next_box_center_y = (70 + 100) / 2
         # Create the next text at the center of the next box
-        next_label_id = canvas.create_text(next_box_center_x, next_box_center_y, text=list_of_display[count + 1], font=("Arial", 12), anchor='center', tags="next_label")
+        next_label_id = canvas.create_text(next_box_center_x, next_box_center_y, text=shuffled_display[count + 1], font=("Arial", 12), anchor='center', tags="next_label")
         element_positions[next_label_id] = (50, 70, 250, 100)  # Store position of the next element
         animate_label(next_label_id, next_box_id, 70)  # Start animation for the next label
         count += 1
@@ -130,14 +133,14 @@ def check_collision():
     global label_id
 
     # Check if the current label is still in list_of_display
-    if not list_of_display:
+    if not shuffled_display:
         delete_element()
         return
 
     user_input = entry.get().lower()
-    if user_input in list_of_answers:
-        term_index = list_of_answers.index(user_input)
-        if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
+    if user_input in shuffled_answers:
+        term_index = shuffled_answers.index(user_input)
+        if term_index < len(shuffled_display) and shuffled_display[0] == shuffled_display[term_index]:
             entry.delete(0, tk.END)  # Clear the entry field after each enter
             update_label()  # Update the label with the next definition
             global questions
@@ -160,14 +163,16 @@ def delete_element():
 
     if label_id_to_delete in element_positions and box_id_to_delete in element_positions:
         canvas.delete(label_id_to_delete, box_id_to_delete)  # Remove displayed label and box from canvas
-        del list_of_display[0]  # Remove the first element from the list
-        del list_of_answers[0]   # Remove the corresponding answer
+        del element_positions[label_id_to_delete]  # Remove label position from element_positions
+        del element_positions[box_id_to_delete]  # Remove box position from element_positions
+        del shuffled_display[0]  # Remove the first element from the list
+        del shuffled_answers[0]   # Remove the corresponding answer
         update_label()  # Update the label with the next definition
         questions += 1  # Increment questions by 1
     else:
-        print("Not found in element_positions or not at the top of the list.")
+        print("Label and box not found or not at the top of the list.")
 
-def handle_input():
+def handle_input(event):
     global questions
 
     user_input = entry.get().lower()
@@ -175,28 +180,21 @@ def handle_input():
 
     if user_input.lower() == "q" or user_input.lower() in ["quit", "exit", "quit game", "exit game"]:
         window.quit()
-    elif user_input in list_of_answers:
-        if list_of_answers:  # Check if list_of_answers is not empty
-            term_index = list_of_answers.index(user_input)
-            if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
-                list_of_display.pop(0)
-                list_of_answers.pop(0)  # Ensure both lists are synchronized
+    elif user_input in shuffled_answers:
+        if shuffled_answers:  # Check if list_of_answers is not empty
+            term_index = shuffled_answers.index(user_input)
+            if term_index < len(shuffled_display) and shuffled_display[0] == shuffled_display[term_index]:
+                shuffled_display.pop(0)
+                shuffled_answers.pop(0)  # Ensure both lists are synchronized
                 canvas.delete("label", "box")  # Remove displayed label and box from canvas
-                update_label()  # Update the label with the next definition
+                delete_element()  # Remove the corresponding label and box
                 questions += 1  # Increment questions by 1
-    elif user_input == "1":  # Handle the case when user types "1"
-        if list_of_display and list_of_display[0] == "a":
-            list_of_display.pop(0)
-            list_of_answers.pop(0)  # Ensure both lists are synchronized
-            canvas.delete("label", "box")  # Remove displayed label and box from canvas
-            update_label()  # Update the label with the next definition
-            questions += 1  # Increment questions by 1
 
 # Entry widget to take user input
 entry = tk.Entry(window, font=("Arial", 12))
 entry.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
 entry.focus_set()
-window.bind("<Return>", handle_input)
+entry.bind("<Return>", handle_input)  # Bind handle_input function to Return key press event
 
 # Update the label with the first definition
 update_label()
