@@ -50,21 +50,13 @@ def update_point_counter():
 def update_label():
     global label_id, box_id, initial_y_position, shuffled_display, shuffled_answers
 
-    if not shuffled_answers:  # Check if no more questions left
-        if questions > 0:  # Check if at least one question was answered
-            # Display Congratulations message
-            canvas.create_text(150, 225, text="You won!", font=("Arial", 20), fill="green", tags="win")
-            entry.destroy()  # Remove user-text-box
-            point_label.destroy()
-            window.geometry("350x560")
-            canvas.delete("label", "box")  # Delete previous label and box
-            if questions == 0:
-                canvas.create_text(150, 300, text=("You did not answer any questions"), font=("Arial", 12), anchor='center', tags="label")
-            elif questions == 1:
-                canvas.create_text(150, 300, text=("You answered one question"), font=("Arial", 12), anchor='center', tags="label")
-            else:
-                canvas.create_text(150, 300, text=("You answered " + str(questions+1) + " questions"), font=("Arial", 12), anchor='center', tags="label")
-            return 
+    if not shuffled_answers:  # Reset lists when there are no more questions
+        shuffled_display = ["a", "b", "c", "d"]
+        shuffled_answers = ["1", "2", "3", "4"]
+        indices = list(range(len(shuffled_display)))
+        random.shuffle(indices)
+        shuffled_display = [shuffled_display[i] for i in indices]
+        shuffled_answers = [shuffled_answers[i] for i in indices]
 
     canvas.delete("label", "box", "game_over")  # Delete previous label, box, and game over message
     # Create a rectangle box around the text
