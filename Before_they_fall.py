@@ -4,14 +4,21 @@
 
 # Imports
 import tkinter as tk
+import random
 
 # Variables
 questions = 0
-movement_speed = 10
+movement_speed = 1
 
 # Define your lists
 list_of_display = ["a", "b", "c", "d"]
 list_of_answers = ["1", "2", "3", "4"]
+
+# Shuffle indices and randomize
+indices = list(range(len(list_of_display)))
+random.shuffle(indices)
+shuffled_display = [list_of_display[i] for i in indices]
+shuffled_answers = [list_of_answers[i] for i in indices]
 
 # Create a Tkinter application window
 window = tk.Tk()
@@ -40,11 +47,15 @@ def update_point_counter():
 
 # Function to update the label text and animate
 def update_label():
-    global label_id, box_id, initial_y_position
+    global label_id, box_id, initial_y_position, shuffled_display, shuffled_answers
 
-    if not list_of_answers:  # Reset lists when there are no more questions
-        list_of_display.extend(["a", "b", "c", "d"])
-        list_of_answers.extend(["1", "2", "3", "4"])
+    if not shuffled_answers:  # Reset lists when there are no more questions
+        shuffled_display = ["a", "b", "c", "d"]
+        shuffled_answers = ["1", "2", "3", "4"]
+        indices = list(range(len(shuffled_display)))
+        random.shuffle(indices)
+        shuffled_display = [shuffled_display[i] for i in indices]
+        shuffled_answers = [shuffled_answers[i] for i in indices]
 
     canvas.delete("label", "box", "game_over")  # Delete previous label, box, and game over message
     # Create a rectangle box around the text
@@ -53,7 +64,7 @@ def update_label():
     box_center_x = (50 + 250) / 2
     box_center_y = (70 + 100) / 2
     # Create the text at the center of the box
-    label_id = canvas.create_text(box_center_x, box_center_y, text=list_of_display[0], font=("Arial", 12), anchor='center', tags="label")
+    label_id = canvas.create_text(box_center_x, box_center_y, text=shuffled_display[0], font=("Arial", 12), anchor='center', tags="label")
     initial_y_position = 70  # Reset initial y-position
     animate_label(label_id, box_id, initial_y_position)  # Start animation
     entry.bind("<Return>", handle_input)
@@ -73,7 +84,7 @@ def animate_label(label_id, box_id, y_position):
         elif questions < 0:
             canvas.create_text(150, 300, text=("You answered " + str(questions) + " questions"), font=("Arial", 12), anchor='center', tags="label")
     '''
-            
+
     bbox = canvas.bbox(label_id)  # Get the bounding box of the label
 
     if bbox is not None:  # Check if bbox is not None
@@ -110,12 +121,12 @@ def handle_input(event):
 
     if user_input.lower() == "q" or user_input.lower() in ["quit", "exit", "quit game", "exit game"]:
         window.quit()
-    elif user_input in list_of_answers:
-        if list_of_answers:  # Check if list_of_answers is not empty
-            term_index = list_of_answers.index(user_input)
-            if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
-                list_of_display.pop(0)
-                list_of_answers.pop(0)  # Ensure both lists are synchronized
+    elif user_input in shuffled_answers:
+        if shuffled_answers:  # Check if list_of_answers is not empty
+            term_index = shuffled_answers.index(user_input)
+            if term_index < len(shuffled_display) and shuffled_display[0] == shuffled_display[term_index]:
+                shuffled_display.pop(0)
+                shuffled_answers.pop(0)  # Ensure both lists are synchronized
                 canvas.delete("label", "box")  # Remove displayed label and box from canvas
                 update_label()  # Update the label with the next definition
                 questions += 1  # Increment questions by 1
