@@ -2,7 +2,6 @@
 
 # imports
 import tkinter as tk
-import time
 
 # defining index and lists of terms and answers
 current_index = 0
@@ -43,11 +42,12 @@ def prev_flashcard():
     list_type = list_of_terms # to display the term side of the previous flashcard first
     current_side = "t" # same as above, but to make it work while flipping
     if current_index == 0:
-        flashcard.config(text = "There are no previous flashcards.")
-        flashcard.after(1000, lambda: flashcard.config(text = list_type[current_index]))
+        b_previous.config(state = "disabled")
     else:
         current_index = (current_index - 1)
         flashcard.config(text = list_type[current_index])
+        b_next.config(state = "normal")
+    check_index()
 
 # defining the next button function  
 # moving from current index to next index - changing the global index by one
@@ -57,11 +57,23 @@ def next_flashcard():
     list_type = list_of_terms # to display the term side of the next flashcard first
     current_side = "t" # same as above, but to make it work while flipping
     if current_index == ((len(list_type)) - 1):
-        flashcard.config(text = "There are no more flashcards.")
-        flashcard.after(1000, lambda: flashcard.config(text = list_type[current_index]))
+        b_next.config(state = "disabled")
     else:
         current_index = (current_index + 1)
         flashcard.config(text = list_type[current_index])
+        b_previous.config(state = "normal")
+    check_index()
+
+def check_index():
+    if current_index == 0:
+        b_previous.config(state = "disabled")
+        b_next.config(state = "normal")
+    elif current_index == ((len(list_type)) - 1):
+        b_previous.config(state = "normal")
+        b_next.config(state = "disabled")
+    else:
+        b_previous.config(state = "normal")
+        b_next.config(state = "normal")
 
 # adding buttons to the frame
 b_previous = tk.Button(buttonframe, text = "Previous", height = 1, width = 10, command = prev_flashcard)
@@ -78,5 +90,8 @@ flashcard.pack(padx = 20, pady = 50)
 
 # packing the buttonframe
 buttonframe.pack()
+
+# checking the index, to make the "previous" button disabled at first
+check_index()
 
 window.mainloop()
