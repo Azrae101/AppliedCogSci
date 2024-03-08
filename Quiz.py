@@ -12,34 +12,47 @@ questions = 1
 # Define your lists
 list_of_display = ["a", "b", "c", "d"]
 list_of_answers = ["1", "2", "3", "4"]
+list_of_hints = ["one", "", "three", "four"]
 
 # Create a Tkinter application window
 window = tk.Tk()
 window.title("Quiz")
 
-# defining the function which shows the answer
+# defining the "give up" function
 def give_up():
     global l_giveup
     l_giveup = tk.Label(text = list_of_answers[0])
     l_giveup.pack()
-    b_giveup.pack_forget() # hides the button to display the answer
+    b_giveup.config(state = "disabled") # disables the button
+    b_hint.config(state = "disabled") # disables the "hint" button, because why would you use a hint if you have the answer?
+    l_hint.pack_forget() # clears the hint
+
+# defining the "hint" function
+def hint():
+    global l_hint
+    l_hint = tk.Label(text = list_of_hints[0])
+    l_hint.pack()
+    b_hint.config(state = "disabled") # disables the button
+    l_giveup.pack_forget() # clears the answer
     
 
-# creating the "give up" button
-b_giveup = tk.Button(
-    text = "Give up",
-    command = give_up)
-b_giveup.pack()
+# creating the buttonframe
+buttonframe = tk.Frame(window)
+buttonframe.columnconfigure(0, weight = 1)
+buttonframe.pack(side = tk.BOTTOM)
+
+# creating the "give up" and "hint" button
+b_giveup = tk.Button(buttonframe, text = "Give up", height = 1, width = 10, command = give_up)
+b_giveup.grid(row = 0, column = 0, padx = 20, pady = 10)
+b_hint = tk.Button(buttonframe, text = "Hint", height = 1, width = 10, command = hint)
+b_hint.grid(row = 0, column = 1, padx = 10, pady = 10)
 
 # Function to update the label text
 def update_label():
     if list_of_display:
         label_text.set(list_of_display[0])
-        b_giveup.pack_forget() # hides the button to make it display in the middle, after the entry box
-        b_giveup.pack() # repacks the "give up" button
     else:
         label_text.set("No more questions \nYou answered " + str(questions) + " questions")
-        b_giveup.pack_forget() # hides the button at the end of the quiz
 
 # Create and pack a label to display the definition
 label_text = tk.StringVar()
@@ -62,10 +75,21 @@ def handle_input(event):
         term_index = list_of_answers.index(user_input)
         if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
             list_of_display.pop(0)
-            list_of_answers.pop(0)  # Ensure both lists are synchronized
+            list_of_answers.pop(0)  
+            list_of_hints.pop(0) # Ensure all lists are synchronized
             update_label()
             questions += 1  # Increment questions by 1
-            l_giveup.pack_forget() # clears the (previous) answer
+            if list_of_display:
+                b_giveup.config(state = "normal") # reverts the "give up" button to normal
+                if list_of_hints[0] == "":
+                    b_hint.config(state = "disabled") # if there is no hint, the button is disabled
+                else:
+                    b_hint.config(state = "normal") # reverts the "hint" button to normal
+            else:
+                b_giveup.config(state = "disabled")
+                b_hint.config(state = "disabled")
+            l_giveup.pack_forget() # clears the answer
+            l_hint.pack_forget() # clears the hint
 
 # Entry widget to take user input
 entry = tk.Entry(window, font=("Arial", 12))
