@@ -19,11 +19,11 @@ window = tk.Tk()
 window.title("Quiz")
 
 # defining the "give up" function
-def give_up():
-    global l_giveup
-    l_giveup = tk.Label(text = list_of_answers[0])
-    l_giveup.pack()
-    b_giveup.config(state = "disabled") # disables the button
+def reveal():
+    global l_reveal
+    l_reveal = tk.Label(text = list_of_answers[0])
+    l_reveal.pack()
+    b_reveal.config(state = "disabled") # disables the button
     b_hint.config(state = "disabled") # disables the "hint" button, because why would you use a hint if you have the answer?
     l_hint.pack_forget() # clears the hint
 
@@ -33,7 +33,7 @@ def hint():
     l_hint = tk.Label(text = list_of_hints[0])
     l_hint.pack()
     b_hint.config(state = "disabled") # disables the button
-    l_giveup.pack_forget() # clears the answer
+    l_reveal.pack_forget() # clears the answer
     
 
 # creating the buttonframe
@@ -42,9 +42,9 @@ buttonframe.columnconfigure(0, weight = 1)
 buttonframe.pack(side = tk.BOTTOM)
 
 # creating the "give up" and "hint" button
-b_giveup = tk.Button(buttonframe, text = "Give up", height = 1, width = 10, command = give_up)
-b_giveup.grid(row = 0, column = 0, padx = 20, pady = 10)
-b_hint = tk.Button(buttonframe, text = "Hint", height = 1, width = 10, command = hint)
+b_reveal = tk.Button(buttonframe, text = "Reveal the answer", height = 1, width = 13, command = reveal)
+b_reveal.grid(row = 0, column = 0, padx = 20, pady = 10)
+b_hint = tk.Button(buttonframe, text = "Hint", height = 1, width = 13, command = hint)
 b_hint.grid(row = 0, column = 1, padx = 10, pady = 10)
 
 # Function to update the label text
@@ -80,15 +80,15 @@ def handle_input(event):
             update_label()
             questions += 1  # Increment questions by 1
             if list_of_display:
-                b_giveup.config(state = "normal") # reverts the "give up" button to normal
+                b_reveal.config(state = "normal") # reverts the "give up" button to normal
                 if list_of_hints[0] == "":
                     b_hint.config(state = "disabled") # if there is no hint, the button is disabled
                 else:
                     b_hint.config(state = "normal") # reverts the "hint" button to normal
             else:
-                b_giveup.config(state = "disabled")
+                b_reveal.config(state = "disabled")
                 b_hint.config(state = "disabled")
-            l_giveup.pack_forget() # clears the answer
+            l_reveal.pack_forget() # clears the answer
             l_hint.pack_forget() # clears the hint
 
 # Entry widget to take user input
