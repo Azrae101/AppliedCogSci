@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards</title>
+    <style>
+        /* Button styling */
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px; /* Adjust margin to control spacing between buttons */
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* Layout */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Ensure the body takes the full viewport height */
+            margin: 0; /* Remove default margin */
+        }
+
+        .flashcard-container {
+            border: 2px solid #ccc; /* Frame-like border */
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center; /* Center-align the text inside */
+        }
+
+        #term, #answer {
+            font-size: 24px; /* Increase font size */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; /* Add some spacing between flashcard and buttons */
+        }
+        
+        .back-btn {
+            position: absolute;
+            bottom: -50px; /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="flashcards.js" defer></script>
+</head>
+<body>
+    <div class="flashcard-container">
+        <h1>Flashcards</h1>
+        <div id="flashcard">
+            <p id="term">{{ term }}</p>
+            <p id="answer" style="display: none;">{{ list_of_answers[current_index] }}</p>
+        </div>
+        <div class="button-container">
+            <form action="/prev">
+                <button type="submit" {% if disable_prev %}disabled{% endif %}>Previous</button>
+            </form>
+            <form id="flipForm" action="/flip" method="POST">
+                <button id="flipButton" type="submit">Flip</button>
+            </form>    
+            <form action="/next">
+                <button type="submit" {% if disable_next %}disabled{% endif %}>Next</button>
+            </form>
+        </div>
+    </div>
+      <!-- Back to Home Button -->
+      <button class="back-btn" onclick="location.href='/'">Back to Home</button>
+</body>
+</html>

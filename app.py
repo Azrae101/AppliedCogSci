@@ -1,16 +1,62 @@
 # Flask app
-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Your existing quiz data
+# Quiz data
 list_of_display = ["a", "b", "c", "d"]
 list_of_answers = ["1", "2", "3", "4"]
+list_type = list_of_display
+current_index = 0
+current_side = "t"
+
 questions = 1
 
 @app.route('/')
-def index():
+def home():
+    return render_template('home.html')
+
+@app.route('/flashcards')
+def flashcards():
+    global current_index
+    global current_side
+    global list_of_display
+    global list_of_answers
+
+    term = list_of_display[current_index]
+    if current_side == "d":
+        term = list_of_answers[current_index]
+    return render_template('flashcards.html', term=term, list_of_display=list_of_display, list_of_answers=list_of_answers, current_index=current_index, current_side=current_side)
+
+@app.route('/prev')
+def prev_flashcard():
+    global current_side
+    current_side = "t"
+    global current_index
+    if current_index > 0:
+        current_index -= 1
+    return redirect('/flashcards')
+
+@app.route('/next')
+def next_flashcard():
+    global current_side
+    current_side = "t"
+    global current_index
+    if current_index < len(list_of_display) - 1:
+        current_index += 1
+    return redirect('/flashcards')
+
+@app.route('/flip', methods=['POST'])
+def flip_flashcard():
+    global current_side
+    if current_side == "t":
+        current_side = "d"
+    else:
+        current_side = "t"
+    return redirect('/flashcards')
+
+@app.route('/quiz')
+def quiz():
     if list_of_display:
         current_question = list_of_display[0]
     else:
@@ -29,7 +75,7 @@ def handle_answer():
             list_of_answers.pop(0)
             questions += 1
 
-    return index()
+    return redirect(url_for('quiz'))
 
 if __name__ == '__main__':
     app.run(debug=True)
