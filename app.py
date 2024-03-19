@@ -37,6 +37,10 @@ current_side = "t"
 
 questions = 1
 
+@app.before_request
+def before_request():
+    g.logged_in = session.get('logged_in', False)
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -132,9 +136,19 @@ def login():
         session['user_id'] = user['id']
         flash('You were logged in.')
 
-        return redirect(url_for('home'))
+        if user is not None:
+            session['logged_in'] = True
+            session['user_id'] = user['id']
+            flash('You were logged in.')
+            return redirect(url_for('home'))
 
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You were logged out.')
+    return redirect(url_for('home'))
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():

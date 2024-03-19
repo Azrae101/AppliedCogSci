@@ -1,7 +1,7 @@
 <!doctype html>
 
 <head>
-    <title>TikTak - {% block title %}{% endblock %}</title>
+    <title>CogCards - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -10,7 +10,7 @@
 
 <nav id="topnav">
     <div id="topnav-center">
-        <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='logo.png') }}"></a>
+        <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='rsz_cogcards.png') }}"></a>
 
         <form class="search" method="post">
             <input type="search" value="" placeholder="Search..." name="search">
