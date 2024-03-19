@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>CogCards - Home</title>
     <style>
         body {
             position: relative;
@@ -50,6 +50,11 @@
             <h1>Welcome to Cog-Cards!</h1>
             <a href="{{ url_for('flashcards') }}" class="button">View Flashcards</a>
             <a href="{{ url_for('quiz') }}" class="button">Take Quiz</a>
+            {% if session.logged_in %}
+                <a href="/logout" class="button">Logout</a>
+            {% else %}
+                <a href="/login" class="button">Login</a>
+            {% endif %}
         </div>
     </div>
 </body>

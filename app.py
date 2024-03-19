@@ -1,7 +1,32 @@
 # Flask app
-from flask import Flask, render_template, request, redirect, url_for
+from flask import (
+    Flask, g, render_template, redirect, url_for, request, flash,
+    session, current_app, send_from_directory
+)
+import hashlib
+import sqlite3
+import os
 
-app = Flask(__name__)
+from werkzeug.utils import secure_filename
+
+app = Flask(__name__) # startup
+
+# Configuration
+app.config['SECRET_KEY'] = "create-your-own"
+
+# Database:
+def get_db():
+    if 'db' not in g:
+        g.db = sqlite3.connect(
+            'database.sqlite',
+            #current_app.config['DATABASE'],
+        )
+        g.db.row_factory = sqlite3.Row
+    return g.db
+def close_db(e=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
 
 # Quiz data
 list_of_display = ["a", "b", "c", "d"]
@@ -11,6 +36,10 @@ current_index = 0
 current_side = "t"
 
 questions = 1
+
+@app.before_request
+def before_request():
+    g.logged_in = session.get('logged_in', False)
 
 @app.route('/')
 def home():
@@ -74,8 +103,87 @@ def handle_answer():
             list_of_display.pop(0)
             list_of_answers.pop(0)
             questions += 1
-
     return redirect(url_for('quiz'))
+
+### LOGIN
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Log in user"""
+
+    # If we receive form data try to log the user in
+    if request.method == 'POST':
+
+        # Connect to the database
+        db = get_db()
+
+        # Retrieve the users password from database (and check if user exist)
+        cur = db.execute("SELECT * FROM user WHERE username=?", (request.form['username'],))
+        user = cur.fetchone()
+        
+        # Check if a user was found
+        if user is None:
+            flash('User not found.')
+            return render_template('login.html')
+
+        # TODO: Check if the passwords match
+        print(user['password'])
+        # flash('Invalid password.', 'error')
+
+        # If everything is okay, log in the user 
+        # TODO: See the previoius TODOs
+        session.clear()
+        session['user_id'] = user['id']
+        flash('You were logged in.')
+
+        if user is not None:
+            session['logged_in'] = True
+            session['user_id'] = user['id']
+            flash('You were logged in.')
+            return redirect(url_for('home'))
+
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You were logged out.')
+    return redirect(url_for('home'))
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    """Registers a new user"""
+
+    # If we receive form data try to register the new user
+    if request.method == 'POST':
+
+        # TODO Username length limit:
+        if len((request.form["username"])) > 10:
+            error = "Your username is too long, please try again"
+
+        # TODO Check if username is available
+        # flash("Username '{}' already taken".format(request.form['username']), 'error')
+
+        # TODO Check if the two passwords match
+        # flash("Passwords do not match, try again.", 'error')
+
+        # TODO Maybe check if the password is a good one?
+        # flash("Password is too weak, try again.", 'error')
+
+        # If all is well create the user
+        # TODO See previous TODOs
+        hashed_password = hashlib.sha256(request.form['password1'].encode()).hexdigest()
+        db=get_db()
+        db.execute("INSERT INTO user (username, password) VALUES (?,?)",
+                   (request.form['username'], hashed_password))
+        db.commit()
+        flash("User '{}' registered, you can now log in.".format(request.form['username']), 'info')
+        
+        return redirect(url_for('login'))
+
+    # If we receive no data just show the registration form
+    else:
+        return render_template('register.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
