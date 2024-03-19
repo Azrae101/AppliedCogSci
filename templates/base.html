@@ -1,0 +1,52 @@
+<!doctype html>
+
+<head>
+    <title>TikTak - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<nav id="topnav">
+    <div id="topnav-center">
+        <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='logo.png') }}"></a>
+
+        <form class="search" method="post">
+            <input type="search" value="" placeholder="Search..." name="search">
+        </form>
+
+        <ul>
+            {% if g.user %}
+                <li><span>{{ g.user['username'] }}</span>
+            {% else %}
+                <li><a href="{{ url_for('register') }}">Register</a>
+                <li><a href="{{ url_for('login') }}">Log In</a>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<div id="body">
+    {% if g.user %}
+        <nav id="leftnav">
+            <ul>
+                <li><span>{{ g.user['username'] }}</span>
+                <li><a href="#">Following</a></li>
+                <li><a href="{{ url_for('logout') }}">Log Out</a>
+            </ul>
+        </nav>
+    {% endif %}
+
+    <section class="content">
+        {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+
+        {% block content %}{% endblock %}
+    </section>
+
+</div>
+</body>
+
+</html>
