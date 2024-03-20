@@ -45,6 +45,11 @@ def before_request():
 def home():
     return render_template('home.html')
 
+# Cardchase
+@app.route('/cardchase')
+def cardchase():
+    return render_template('home.html') # CHANGE!!!
+
 @app.route('/flashcards')
 def flashcards():
     global current_index
