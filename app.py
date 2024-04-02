@@ -54,7 +54,10 @@ questions_cardchase = [
 
 @app.route('/cardchase')
 def cardchase():
-    return render_template('cardchase.html')
+    # Select a random question from questions_cardchase
+    import random
+    selected_question = random.choice(questions_cardchase)
+    return render_template('cardchase.html', question=selected_question["question"], answer=selected_question["answer"])
 
 # Flashcards viewing
 @app.route('/flashcards')
