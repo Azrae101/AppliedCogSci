@@ -82,6 +82,8 @@
             <p id="question"></p>
             <p id="answer"></p>
         </div>
+        <!-- Point counter -->
+        <p id="pointCounter" style="font-size: 20px; margin-top: 20px;"></p>
     </div>
     <!-- Back to Home Button -->
     <button class="back-btn" onclick="location.href='/'">Back to Home</button>
@@ -89,14 +91,19 @@
     <!-- JavaScript code -->
     <script>
         // Define your questions directly in JavaScript
-        const questions = [
-            {"question": "Question 1", "answer": "Answer 1"},
-            {"question": "Question 2", "answer": "Answer 2"},
-            {"question": "Question 3", "answer": "Answer 3"},
-            {"question": "Question 4", "answer": "Answer 4"}
+        let questions = [
+            {"question": "Question 1", "answer": "1"},
+            {"question": "Question 2", "answer": "2"},
+            {"question": "Question 3", "answer": "3"},
+            {"question": "Question 4", "answer": "4"}
         ];
 
         let currentQuestionIndex = 0;
+
+        // Function to update the point counter
+        function updatePointCounter() {
+            document.getElementById('pointCounter').innerText = `Questions Answered: ${currentQuestionIndex}`;
+        }
 
         // Function to animate the game
         function animate() {
@@ -116,6 +123,8 @@
             if (movementSpeed > canvas.height - 20) {
                 movementSpeed = 2;
             }
+            // Update point counter
+            updatePointCounter();
             // Request the next frame for animation
             requestAnimationFrame(animate);
         }
@@ -123,11 +132,19 @@
         // Function to fetch the next question from the server and update the game
         function fetchNextQuestion() {
             currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                // Set the current question and update the game
-                updateQuestion();
-            } else {
-                alert("Congratulations! You've answered all questions.");
+            if (currentQuestionIndex >= questions.length) {
+                currentQuestionIndex = 0; // Reset index if all questions have been answered
+                shuffleQuestions(); // Shuffle questions when all have been answered
+            }
+            // Set the current question and update the game
+            updateQuestion();
+        }
+
+        // Function to shuffle the questions array
+        function shuffleQuestions() {
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
             }
         }
 
