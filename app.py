@@ -1,15 +1,16 @@
 # Flask app
 from flask import (
     Flask, g, render_template, redirect, url_for, request, flash,
-    session, current_app, send_from_directory
+    session, jsonify
 )
 import hashlib
 import sqlite3
 import os
+import re
+from flask_cors import CORS
 
-from werkzeug.utils import secure_filename
-
-app = Flask(__name__) # startup
+app = Flask(__name__)
+CORS(app)  
 
 # Configuration
 app.config['SECRET_KEY'] = "create-your-own"
@@ -17,10 +18,8 @@ app.config['SECRET_KEY'] = "create-your-own"
 # Database:
 def get_db():
     if 'db' not in g:
-        g.db = sqlite3.connect(
-            'database.sqlite',
-            #current_app.config['DATABASE'],
-        )
+        db_path = os.path.join('database', 'database.sqlite')
+        g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row
     return g.db
 def close_db(e=None):
@@ -46,10 +45,18 @@ def home():
     return render_template('home.html')
 
 # Cardchase
+questions_cardchase = [
+    {"question": "Question 1", "answer": "Answer 1"},
+    {"question": "Question 2", "answer": "Answer 2"},
+    {"question": "Question 3", "answer": "Answer 3"},
+    {"question": "Question 4", "answer": "Answer 4"},
+]
+
 @app.route('/cardchase')
 def cardchase():
-    return render_template('home.html') # CHANGE!!!
+    return render_template('cardchase.html')
 
+# Flashcards viewing
 @app.route('/flashcards')
 def flashcards():
     global current_index
@@ -136,7 +143,6 @@ def login():
         # flash('Invalid password.', 'error')
 
         # If everything is okay, log in the user 
-        # TODO: See the previoius TODOs
         session.clear()
         session['user_id'] = user['id']
         flash('You were logged in.')
@@ -161,22 +167,55 @@ def register():
 
     # If we receive form data try to register the new user
     if request.method == 'POST':
+        
+        # Connect to the database
+        db = get_db()
 
-        # TODO Username length limit:
+        # Username length limit:
         if len((request.form["username"])) > 10:
-            error = "Your username is too long, please try again"
+            flash("Your username is too long, please try again")
+            return render_template('register.html')
 
-        # TODO Check if username is available
-        # flash("Username '{}' already taken".format(request.form['username']), 'error')
+        # Check if username is available
+        cur = db.execute("SELECT * FROM user WHERE username=?", (request.form['username'],))
+        existing_user = cur.fetchone()
+        if existing_user:
+            flash("Username '{}' already taken".format(request.form['username']), 'error')
+            return render_template('register.html')
 
-        # TODO Check if the two passwords match
-        # flash("Passwords do not match, try again.", 'error')
+        # Check if the two passwords match
+        if request.form['password1'] != request.form['password2']:
+            flash("Passwords do not match, try again.", 'error')
+            return render_template('register.html')
 
-        # TODO Maybe check if the password is a good one?
-        # flash("Password is too weak, try again.", 'error')
+        # Strong password check (not implemented rn)
+        '''
+        def is_strong_password(password):
+            # Password must be at least 8 characters long
+            if len(password) < 8:
+                return False
+            # Password must contain at least one uppercase letter
+            if not re.search(r'[A-Z]', password):
+                return False
+            # Password must contain at least one lowercase letter
+            if not re.search(r'[a-z]', password):
+                return False
+            # Password must contain at least one digit
+            if not re.search(r'\d', password):
+                return False
+            # Password must contain at least one symbol
+            if not re.search(r'[^a-zA-Z0-9]', password):
+                return False
+            # If all conditions are met, the password is strong
+            return True
 
-        # If all is well create the user
-        # TODO See previous TODOs
+        # Check if the password is strong
+        if not is_strong_password(request.form['password1']):
+            flash("Password is too weak, try again.", 'error')
+            return render_template('register.html')
+        '''
+
+        # If all above is approved: create the user
         hashed_password = hashlib.sha256(request.form['password1'].encode()).hexdigest()
         db=get_db()
         db.execute("INSERT INTO user (username, password) VALUES (?,?)",
@@ -186,7 +225,7 @@ def register():
         
         return redirect(url_for('login'))
 
-    # If we receive no data just show the registration form
+    # If we receive no data: just show the registration form again
     else:
         return render_template('register.html')
 
