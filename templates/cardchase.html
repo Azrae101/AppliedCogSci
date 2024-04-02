@@ -10,26 +10,67 @@
             border: 5px solid blueviolet;
             width: 100%; 
             height: 100%; 
+            margin: 10px auto;
+            background-color: white; /* Set background color of the game canvas to white */
         }
         /* Centering the canvas */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: gainsboro; /* Set background color of the body to black */
+            margin: 0; /* Remove default margin */
+            height: 100vh; /* Make body take up the full viewport height */
         }
         #container {
             text-align: center;
+            color: white; /* Set text color to white */
         }
         /* Styling for the user input */
         #userInput {
             display: block;
-            margin: 10px auto; /* Center the input horizontally */
+            position: absolute; /* Position absolutely */
+            bottom: 10px; /* Align to the bottom */
+            left: calc(50% - 255px); /* Center horizontally */
+            width: 520px; /* Width same as canvas width */
+            margin: 0 auto; /* Center horizontally */
+            background-color: white; /* Set input background color to transparent */
+            color: black; /* Set input text color to white */
+            border: 5px solid blueviolet; /* Set input border color to white */
+            padding: 15px; /* Add some padding */
+            box-sizing: border-box; /* Include padding in width */
+        }
+        /* Styling for the title */
+        h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 36px;
+            color: blueviolet;
+            letter-spacing: 2px;
+            margin-top: 100px;
+        }
+        .back-btn {
+            position: absolute;
+            bottom: -50px; 
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <!-- Container for the current question and answer -->
     <div id="container">
+        <h1>Card Chase Game</h1>
         <!-- Canvas element where the game will be drawn -->
         <canvas id="gameCanvas" width="500" height="750"></canvas>
         <!-- Input field for user's answer -->
@@ -42,6 +83,8 @@
             <p id="answer"></p>
         </div>
     </div>
+    <!-- Back to Home Button -->
+    <button class="back-btn" onclick="location.href='/'">Back to Home</button>
 
     <!-- JavaScript code -->
     <script>
@@ -62,7 +105,7 @@
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             // Draw the current question on the canvas
-            ctx.font = '12px Arial';
+            ctx.font = '24px Arial';
             const questionText = questions[currentQuestionIndex].question;
             const textWidth = ctx.measureText(questionText).width;
             const x = (canvas.width - textWidth) / 2;
