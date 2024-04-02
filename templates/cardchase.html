@@ -99,10 +99,11 @@
         ];
 
         let currentQuestionIndex = 0;
+        let points = 0; // Initialize points variable
 
         // Function to update the point counter
         function updatePointCounter() {
-            document.getElementById('pointCounter').innerText = `Questions Answered: ${currentQuestionIndex}`;
+            document.getElementById('pointCounter').innerText = `Questions Answered Correctly: ${points}`;
         }
 
         // Function to animate the game
@@ -118,11 +119,30 @@
             const x = (canvas.width - textWidth) / 2;
             ctx.fillText(questionText, x, movementSpeed);
             // Increment the movement speed
-            movementSpeed += 1;
-            // Reset the movement speed if it exceeds the canvas height
+            movementSpeed += 5;
+            // Check if the text hits the bottom of the canvas
             if (movementSpeed > canvas.height - 20) {
-                movementSpeed = 2;
+                // Replace the question with "Game Over"
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.font = '36px Arial'; // Larger font size
+                ctx.fillStyle = 'red'; // Red color
+                const gameOverText = "Game Over";
+                const gameOverTextWidth = ctx.measureText(gameOverText).width;
+                const gameOverTextX = (canvas.width - gameOverTextWidth) / 2; // Center the text horizontally
+                ctx.fillText(gameOverText, gameOverTextX, canvas.height / 2);
+                // Display point counter
+                ctx.font = '20px Arial'; // Larger font size
+                ctx.fillStyle = 'black'; // black color
+                const pointCounter = `Questions Answered: ${points}`;
+                const pointCounterWidth = ctx.measureText(pointCounter).width;
+                const pointCounterX = (canvas.width - pointCounterWidth) / 2; // Center the text horizontally
+                ctx.fillText(pointCounter, pointCounterX, (canvas.height / 2) + 40); // Position under "Game Over" text
+                // Delete user input
+                document.getElementById('userInput').style.display = 'none';
+                return; // Stop the animation loop
             }
+            
+            document.getElementById('pointCounter').style.display = 'none';
             // Update point counter
             updatePointCounter();
             // Request the next frame for animation
@@ -131,6 +151,7 @@
 
         // Function to fetch the next question from the server and update the game
         function fetchNextQuestion() {
+            points++;
             currentQuestionIndex++;
             if (currentQuestionIndex >= questions.length) {
                 currentQuestionIndex = 0; // Reset index if all questions have been answered
@@ -138,6 +159,8 @@
             }
             // Set the current question and update the game
             updateQuestion();
+            // Reset movement speed for the new question
+            movementSpeed = 2;
         }
 
         // Function to shuffle the questions array
@@ -160,6 +183,7 @@
             const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
             // Check if the user's answer matches the current answer
             if (userAnswer === correctAnswer) {
+                
                 // Fetch the next question if the answer is correct
                 fetchNextQuestion();
             } else {
