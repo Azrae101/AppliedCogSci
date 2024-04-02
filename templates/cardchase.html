@@ -183,11 +183,8 @@
             const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
             // Check if the user's answer matches the current answer
             if (userAnswer === correctAnswer) {
-                
                 // Fetch the next question if the answer is correct
                 fetchNextQuestion();
-            } else {
-                alert("Incorrect answer. Try again.");
             }
             // Clear the input field
             document.getElementById('userInput').value = '';
