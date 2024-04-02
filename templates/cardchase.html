@@ -7,21 +7,40 @@
     <style>
         /* Setting the border of the canvas element */
         #gameCanvas {
-            border: 1px solid black;
+            border: 5px solid blueviolet;
+            width: 100%; 
+            height: 100%; 
+        }
+        /* Centering the canvas */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #container {
+            text-align: center;
+        }
+        /* Styling for the user input */
+        #userInput {
+            display: block;
+            margin: 10px auto; /* Center the input horizontally */
         }
     </style>
 </head>
 <body>
-    <!-- Canvas element where the game will be drawn -->
-    <canvas id="gameCanvas" width="300" height="500"></canvas>
-    <!-- Input field for user's answer -->
-    <input type="text" id="userInput" placeholder="Enter your answer...">
-    <!-- Submit button to submit the user's answer -->
-    <button id="submitButton">Submit</button>
     <!-- Container for the current question and answer -->
-    <div id="questionAnswerContainer">
-        <p id="question"></p>
-        <p id="answer"></p>
+    <div id="container">
+        <!-- Canvas element where the game will be drawn -->
+        <canvas id="gameCanvas" width="500" height="750"></canvas>
+        <!-- Input field for user's answer -->
+        <input type="text" id="userInput" placeholder="Enter your answer...">
+        <!-- Submit button to submit the user's answer (hidden) -->
+        <button id="submitButton" style="display: none;">Submit</button>
+        <!-- Container for the current question and answer -->
+        <div id="questionAnswerContainer">
+            <p id="question"></p>
+            <p id="answer"></p>
+        </div>
     </div>
 
     <!-- JavaScript code -->
@@ -44,11 +63,14 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             // Draw the current question on the canvas
             ctx.font = '12px Arial';
-            ctx.fillText(questions[currentQuestionIndex].question, 150, movementSpeed);
+            const questionText = questions[currentQuestionIndex].question;
+            const textWidth = ctx.measureText(questionText).width;
+            const x = (canvas.width - textWidth) / 2;
+            ctx.fillText(questionText, x, movementSpeed);
             // Increment the movement speed
             movementSpeed += 1;
             // Reset the movement speed if it exceeds the canvas height
-            if (movementSpeed > 480) {
+            if (movementSpeed > canvas.height - 20) {
                 movementSpeed = 2;
             }
             // Request the next frame for animation
@@ -94,8 +116,12 @@
         // Start the animation loop
         animate();
 
-        // Add an event listener to the submit button for submitting the user's answer
-        document.getElementById('submitButton').addEventListener('click', submitAnswer);
+        // Add an event listener to the user input for submitting the answer when Enter is pressed
+        document.getElementById('userInput').addEventListener('keypress', function(event) {
+            if (event.keyCode === 13) {
+                submitAnswer();
+            }
+        });
     </script>
 </body>
 </html>
