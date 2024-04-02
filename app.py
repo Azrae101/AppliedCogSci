@@ -44,20 +44,9 @@ def before_request():
 def home():
     return render_template('home.html')
 
-# Cardchase
-questions_cardchase = [
-    {"question": "Question 1", "answer": "Answer 1"},
-    {"question": "Question 2", "answer": "Answer 2"},
-    {"question": "Question 3", "answer": "Answer 3"},
-    {"question": "Question 4", "answer": "Answer 4"},
-]
-
 @app.route('/cardchase')
 def cardchase():
-    # Select a random question from questions_cardchase
-    import random
-    selected_question = random.choice(questions_cardchase)
-    return render_template('cardchase.html', question=selected_question["question"], answer=selected_question["answer"])
+    return render_template('cardchase.html')
 
 # Flashcards viewing
 @app.route('/flashcards')

@@ -23,99 +23,79 @@
         <p id="question"></p>
         <p id="answer"></p>
     </div>
-    <script>
-        // Get the question and answer from the rendered template
-        const question = "{{ question }}";
-        const answer = "{{ answer }}";
-        // Get the canvas and its context for drawing
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        // Get the input field, submit button, and question/answer container
-        const userInput = document.getElementById('userInput');
-        const submitButton = document.getElementById('submitButton');
-        const questionAnswerContainer = document.getElementById('questionAnswerContainer');
-        // Initialize the current question and movement speed
-        let currentQuestion = {};
-        let movementSpeed = 2;
 
-        // Function to draw text on the canvas
-        function drawText(text, x, y, fontSize) {
-            ctx.font = `${fontSize}px Arial`;
-            ctx.fillText(text, x, y);
-        }
+    <!-- JavaScript code -->
+    <script>
+        // Define your questions directly in JavaScript
+        const questions = [
+            {"question": "Question 1", "answer": "Answer 1"},
+            {"question": "Question 2", "answer": "Answer 2"},
+            {"question": "Question 3", "answer": "Answer 3"},
+            {"question": "Question 4", "answer": "Answer 4"}
+        ];
+
+        let currentQuestionIndex = 0;
 
         // Function to animate the game
         function animate() {
-            const answer = currentQuestion.answer;
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Draw the current answer on the canvas
-            drawText(answer, 150, movementSpeed, 12);
+            // Draw the current question on the canvas
+            ctx.font = '12px Arial';
+            ctx.fillText(questions[currentQuestionIndex].question, 150, movementSpeed);
             // Increment the movement speed
             movementSpeed += 1;
             // Reset the movement speed if it exceeds the canvas height
             if (movementSpeed > 480) {
                 movementSpeed = 2;
-                // Fetch the next question
-                fetchNextQuestion();
             }
             // Request the next frame for animation
             requestAnimationFrame(animate);
         }
 
-        // Function to fetch questions from the server
-        function fetchQuestions() {
-            return fetch('/cardchase')
-               .then(response => response.json())
-               .then(questions => {
-                    return questions;
-                });
-        }
-
-        // Function to update the current question and answer on the page
-        function updateQuestionAnswer() {
-            if (Object.keys(currentQuestion).length > 0) {
-                const question = currentQuestion.question;
-                const answer = currentQuestion.answer;
-                // Update the question and answer elements on the page
-                questionAnswerContainer.querySelector('#question').innerText = question;
-                questionAnswerContainer.querySelector('#answer').innerText = answer;
+        // Function to fetch the next question from the server and update the game
+        function fetchNextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                // Set the current question and update the game
+                updateQuestion();
+            } else {
+                alert("Congratulations! You've answered all questions.");
             }
         }
 
-        // Function to fetch the next question from the server and update the game
-        function fetchNextQuestion() {
-            fetchQuestions()
-                .then(questions => {
-                    if (questions.length > 0) {
-                        // Set the current question and update the game
-                        currentQuestion = questions.shift();
-                        updateQuestionAnswer();
-                        // Start the animation loop after fetching the question and answer
-                        animate();
-                    }
-                });
+        // Function to update the current question on the page
+        function updateQuestion() {
+            document.getElementById('question').innerText = questions[currentQuestionIndex].question;
+            document.getElementById('answer').innerText = questions[currentQuestionIndex].answer;
         }
 
         // Function to submit the user's answer
         function submitAnswer() {
-            const userAnswer = userInput.value.toLowerCase();
+            const userAnswer = document.getElementById('userInput').value.toLowerCase();
+            const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
             // Check if the user's answer matches the current answer
-            if (userAnswer === currentQuestion.answer.toLowerCase()) {
+            if (userAnswer === correctAnswer) {
                 // Fetch the next question if the answer is correct
                 fetchNextQuestion();
+            } else {
+                alert("Incorrect answer. Try again.");
             }
             // Clear the input field
-            userInput.value = '';
+            document.getElementById('userInput').value = '';
         }
 
         // Fetch the first question and start the game
-        fetchNextQuestion();
+        updateQuestion();
+        // Initialize the movement speed
+        let movementSpeed = 2;
         // Start the animation loop
         animate();
 
         // Add an event listener to the submit button for submitting the user's answer
-        submitButton.addEventListener('click', submitAnswer);
+        document.getElementById('submitButton').addEventListener('click', submitAnswer);
     </script>
 </body>
 </html>
