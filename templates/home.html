@@ -11,19 +11,22 @@
             margin: 0;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; 
             flex-direction: column;
         }
 
         .container {
-            border: 2px solid #ccc;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 0px;
             background-color: #f9f9f9;
+            width: 100%; 
+            box-sizing: border-box; 
         }
 
         .content {
-            text-align: center;
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-start; 
+            padding: 10px 10px; 
         }
 
         .button {
@@ -60,21 +63,46 @@
         .button.logout:hover {
             background-color: #0889ec48;
         }
+
+        .resized-img {
+            width: 100%; 
+            position: relative;
+            top: 0px; 
+        }
+
+        .logo {
+            margin-right: 10px; 
+        }
+
+        .search {
+            margin-right: auto;
+        }
+
+        .button-container {
+            margin-left: auto; 
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <div class="content">
-            <h1>Welcome to Cog-Cards!</h1>
-            <a href="{{ url_for('flashcards') }}" class="button">View Flashcards</a>
-            <a href="{{ url_for('quiz') }}" class="button">Take Quiz</a>
-            <a href="{{ url_for('cardchase') }}" class="button">Play CardChase</a>
-            {% if session.logged_in %}
-                <a href="/logout" class="button logout">Logout</a>
-            {% else %}
-                <a href="/login" class="button login">Login</a>
-            {% endif %}
+            <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='rsz_cogcards.png') }}"></a>
+            <form class="search" method="post">
+                <input type="search" value="" placeholder="Search..." name="search">
+            </form>
+            <div class="button-container">
+                <a href="{{ url_for('flashcards') }}" class="button">View Flashcards</a>
+                <a href="{{ url_for('quiz') }}" class="button">Take Quiz</a>
+                <a href="{{ url_for('cardchase') }}" class="button">Play CardChase</a>
+                {% if session.logged_in %}
+                    <a href="/logout" class="button logout">Logout</a>
+                {% else %}
+                    <a href="/login" class="button login">Login</a>
+                {% endif %}
+            </div>
         </div>
     </div>
+    <img src= "{{url_for('static', filename='home.png')}}" class="resized-img">
 </body>
 </html>

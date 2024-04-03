@@ -1,5 +1,45 @@
 <!doctype html>
 
+<style>
+    #topnav-center {
+        display: flex;
+        justify-content: flex-end; /* Align items to the right */
+        align-items: center; /* Align items vertically */
+    }
+    .back-btn {
+        display: block; /* Make it a block element */
+        margin-top: 0px; /* Add some top margin */
+        width: 15%; /* Make it take full width */
+        padding: 10px 10px; /* Adjust padding */
+        background-color: #007bff;
+        margin-right: auto;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        height: 40px; /* Set the height */
+    }
+
+    .back-btn:hover, #topnav-center ul li a:hover {
+        background-color: #0056b3;
+    }
+
+    #topnav-center ul {
+        margin-right: 20px; /* Increase the distance between buttons */
+    }
+
+    #topnav-center ul li {
+        margin-right: 10px; /* Increase the distance between list items */
+    }
+
+    #topnav-center ul li a {
+        height: 20px
+    }
+
+
+</style>
+
 <head>
     <title>CogCards - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -10,12 +50,8 @@
 
 <nav id="topnav">
     <div id="topnav-center">
-        <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='rsz_cogcards.png') }}"></a>
-
-        <form class="search" method="post">
-            <input type="search" value="" placeholder="Search..." name="search">
-        </form>
-
+             <!-- Back to Home Button -->
+      <button class="back-btn" onclick="location.href='/'">Back to Home</button>
         <ul>
             {% if g.user %}
                 <li><span>{{ g.user['username'] }}</span>
@@ -48,5 +84,4 @@
 
 </div>
 </body>
-
 </html>
