@@ -109,8 +109,17 @@ def handle_answer():
             questions += 1
     return redirect(url_for('quiz'))
 
-### LOGIN
+### Search
+@app.route('/search', methods=['POST'])
+def search_results():
+    search_query = request.form['search']
+    # Predefined search results
+    predefined_results = ['login', 'register', 'flashcards', 'quiz', 'cardchase']
+    # Check if the search query matches any predefined result
+    results = [result for result in predefined_results if search_query.lower() in result]
+    return render_template('search_results.html', search_query=search_query, results=results)
 
+### LOGIN
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Log in user"""
