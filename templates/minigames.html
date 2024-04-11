@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CogCards - Home</title>
+    <title>Minigames</title>
     <style>
         body {
             position: relative;
@@ -13,6 +13,14 @@
             align-items: center;
             justify-content: flex-start; 
             flex-direction: column;
+        }
+
+        .title {
+        margin-top: 20px; /* Adjust margin as needed */
+        }
+
+        .cardchase {
+            margin-top: 20px; /* Adjust margin as needed */
         }
 
         .container {
@@ -103,6 +111,7 @@
             </div>
         </div>
     </div>
-    <img src= "{{url_for('static', filename='home.png')}}" class="resized-img">
+    <h1 class="title">Minigames</h1> 
+    <a href="{{ url_for('cardchase') }}" class="button">CardChase</a>
 </body>
 </html>

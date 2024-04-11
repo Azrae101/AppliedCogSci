@@ -48,6 +48,10 @@ def home():
 def cardchase():
     return render_template('cardchase.html')
 
+@app.route('/minigames')
+def minigames():
+    return render_template('minigames.html')
+
 # Flashcards viewing
 @app.route('/flashcards')
 def flashcards():
