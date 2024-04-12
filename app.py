@@ -52,6 +52,10 @@ def cardchase():
 def minigames():
     return render_template('minigames.html')
 
+@app.route('/tetris')
+def tetris():
+    return render_template('index.html')
+
 # Flashcards viewing
 @app.route('/flashcards')
 def flashcards():

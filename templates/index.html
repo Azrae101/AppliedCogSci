@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Tetris</title>
+    <link href="tetris/tetris.css" rel="stylesheet" />
+    <script src="tetris/tetris.js" type="module"></script>
+</head>
+<div id="tetris" class="row">
+    <div class="game" tabindex="0">
+        <h1 id="gameMessage" class="game-message hidden">Game Over</h1>
+        <div id="grid" class="grid">
+        </div>
+    </div>
+    <aside class="flex sidebar">
+        <article class="points">
+            <h1>Lines</h1>
+            <p id="lines">0</p>
+        </article>
+        <article  class="preview">
+            <h1>Next</h1>
+            <div id="preview">
+            </div>
+        </article>
+        <nav>
+            <button id="restart">RESTART</button>
+            <button id="pause">PAUSE</button>
+        </nav>
+    </aside>
+</div>
