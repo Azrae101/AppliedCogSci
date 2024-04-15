@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TermTime Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        #termInput {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        #timer {
+            font-size: 24px;
+            color: #f00;
+        }
+        #score {
+            font-size: 24px;
+            color: #0c0;
+        }
+        #elementsLeft {
+            font-size: 16px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h1>TermTime</h1>
+    <p>Type as many terms as you can before time runs out!</p>
+    <input type="text" id="termInput" placeholder="Type here...">
+    <p id="elementsLeft"></p>
+
+    <p>Time left: <span id="timer">10</span> seconds</p>
+    <p>Score: <span id="score">0</span></p>
+
+    <script>
+        let terms = [0, 1, 2, 3, 4, 5];
+        let score = 0;
+        let timeLeft = 10;
+        let timerInterval;
+
+        function startTimer() {
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            document.getElementById("timer").textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById("termInput").disabled = true;
+                document.getElementById("termInput").placeholder = "Time's up!";
+                document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
+                document.getElementById("elementsLeft").textContent = "Elements left: " + terms.join(", ");
+            } else {
+                document.getElementById("elementsLeft").textContent = "Number of elements: " + terms.length;
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                checkTerm();
+            }
+        }
+
+        function checkTerm() {
+            let term = document.getElementById("termInput").value.trim().toLowerCase();
+            if (term === "q" || term === "quit") {
+                clearInterval(timerInterval);
+                document.getElementById("timer").textContent = "0";
+                document.getElementById("termInput").disabled = true;
+                document.getElementById("termInput").placeholder = "Time's up!";
+                document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
+                if (terms.length > 0) {
+                    document.getElementById("elementsLeft").textContent = "Elements left: " + terms.length;
+                }
+                return;
+            }
+            let termAsNumber = parseInt(term);
+            if (!isNaN(termAsNumber) && terms.includes(termAsNumber)) {
+                score++;
+                document.getElementById("score").textContent = score;
+                terms.splice(terms.indexOf(termAsNumber), 1);
+                if (terms.length === 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById("termInput").disabled = true;
+                    document.getElementById("termInput").placeholder = "You won!";
+                    document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
+                }
+            }
+            document.getElementById("termInput").value = "";
+            document.getElementById("elementsLeft").textContent = "Number of elements: " + terms.length;
+        }
+
+        document.getElementById("termInput").addEventListener("keypress", handleKeyPress);
+
+        startTimer();
+    </script>
+</body>
+</html>

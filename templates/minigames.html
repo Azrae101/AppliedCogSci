@@ -16,10 +16,6 @@
         }
 
         .title {
-        margin-top: 20px; /* Adjust margin as needed */
-        }
-
-        .cardchase {
             margin-top: 20px; /* Adjust margin as needed */
         }
 
@@ -72,22 +68,22 @@
             background-color: #0889ec48;
         }
 
-        .resized-img {
-            width: 100%; 
-            position: relative;
-            top: 0px; 
+        .minigame-container {
+            display: flex;
+            align-items: center;
         }
 
-        .logo {
-            margin-right: 10px; 
+        .minigame {
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
-        .search {
-            margin-right: auto;
-        }
-
-        .button-container {
-            margin-left: auto; 
+        .minigame img {
+            height: 500px; /* Set the height as needed */
+            width: auto; /* Maintain aspect ratio */
         }
 
     </style>
@@ -112,7 +108,18 @@
         </div>
     </div>
     <h1 class="title">Minigames</h1> 
-    <a href="{{ url_for('cardchase') }}" class="button">CardChase</a>
-    <a href="{{ url_for('tetris') }}" class="button">Tetris</a>
+    <div class="minigame-container">
+        <div class="minigame">
+            <img src="{{ url_for('static', filename='FlashFall.gif') }}" class="resized-img">
+            <a href="{{ url_for('cardchase') }}" class="button">Play CardChase</a>
+        </div>
+        <div class="minigame">
+            <img src="{{ url_for('static', filename='tetris.png') }}" class="resized-img">
+            <a href="{{ url_for('tetris') }}" class="button">Play Tetris</a>
+        </div>
+        <div class="minigame">
+            <a href="{{ url_for('termtime') }}" class="button">Play TermTime</a>
+        </div>
+    </div>
 </body>
 </html>
