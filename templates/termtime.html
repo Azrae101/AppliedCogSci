@@ -31,19 +31,21 @@
         }
     </style>
 </head>
+    <!-- Back to Home Button -->
+    <button class="back-btn" onclick="location.href='/'">Back to Home</button>
 <body>
     <h1>TermTime</h1>
     <p>Type as many terms as you can before time runs out!</p>
     <input type="text" id="termInput" placeholder="Type here...">
     <p id="elementsLeft"></p>
 
-    <p>Time left: <span id="timer">20</span> seconds</p>
+    <p>Time left: <span id="timer">60</span> seconds</p>
     <p>Score: <span id="score">0</span></p>
 
     <script>
         let terms = [0, 1, 2, 3, 4, 5];
         let score = 0;
-        let timeLeft = 20;
+        let timeLeft = 60;
         let timerInterval;
 
         function startTimer() {
