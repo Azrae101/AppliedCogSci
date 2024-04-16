@@ -54,7 +54,7 @@ def cardchase():
 
 @app.route('/tetris')
 def tetris():
-    return render_template('index.html')
+    return render_template('tetris.html')
 
 @app.route('/termtime')
 def termtime():
