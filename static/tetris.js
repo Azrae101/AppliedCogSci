@@ -287,6 +287,7 @@ class Tetris {
     requestAnimationFrame(() => this.render());
   }
 
+  
   tick() {
     if (!this.isPaused) {
       if (this.gameOver) {
