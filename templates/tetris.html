@@ -27,7 +27,6 @@
     flex: 1;
     max-width: 1em;
     height: 1em;
-    border: 1px solid rgba(255, 254, 254, 0.3);
     background-color: #000000;
   }
   
@@ -66,14 +65,14 @@
   .game {
     margin-top: 1em;
     margin-bottom: 5em;
-    position: center;
     background: #000000; 
+    position: relative;
 }
 
   .game-message {
     top: 0;
     margin-top: 0;
-    background: darkgreen;
+    background: rgb(199, 10, 10);
     color: white;
     font-family: Courier;
     text-align: center;
@@ -94,7 +93,9 @@
     display: inline-block;
     padding: 10px 20px;
     margin: 10px;
+    bottom: -10px;
     background-color: #ff2200;
+    position: absolute;
     color: #fff;
     text-decoration: none;
     border: none;
@@ -109,7 +110,7 @@
 
   .back-btn {
     position: absolute;
-    bottom: -50px; /* Adjust as needed */
+    bottom: -50px; 
     left: 50%;
     transform: translateX(-50%);
     padding: 10px 20px;
@@ -131,7 +132,7 @@
     align-items: center;
     }
     </style>
-    <script src="static/tetris.js" type="module"></script>
+    <script src="static/tetricards.js" type="module"></script>
 </head>
 <h1>TetriCards</h1>
 <div class="row justify-center align-center">
@@ -141,15 +142,14 @@
     </div>
     <aside class="flex sidebar">
         <article class="points">
-            <p id="lines"></p>
+            <p id="lines"></p>  <!-- TODO: Do not display "0" -->
         </article>
         <article class="preview">
             <div id="preview"></div>
         </article>
         <nav>
-            <button class="button" id="restart">Restart</button>
-            <button class="button" id="pause">Pause</button>
             <button class="back-btn" onclick="location.href='/minigames'">Back to minigames</button>
+            <button class="button" onclick="location.href='/tetris'">Restart</button>
         </nav>
     </aside>
 </div>
