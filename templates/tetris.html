@@ -59,15 +59,17 @@
   }
   
   .sidebar > * {
-    margin-bottom: 2em;
+    margin-bottom: 50em;
   }
   
   .game {
-    margin-top: 1em;
-    margin-bottom: 5em;
-    background: #000000; 
+    margin: 0 auto; /* This centers the game horizontally */
+    background: #000000;
     position: relative;
-}
+    display: flex; /* Enable flexbox layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+  }
 
   .game-message {
     top: 0;
@@ -131,25 +133,50 @@
     justify-content: center;
     align-items: center;
     }
+
+    h1 {
+        text-align: center; /* Center the text horizontally */
+    }
+    
+    .user-input-container {
+    width: 50em; 
+    height: 5em; 
+    position: relative; 
+    }
+
+    #userInput {
+        width: 100%; /* Make the text field fill the entire width of its container */
+        height: 100%; /* Make the text field fill the entire height of its container */
+        font-size: 16px; /* Adjust font size as needed */
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        padding: 10px; /* Add padding for better appearance */
+    }
+
     </style>
-    <script src="static/tetricards.js" type="module"></script>
+    <script src="static/tetrilol.js" type="module"></script>
 </head>
+<body>
 <h1>TetriCards</h1>
+<article class="points">
+  <p id="lines"></p>
+</article>
 <div class="row justify-center align-center">
-    <div class="game" tabindex="0">
-        <h1 id="gameMessage" class="game-message hidden">Game Over</h1>
-        <div id="grid" class="grid"></div>
+    <div class="game-container">
+        <div class="game" tabindex="0">
+            <h1 id="gameMessage" class="game-message hidden">Game Over</h1>
+            <div id="grid" class="grid"></div>
+        </div>
+        <div class="user-input-container">
+            <input type="text" id="userInput" placeholder="Type here...">
+        </div>
     </div>
-    <aside class="flex sidebar">
-        <article class="points">
-            <p id="lines"></p>  <!-- TODO: Do not display "0" -->
-        </article>
-        <article class="preview">
-            <div id="preview"></div>
-        </article>
-        <nav>
-            <button class="back-btn" onclick="location.href='/minigames'">Back to minigames</button>
-            <button class="button" onclick="location.href='/tetris'">Restart</button>
-        </nav>
-    </aside>
+    <button class="button" onclick="location.href='/tetris'">Restart</button>
+    <article class="preview">
+        <div id="preview"></div>
+    </article>
+    <nav>
+        <button class="back-btn" onclick="location.href='/minigames'">Back to minigames</button>
+    </nav>
 </div>
+</body>
+</html>

@@ -117,33 +117,54 @@ class Grid {
   
   class HTMLGrid {
     constructor(grid, sel) {
-      this.grid = grid;
-      this.el = document.querySelector(sel);
-      this.setupBoard();
+        this.grid = grid;
+        this.el = document.querySelector(sel);
+        this.setupBoard();
     }
+
     setupBoard() {
-      this.grid.getBoardWithActiveShape().forEach((row) => {
-        const rowDiv = document.createElement("div");
-        rowDiv.className = "row";
-        row.forEach(() => {
-          const squareDiv = document.createElement("div");
-          squareDiv.className = "square";
-          rowDiv.appendChild(squareDiv);
+        this.grid.getBoardWithActiveShape().forEach((row) => {
+            const rowDiv = document.createElement("div");
+            rowDiv.className = "row";
+            row.forEach((square) => {
+                const squareDiv = document.createElement("div");
+                squareDiv.className = "square";
+                if (square) {
+                    squareDiv.style.backgroundColor = square.color || "";
+                    squareDiv.style.border = "1px solid transparent"; // Initially, set border to transparent
+                    if (square.highlighted) {
+                        squareDiv.style.border = "1px solid black"; // Add border when highlighted
+                    }
+                }
+                rowDiv.appendChild(squareDiv);
+            });
+            this.el.appendChild(rowDiv);
         });
-        this.el.appendChild(rowDiv);
-      });
     }
-  
+
     render() {
-      this.grid.getBoardWithActiveShape().forEach((row, i) => {
-        row.forEach((square, j) => {
-          const squareDiv = this.el.children[i].children[j];
-          squareDiv.style.backgroundColor = square.color || "";
-        });
-      });
+        const grid = this.grid.getBoardWithActiveShape();
+        for (let i = 0; i < grid.length; i++) {
+            const row = grid[i];
+            for (let j = 0; j < row.length; j++) {
+                const square = row[j];
+                const squareDiv = this.el.children[i].children[j];
+                if (square) {
+                    squareDiv.style.backgroundColor = square.color || "";
+                    squareDiv.style.border = "1px solid transparent"; // Initially, set border to transparent
+                    if (square.highlighted) {
+                        squareDiv.style.border = "1px solid black"; // Add border when highlighted
+                    }
+                } else {
+                    squareDiv.style.backgroundColor = "";
+                    squareDiv.style.border = ""; // Remove border if no shape
+                }
+            }
+        }
     }
-  }
-  
+}
+
+
   class Shape {
     constructor(definition, color) {
       this.x = 0;
@@ -213,13 +234,13 @@ class Grid {
     }
   
     static random() {
-      const randomColor = () => Math.ceil(Math.random() * 255);
+      const colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"];
       const shapes = ["rect3x2", "rect4x2", "rect5x2", "square"];
       const shape = shapes[Math.floor(Math.random() * shapes.length)];
-      const color = `rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`;
+      const color = colors[Math.floor(Math.random() * colors.length)];
       return this[shape](color);
     }
-  }  
+  }
   
   class Tetris {
     constructor() {
@@ -235,8 +256,16 @@ class Grid {
       this.addPiece();
   
       this.tick();
+
+        document.getElementById("userInput").addEventListener("keydown", function(event) {
+          if (event.key === "Enter") {
+              event.preventDefault(); // Prevent the default Enter key behavior (e.g., submitting a form)
+              this.value = ""; // Reset the input field value
+          }
+      });
+
     }
-  
+
     restart() {
       this.isPaused = false;
       this.lines = 0;
@@ -297,6 +326,6 @@ class Grid {
       }
     }
   }
-  
-  const game = new Tetris();
+
+  const game = new Tetris();  
   
