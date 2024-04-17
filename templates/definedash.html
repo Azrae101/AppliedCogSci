@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TermTime Game</title>
+    <title>Definition Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,7 +28,7 @@
         h1 {
             color: #333;
         }
-        #termInput {
+        #definitionInput {
             padding: 10px;
             font-size: 16px;
             margin-bottom: 20px;
@@ -41,7 +41,7 @@
             font-size: 24px;
             color: #0c0;
         }
-        #elementsLeft {
+        #termsLeft {
             font-size: 16px;
             color: #999;
         }
@@ -68,16 +68,19 @@
     <button class="back-btn" onclick="location.href='/minigames'">Back to minigames</button>
 <body>
     <div class="container">
-    <h1>TermTime</h1>
-    <p>Type as many terms as you can before time runs out!</p>
-    <input type="text" id="termInput" placeholder="Type here...">
-    <p id="elementsLeft"></p>
+    <h1>Definition Game</h1>
+    <p>Define the term as precisely as you can before time runs out!</p>
+    <p id="currentTerm"></p>
+    <input type="text" id="definitionInput" placeholder="Define here...">
+    <p id="termsLeft"></p>
 
     <p>Time left: <span id="timer">60</span> seconds</p>
     <p>Score: <span id="score">0</span></p>
     </div>
     <script>
-        let terms = [0, 1, 2, 3, 4, 5];
+        let answers= ["this is an example", "they are important", "the mitochondria is the powerhouse of the cell"];
+        let terms= ["Example", "Banana", "Mitochondria"];
+
         let score = 0;
         let timeLeft = 60;
         let timerInterval;
@@ -91,51 +94,64 @@
             document.getElementById("timer").textContent = timeLeft;
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                document.getElementById("termInput").disabled = true;
-                document.getElementById("termInput").placeholder = "Time's up!";
-                document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
-                document.getElementById("elementsLeft").textContent = "Elements left: " + terms.join(", ");
-            } else {
-                document.getElementById("elementsLeft").textContent = "Number of elements: " + terms.length;
+                document.getElementById("definitionInput").disabled = true;
+                document.getElementById("definitionInput").placeholder = "Time's up!";
+                document.getElementById("definitionInput").removeEventListener("keypress", handleKeyPress);
+                document.getElementById("termsLeft").textContent = "Terms left: " + terms.join(", ");
             }
         }
 
         function handleKeyPress(event) {
             if (event.key === "Enter") {
-                checkTerm();
+                checkDefinition();
             }
         }
 
-        function checkTerm() {
-            let term = document.getElementById("termInput").value.trim().toLowerCase();
-            if (term === "q" || term === "quit") {
+        function checkDefinition() {
+            let definition = document.getElementById("definitionInput").value.trim().toLowerCase();
+            if (definition === "q" || definition === "quit") {
                 clearInterval(timerInterval);
                 document.getElementById("timer").textContent = "0";
-                document.getElementById("termInput").disabled = true;
-                document.getElementById("termInput").placeholder = "Time's up!";
-                document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
+                document.getElementById("definitionInput").disabled = true;
+                document.getElementById("definitionInput").placeholder = "Time's up!";
+                document.getElementById("definitionInput").removeEventListener("keypress", handleKeyPress);
                 if (terms.length > 0) {
-                    document.getElementById("elementsLeft").textContent = "Elements left: " + terms.length;
+                    document.getElementById("termsLeft").textContent = "Terms left: " + terms.length;
                 }
                 return;
             }
-            let termAsNumber = parseInt(term);
-            if (!isNaN(termAsNumber) && terms.includes(termAsNumber)) {
-                score++;
-                document.getElementById("score").textContent = score;
-                terms.splice(terms.indexOf(termAsNumber), 1);
-                if (terms.length === 0) {
-                    clearInterval(timerInterval);
-                    document.getElementById("termInput").disabled = true;
-                    document.getElementById("termInput").placeholder = "You won!";
-                    document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
+
+            let definitionWords = definition.split(" ");
+            let currentAnswer = answers[0].toLowerCase();
+            let matches = 0;
+
+            for (let word of definitionWords) {
+                if (currentAnswer.includes(word)) {
+                    matches++;
                 }
             }
-            document.getElementById("termInput").value = "";
-            document.getElementById("elementsLeft").textContent = "Number of elements: " + terms.length;
+
+            if (matches >= 2) {
+                score++;
+                document.getElementById("score").textContent = score;
+                terms.shift();
+                answers.shift();
+                if (terms.length > 0) {
+                    document.getElementById("currentTerm").textContent = terms[0];
+                    document.getElementById("termsLeft").textContent = "Number of terms: " + terms.length;
+                } else {
+                    clearInterval(timerInterval);
+                    document.getElementById("definitionInput").disabled = true;
+                    document.getElementById("definitionInput").placeholder = "You won!";
+                    document.getElementById("definitionInput").removeEventListener("keypress", handleKeyPress);
+                }
+            }
+            document.getElementById("definitionInput").value = "";
         }
 
-        document.getElementById("termInput").addEventListener("keypress", handleKeyPress);
+        document.getElementById("currentTerm").textContent = terms[0];
+        document.getElementById("termsLeft").textContent = "Number of terms: " + terms.length;
+        document.getElementById("definitionInput").addEventListener("keypress", handleKeyPress);
 
         startTimer();
     </script>

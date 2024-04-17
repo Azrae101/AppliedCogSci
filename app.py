@@ -60,6 +60,10 @@ def tetris():
 def termtime():
     return render_template('termtime.html')
 
+@app.route('/definedash')
+def definedash():
+    return render_template('definedash.html')
+
 # Flashcards viewing
 @app.route('/flashcards')
 def flashcards():
