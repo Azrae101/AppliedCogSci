@@ -44,9 +44,21 @@ def before_request():
 def home():
     return render_template('home.html')
 
+@app.route('/minigames')
+def minigames():
+    return render_template('minigames.html')
+
 @app.route('/cardchase')
 def cardchase():
     return render_template('cardchase.html')
+
+@app.route('/tetris')
+def tetris():
+    return render_template('tetris.html')
+
+@app.route('/termtime')
+def termtime():
+    return render_template('termtime.html')
 
 # Flashcards viewing
 @app.route('/flashcards')
