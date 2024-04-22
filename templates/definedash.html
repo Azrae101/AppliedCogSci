@@ -45,18 +45,23 @@
             font-size: 16px;
             color: #999;
         }
+        #realAnswer {
+            font-size: 16px;
+            color: #999;
+            margin-top: 10px;
+        }
         .back-btn {
-        position: absolute;
-        bottom: 10px; 
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
+            position: absolute;
+            bottom: 10px; 
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .back-btn:hover {
@@ -64,22 +69,24 @@
         }
     </style>
 </head>
-    <!-- Back to Home Button -->
-    <button class="back-btn" onclick="location.href='/minigames'">Back to minigames</button>
+<!-- Back to Home Button -->
+<button class="back-btn" onclick="location.href='/minigames'">Back to minigames</button>
 <body>
     <div class="container">
     <h1>DefineDash</h1>
     <p>Define the term as precisely as you can before time runs out!</p>
     <p id="currentTerm"></p>
     <input type="text" id="definitionInput" placeholder="Define here...">
+    <div id="realAnswer"></div> <!-- Added div to display real answer -->
     <p id="termsLeft"></p>
 
     <p>Time left: <span id="timer">60</span> seconds</p>
     <p>Score: <span id="score">0</span></p>
+    <button id="continueBtn" style="display: none;" onclick="nextTerm()">Continue</button> <!-- Added continue button -->
     </div>
     <script>
-        let answers= ["this is an example", "they are important", "the mitochondria is the powerhouse of the cell"];
-        let terms= ["Example", "Banana", "Mitochondria"];
+        let answers = ["this is an example", "they are important", "the mitochondria is the powerhouse of the cell"];
+        let terms = ["Example", "Banana", "Mitochondria"];
 
         let score = 0;
         let timeLeft = 60;
@@ -98,6 +105,7 @@
                 document.getElementById("definitionInput").placeholder = "Time's up!";
                 document.getElementById("definitionInput").removeEventListener("keypress", handleKeyPress);
                 document.getElementById("termsLeft").textContent = "Terms left: " + terms.join(", ");
+                document.getElementById("continueBtn").style.display = "inline"; // Show continue button
             }
         }
 
@@ -118,6 +126,7 @@
                 if (terms.length > 0) {
                     document.getElementById("termsLeft").textContent = "Terms left: " + terms.length;
                 }
+                document.getElementById("continueBtn").style.display = "inline"; // Show continue button
                 return;
             }
 
@@ -134,19 +143,31 @@
             if (matches >= 2) {
                 score++;
                 document.getElementById("score").textContent = score;
-                terms.shift();
-                answers.shift();
-                if (terms.length > 0) {
-                    document.getElementById("currentTerm").textContent = terms[0];
-                    document.getElementById("termsLeft").textContent = "Number of terms: " + terms.length;
-                } else {
-                    clearInterval(timerInterval);
-                    document.getElementById("definitionInput").disabled = true;
-                    document.getElementById("definitionInput").placeholder = "You won!";
-                    document.getElementById("definitionInput").removeEventListener("keypress", handleKeyPress);
-                }
+                clearInterval(timerInterval); // Stop the timer
+                document.getElementById("realAnswer").textContent = "Correct answer: " + answers[0]; // Display real answer
+                document.getElementById("continueBtn").style.display = "inline"; // Show continue button
+                return; // Do not reset input field
             }
             document.getElementById("definitionInput").value = "";
+        }
+
+        function nextTerm() {
+            terms.shift();
+            answers.shift();
+            document.getElementById("realAnswer").textContent = ""; // Clear real answer
+            document.getElementById("definitionInput").value = ""; // Clear input field
+            document.getElementById("continueBtn").style.display = "none"; // Hide continue button
+            timeLeft = 60; // Reset the time
+            startTimer(); // Restart timer
+            if (terms.length > 0) {
+                document.getElementById("currentTerm").textContent = terms[0];
+                document.getElementById("termsLeft").textContent = "Number of terms: " + terms.length;
+            } else {
+                clearInterval(timerInterval);
+                document.getElementById("definitionInput").disabled = true;
+                document.getElementById("definitionInput").placeholder = "You won!";
+                document.getElementById("definitionInput").removeEventListener("keypress", handleKeyPress);
+            }
         }
 
         document.getElementById("currentTerm").textContent = terms[0];
