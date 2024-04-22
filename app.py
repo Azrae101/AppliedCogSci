@@ -44,6 +44,10 @@ def before_request():
 def home():
     return render_template('home.html')
 
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 @app.route('/minigames')
 def minigames():
     return render_template('minigames.html')

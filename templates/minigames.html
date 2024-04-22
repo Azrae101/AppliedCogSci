@@ -34,7 +34,42 @@
         }
 
         .button {
-            display: none; /* Hide the buttons by default */
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* styles login/logout button */
+        .button.login {
+            background-color: red;
+        }
+
+        .button.login:hover {
+            background-color: #ec5008;
+        }
+
+        /* styles logout button */
+        .button.logout {
+            background-color: rgba(0, 145, 255, 0.272);
+        }
+
+        .button.logout:hover {
+            background-color: #0889ec48;
+        }
+
+        .button-container {
+            margin-left: auto;
         }
 
         .minigame-container {
@@ -68,7 +103,6 @@
         .minigame span {
             margin-top: 10px; /* Adjust margin */
         }
-
     </style>
 </head>
 <body>
@@ -105,19 +139,19 @@
     <div class="minigame-container">
         <div class="minigame">
             <a href="{{ url_for('cardchase') }}"><img src="{{ url_for('static', filename='FlashFall.gif') }}" class="resized-img"></a>
-            <span>Play CardChase</span>
+            <span>CardChase</span>
         </div>
         <div class="minigame">
             <a href="{{ url_for('tetris') }}"><img src="{{ url_for('static', filename='tetris.png') }}" class="resized-img"></a>
-            <span>Play Tetris</span>
+            <span>Tetris</span>
         </div>
         <div class="minigame">
             <a href="{{ url_for('termtime') }}"><img src="{{ url_for('static', filename='TermTime.gif') }}" class="resized-img"></a>
-            <span>Play TermTime</span>
+            <span>TermTime</span>
         </div>
         <div class="minigame">
             <a href="{{ url_for('definedash') }}"><img src="{{ url_for('static', filename='definedash.gif') }}" class="resized-img"></a>
-            <span>Play DefineDash</span>
+            <span>DefineDash</span>
         </div>
     </div>
 </body>
