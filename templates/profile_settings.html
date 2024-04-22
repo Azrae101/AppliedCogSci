@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings</title>
+    <style>
+        .containerlol {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .profile-settingslol {
+            text-align: center;
+            max-width: 800px;
+            width: 500px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .profile-settingslol label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .profile-settingslol input[type="text"],
+        .profile-settingslol input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        .profile-settingslol input[type="file"] {
+            margin-bottom: 15px;
+        }
+        .profile-settingslol input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .profile-settingslol input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    {% include "navbar.html" %}
+    <h1>Profile Settings</h1>
+    <div class="containerlol">
+        <div class="profile-settingslol">
+            <form action="/profile/settings" method="post">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br><br>
+                
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}"><br><br>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}"><br><br>
+                
+                <label for="account_name">Account Name:</label>
+                <input type="text" id="account_name" name="account_name" value="{{ user.account_name }}"><br><br>
+                
+                <input type="submit" value="Save Changes">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

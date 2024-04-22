@@ -9,19 +9,41 @@ import os
 import re
 from flask_cors import CORS
 
+# Alter the user table to add the first_name column
+
+
+
 app = Flask(__name__)
 CORS(app)  
 
 # Configuration
 app.config['SECRET_KEY'] = "create-your-own"
 
-# Database:
+# Database setup
 def get_db():
     if 'db' not in g:
         db_path = os.path.join('database', 'database.sqlite')
         g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row
+        # Add the column if it doesn't exist
+        cursor = g.db.cursor()
+        cursor.execute("PRAGMA table_info(user)")
+        columns = cursor.fetchall()
+        column_names = [column[1] for column in columns]
+        if 'first_name' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN first_name TEXT")
+            g.db.commit()
+        if 'last_name' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN last_name TEXT")
+            g.db.commit()
+        if 'email' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN email TEXT")
+            g.db.commit()
+        if 'account_name' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN account_name TEXT")
+            g.db.commit()
     return g.db
+
 def close_db(e=None):
     db = g.pop('db', None)
     if db is not None:
@@ -43,10 +65,6 @@ def before_request():
 @app.route('/')
 def home():
     return render_template('home.html')
-
-@app.route('/profile')
-def profile():
-    return render_template('profile.html')
 
 @app.route('/minigames')
 def minigames():
@@ -138,6 +156,43 @@ def search_results():
     # Check if the search query matches any predefined result
     results = [result for result in predefined_results if search_query.lower() in result]
     return render_template('search_results.html', search_query=search_query, results=results)
+
+### Profile
+@app.route('/profile/settings', methods=['GET', 'POST'])
+def profile_settings():
+    """Update user profile settings"""
+    if request.method == 'POST':
+        # Connect to the database
+        db = get_db()
+
+        # Retrieve the logged-in user's ID
+        user_id = session.get('user_id')
+
+        # Retrieve form data
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+        account_name = request.form['account_name']
+        # You can handle profile picture upload here if needed
+
+        # Update user profile in the database
+        db.execute("UPDATE user SET first_name=?, last_name=?, email=?, account_name=? WHERE id=?",
+                   (first_name, last_name, email, account_name, user_id))
+        db.commit()
+
+        flash('Profile updated successfully.')
+
+        # Redirect to the profile settings page or any other appropriate page
+        return redirect(url_for('profile_settings'))
+
+    # Retrieve the logged-in user's information
+    db = get_db()
+    user_id = session.get('user_id')
+    cur = db.execute("SELECT * FROM user WHERE id=?", (user_id,))
+    user = cur.fetchone()
+
+    # Pass the user variable to the template context
+    return render_template('profile_settings.html', user=user)
 
 ### LOGIN
 @app.route('/login', methods=['GET', 'POST'])

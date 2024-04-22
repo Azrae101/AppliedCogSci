@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body {
+        position: relative;
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; 
+        flex-direction: column;
+    }
+
+    .container {
+        padding: 0px;
+        background-color: #f9f9f9;
+        width: 100%; 
+        box-sizing: border-box; 
+    }
+
+    .content {
+        display: flex; 
+        align-items: center; 
+        justify-content: flex-start; 
+        padding: 10px 10px; 
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .button.round {
+        display: inline-block;
+        width: 55px; /* Set the width and height to your desired size */
+        height: 45px;
+        padding: 0; /* Remove padding to make sure it's a perfect circle */
+        border-radius: 50%; /* Use 50% border-radius to make it a circle */
+        background-color: #3a424a;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    /* styles login/logout button */
+    .button.login {
+        background-color: red;
+    }
+
+    .button.login:hover {
+        background-color: #ec5008;
+    }
+
+    /* styles logout button */
+    .button.logout {
+        background-color: rgba(0, 145, 255, 0.272);
+    }
+
+    .button.logout:hover {
+        background-color: #0889ec48;
+    }
+
+    .resized-img {
+        width: 100%; 
+        position: relative;
+        top: 0px; 
+    }
+
+    .logo {
+        margin-right: 10px; 
+    }
+
+    .search {
+        margin-right: auto;
+    }
+
+    .button-container {
+        margin-left: auto; 
+    }
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="content">
+        <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='rsz_cogcards.png') }}"></a>
+        <form class="search" method="post" action="{{ url_for('search_results') }}">
+            <input type="search" value="" placeholder="Search..." name="search">
+        </form>
+        <div class="button-container">
+            <!-- Other buttons -->
+            <a href="{{ url_for('flashcards') }}" class="button">Find</a>
+            <a href="{{ url_for('flashcards') }}" class="button">Create</a>
+            <a href="{{ url_for('quiz') }}" class="button">View</a>
+            <a href="{{ url_for('minigames') }}" class="button">Study</a>
+            {% if not session.logged_in %}
+                <a href="/login" class="button login">Login</a>
+            {% endif %}
+            <!-- Profile dropdown -->
+            <div class="dropdown">
+                {% if session.logged_in %}
+                <button class="button round">Profile</button>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('profile_settings') }}">Settings</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -108,20 +108,7 @@
 <body>
     <div class="container">
         <div class="content">
-            <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='rsz_cogcards.png') }}"></a>
-            <form class="search" method="post" action="{{ url_for('search_results') }}">
-                <input type="search" value="" placeholder="Search..." name="search">
-            </form>
-            <div class="button-container">
-                <a href="{{ url_for('flashcards') }}" class="button">View Flashcards</a>
-                <a href="{{ url_for('quiz') }}" class="button">Take Quiz</a>
-                <a href="{{ url_for('minigames') }}" class="button">Play Minigames</a>
-                {% if session.logged_in %}
-                    <a href="/logout" class="button logout">Logout</a>
-                {% else %}
-                    <a href="/login" class="button login">Login</a>
-                {% endif %}
-            </div>
+            {% include "navbar.html" %}
         </div>
     </div>
     <h1 class="title">Standard learning</h1> 
