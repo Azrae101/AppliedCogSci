@@ -9,10 +9,6 @@ import os
 import re
 from flask_cors import CORS
 
-# Alter the user table to add the first_name column
-
-
-
 app = Flask(__name__)
 CORS(app)  
 
@@ -65,6 +61,14 @@ def before_request():
 @app.route('/')
 def home():
     return render_template('home.html')
+
+@app.route('/find')
+def find():
+    return render_template('find.html')
+
+@app.route('/create')
+def create():
+    return render_template('create.html')
 
 @app.route('/minigames')
 def minigames():

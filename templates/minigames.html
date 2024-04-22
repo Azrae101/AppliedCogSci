@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minigames</title>
+    <title>Study with minigames</title>
     <style>
         body {
             position: relative;
@@ -44,6 +44,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            align-items: right;
         }
 
         .button:hover {
@@ -70,6 +71,7 @@
 
         .button-container {
             margin-left: auto;
+            text-align: right;
         }
 
         .minigame-container {
@@ -103,6 +105,16 @@
         .minigame span {
             margin-top: 10px; /* Adjust margin */
         }
+
+        /* Button color for deck*/
+        .buttonslol {
+            background-color: red !important;
+        }
+
+        .buttonslol:hover {
+            background-color: rgb(182, 0, 0) !important;
+        }
+
     </style>
 </head>
 <body>
@@ -110,6 +122,9 @@
         <div class="content">
             {% include "navbar.html" %}
         </div>
+    </div>
+    <div class="button-container"> <!-- Added container for the button -->
+        <a href="{{ url_for('create') }}" class="button buttonslol">Choose a study set</a>
     </div>
     <h1 class="title">Standard learning</h1> 
     <div class="minigame-container">

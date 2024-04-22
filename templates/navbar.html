@@ -122,6 +122,79 @@
     .dropdown:hover .dropdown-content {
         display: block;
     }
+
+    .streak-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .streak-fire {
+        width: 40px;
+        height: 80px;
+        position: relative; 
+    }
+
+    .flame {
+        position: absolute;
+        bottom: -10px;
+        width: 10px;
+        height: 40px;
+        background: #ff5733; /* Firey color */
+        border-radius: 50% 50% 0 0;
+        transform: rotate(-45deg);
+        animation: flame 1s ease-in-out infinite alternate;
+    }
+
+    .flame:nth-child(2) {
+        left: 10px;
+        width: 10px;
+        height: 45px;
+        background: #f82e01; /* Firey color */
+        animation-delay: 0.1s;
+    }
+
+    .flame:nth-child(3) {
+        right: 10px;
+        width: 10px;
+        height: 47px;
+        background: #fffb00; /* Firey color */
+        animation-delay: 0.2s;
+    }
+
+    .flame:nth-child(4) {
+        left: 20px;
+        width: 10px;
+        height: 45px;
+        background: #ff5e00; /* Firey color */
+        animation-delay: 0.3s; 
+    }
+
+    .flame:nth-child(5) {
+        left: 30px;
+        background: #ffae00; /* Firey color */
+        animation-delay: 0.4s;
+    }
+
+    .streak-number {
+        position: absolute;
+        bottom: 0; /* Position at the bottom of the flames */
+        left: 50%;
+        transform: translateX(-50%);
+        color: #000000;
+        font-size: 16px;
+        font-weight: bold;
+        z-index: 1; /* Ensure the number is on top of the flames */
+    }
+
+    @keyframes flame {
+        0% {
+            transform: rotate(0deg) scaleY(1);
+        }
+        100% {
+            transform: rotate(0deg) scaleY(1.2);
+        }
+    }
+
 </style>
 </head>
 <body>
@@ -133,23 +206,35 @@
         </form>
         <div class="button-container">
             <!-- Other buttons -->
-            <a href="{{ url_for('flashcards') }}" class="button">Find</a>
-            <a href="{{ url_for('flashcards') }}" class="button">Create</a>
-            <a href="{{ url_for('quiz') }}" class="button">View</a>
+            <a href="{{ url_for('find') }}" class="button">Find Flashcards</a>
+            <a href="{{ url_for('create') }}" class="button">Create Cards</a>
             <a href="{{ url_for('minigames') }}" class="button">Study</a>
             {% if not session.logged_in %}
                 <a href="/login" class="button login">Login</a>
             {% endif %}
-            <!-- Profile dropdown -->
-            <div class="dropdown">
-                {% if session.logged_in %}
-                <button class="button round">Profile</button>
-                    <div class="dropdown-content">
-                        <a href="{{ url_for('profile_settings') }}">Settings</a>
-                        <a href="/logout">Logout</a>
-                    </div>
-                {% endif %}
+
+        <div class="dropdown">
+            {% if session.logged_in %}
+            <button class="button round">Profile</button>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('profile_settings') }}">Settings</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Add the fire symbol here -->
+        <div class="streak-container">
+            <div class="streak-fire">
+                <div class="streak-number">34</div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
             </div>
         </div>
+            </div>
+            </div>
     </div>
 </div>

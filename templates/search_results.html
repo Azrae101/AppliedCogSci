@@ -5,40 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <style>
-        /* CSS for bigger links */
-        li a {
-            font-size: 20px; /* Adjust the font size as needed */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f8f9fa; /* Set background color */
+            margin: 0;
+            padding: 0;
+            color: #333; /* Default text color */
         }
-        .back-btn {
-            position: absolute;
-            bottom: -50px; /* Adjust as needed */
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        li {
+            margin-bottom: 10px;
+            background-color: #ececec;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.537);
+        }
+        li a {
+            font-size: 18px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        li a:hover {
+            text-decoration: underline;
         }
 
-        .back-btn:hover {
-            background-color: #0056b3;
+        .containerlol {
+            background-color: #ffffff; /* White for content area */
+            padding: 100px;
+            margin-top: 80px; /* Adjusted to accommodate the fixed navbar */
+            max-width: 800px; /* Adjust max-width as needed */
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 </head>
 <body>
-    <h1>Search Results for "{{ search_query }}"</h1>
-    {% if results %}
-        <ul>
-            {% for result in results %}
-                <li><a href="{{ url_for(result) }}">{{ result }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No results found.</p>
-    {% endif %}
-    <button class="back-btn" onclick="location.href='/'">Back to Home</button>
+    <div>
+        {% include "navbar.html" %}
+    </div>
+    <div class="containerlol">
+        <h1>Search Results for "{{ search_query }}"</h1>
+        {% if results %}
+            <ul>
+                {% for result in results %}
+                    <li><a href="{{ url_for(result) }}">{{ result }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No results found.</p>
+        {% endif %}
+    </div>
 </body>
 </html>
