@@ -92,9 +92,10 @@
                 <input type="search" value="" placeholder="Search..." name="search">
             </form>
             <div class="button-container">
-                <a href="{{ url_for('flashcards') }}" class="button">View Flashcards</a>
-                <a href="{{ url_for('quiz') }}" class="button">Take Quiz</a>
-                <a href="{{ url_for('minigames') }}" class="button">Play Minigames</a>
+                <a href="{{ url_for('flashcards') }}" class="button">Find</a>
+                <a href="{{ url_for('flashcards') }}" class="button">Create</a>
+                <a href="{{ url_for('quiz') }}" class="button">View</a>
+                <a href="{{ url_for('minigames') }}" class="button">Study</a>
                 {% if session.logged_in %}
                     <a href="/logout" class="button logout">Logout</a>
                 {% else %}

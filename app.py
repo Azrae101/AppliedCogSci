@@ -28,7 +28,7 @@ def close_db(e=None):
         db.close()
 
 # Quiz data
-list_of_display = ["a", "b", "c", "d"]
+list_of_display = ["Question A", "Question B", "Question C", "Question D"]
 list_of_answers = ["1", "2", "3", "4"]
 list_type = list_of_display
 current_index = 0

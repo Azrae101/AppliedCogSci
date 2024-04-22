@@ -34,47 +34,18 @@
         }
 
         .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        /* styles login/logout button */
-        .button.login {
-            background-color: red;
-        }
-
-        .button.login:hover {
-            background-color: #ec5008;
-        }
-
-        /* styles logout button */
-        .button.logout {
-            background-color: rgba(0, 145, 255, 0.272);
-        }
-
-        .button.logout:hover {
-            background-color: #0889ec48;
+            display: none; /* Hide the buttons by default */
         }
 
         .minigame-container {
             display: flex;
             align-items: center;
+            flex-wrap: wrap; /* Allow wrapping */
+            justify-content: center; /* Center the items */
+            gap: 20px; /* Gap between minigame items */
         }
 
         .minigame {
-            margin: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -82,8 +53,20 @@
         }
 
         .minigame img {
-            height: 500px; /* Set the height as needed */
+            height: 200px; /* Set the height as needed */
             width: auto; /* Maintain aspect ratio */
+            cursor: pointer; /* Change cursor to pointer */
+            border-radius: 5px; /* Add border radius */
+            transition: transform 0.3s ease; /* Add transition effect */
+            border: 2px solid #000000; /* Add border */
+        }
+
+        .minigame img:hover {
+            transform: scale(1.1); /* Enlarge on hover */
+        }
+
+        .minigame span {
+            margin-top: 10px; /* Adjust margin */
         }
 
     </style>
@@ -107,23 +90,34 @@
             </div>
         </div>
     </div>
-    <h1 class="title">Minigames</h1> 
+    <h1 class="title">Standard learning</h1> 
     <div class="minigame-container">
         <div class="minigame">
-            <img src="{{ url_for('static', filename='FlashFall.gif') }}" class="resized-img">
-            <a href="{{ url_for('cardchase') }}" class="button">Play CardChase</a>
+            <a href="{{ url_for('flashcards') }}"><img src="{{ url_for('static', filename='flashcards.gif') }}" class="resized-img"></a>
+            <span>Flashcards</span>
         </div>
         <div class="minigame">
-            <img src="{{ url_for('static', filename='tetris.png') }}" class="resized-img">
-            <a href="{{ url_for('tetris') }}" class="button">Play Tetris</a>
+            <a href="{{ url_for('quiz') }}"><img src="{{ url_for('static', filename='quiz.gif') }}" class="resized-img"></a>
+            <span>Quiz</span>
+        </div>
+    </div>
+    <h1 class="title">Gamified learning</h1>
+    <div class="minigame-container">
+        <div class="minigame">
+            <a href="{{ url_for('cardchase') }}"><img src="{{ url_for('static', filename='FlashFall.gif') }}" class="resized-img"></a>
+            <span>Play CardChase</span>
         </div>
         <div class="minigame">
-            <img src="{{ url_for('static', filename='TermTime.gif') }}" class="resized-img">
-            <a href="{{ url_for('termtime') }}" class="button">Play TermTime</a>
+            <a href="{{ url_for('tetris') }}"><img src="{{ url_for('static', filename='tetris.png') }}" class="resized-img"></a>
+            <span>Play Tetris</span>
         </div>
         <div class="minigame">
-            <img src="{{ url_for('static', filename='definedash.png') }}" class="resized-img">
-            <a href="{{ url_for('definedash') }}" class="button">Play DefineDash</a>
+            <a href="{{ url_for('termtime') }}"><img src="{{ url_for('static', filename='TermTime.gif') }}" class="resized-img"></a>
+            <span>Play TermTime</span>
+        </div>
+        <div class="minigame">
+            <a href="{{ url_for('definedash') }}"><img src="{{ url_for('static', filename='definedash.gif') }}" class="resized-img"></a>
+            <span>Play DefineDash</span>
         </div>
     </div>
 </body>
