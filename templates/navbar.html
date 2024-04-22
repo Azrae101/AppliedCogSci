@@ -25,7 +25,7 @@
         display: flex; 
         align-items: center; 
         justify-content: flex-start; 
-        padding: 10px 10px; 
+        padding: 0px 10px; 
     }
 
     .button {
@@ -224,6 +224,7 @@
         </div>
 
         <!-- Add the fire symbol here -->
+        {% if session.logged_in %}
         <div class="streak-container">
             <div class="streak-fire">
                 <div class="streak-number">34</div>
@@ -233,6 +234,7 @@
                 <div class="flame"></div>
                 <div class="flame"></div>
             </div>
+        {% endif %}
         </div>
             </div>
             </div>
