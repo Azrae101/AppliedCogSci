@@ -91,10 +91,29 @@ def definedash():
     return render_template('games/definedash.html')
 
 # Game settings
+@app.route('/cardchase_settings')
+def cardchase_settings():
+    return render_template('game_settings/cardchase_settings.html')
 
-@app.route('/game_settings')
-def game_settings():
-    return render_template('game_settings/game_settings.html')
+@app.route('/definedash_settings')
+def definedash_settings():
+    return render_template('game_settings/definedash_settings.html')
+
+@app.route('/flashcards_settings')
+def flashcards_settings():
+    return render_template('game_settings/flashcards_settings.html')
+
+@app.route('/tetris_settings')
+def tetris_settings():
+    return render_template('game_settings/tetris_settings.html')
+
+@app.route('/termtime_settings')
+def termtime_settings():
+    return render_template('game_settings/termtime_settings.html')
+
+@app.route('/quiz_settings')
+def quiz_settings():
+    return render_template('game_settings/quiz_settings.html')
 
 # Flashcards viewing
 @app.route('/flashcards')

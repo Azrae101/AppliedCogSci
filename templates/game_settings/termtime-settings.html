@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Term Time</title>
+    <link rel="stylesheet" type="text/css" href="static/game_settings.css">
+    <div class="container">
+        <div class="content">
+            {% include "navbar.html" %}
+        </div>
+    </div>
+    <div class="containerlol">
+        <div class="left-container">
+            <!-- Cardchase section -->
+            <h2>Term Time</h2>
+            <!-- Study deck -->
+            <div class="containernew">
+                <h3>Study Deck: Cognitive Science</h3>
+                <a href="{{ url_for('create') }}" class="button">Change deck</a>
+            </div>            
+            <p> </p>
+            <p> </p>
+            <!-- Placeholder for game GIF preview -->
+            <img src="static/termtime.gif" alt="[Game Preview]">
+        </div>
+
+        <div class="right-container">        
+            <!-- Settings section -->
+            <div class="settings-container">
+                <h2>Settings</h2>
+                <!-- Options menu -->
+                <h3 class="settings-title">Difficulty</h3>
+                <select id="options" name="options" class="options-menu">
+                    <option value="" disabled selected>Select Difficulty</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <p> </p>
+                <button class="toggle-button" onclick="toggleEndlessMode()">Endless Mode: Off</button>
+            </div>
+            <!-- High scores section -->
+            <div class="settings-container">
+                <h2>High Scores</h2>
+                <ul class="highscores-list">
+                    <li>Player 1: 10</li>
+                    <li>Player 2: 12</li>
+                    <li>Player 3: 8</li>
+                </ul>
+            </div>
+            <!-- Start game button -->
+            <button class="buttonlol" onclick="startGame()">Let's Study!</button>
+        </div>
+    </div>
+    <script type='text/javascript'>
+        function startGame() {
+            // Redirect to cardchase.html
+            window.location.href = 'termtime';
+        }
+
+        function toggleEndlessMode() {
+            // Toggle Endless Mode
+            var button = document.querySelector('.toggle-button');
+            if (button.textContent === 'Endless Mode: Off') {
+                button.textContent = 'Endless Mode: On';
+            } else {
+                button.textContent = 'Endless Mode: Off';
+            }
+        }
+    </script>
+</body>
+</html>
