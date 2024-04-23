@@ -108,3 +108,9 @@ body {
 .buttonnew:hover {
     background-color: rgb(190, 190, 190);
 }
+
+/* Assuming you have a container class named "gif-container" */
+.gif-container {
+    outline: 2px solid black; /* Adjust the color and width of the outline as needed */
+    display: inline-block; /* Ensure the container doesn't stretch to full width */
+}
