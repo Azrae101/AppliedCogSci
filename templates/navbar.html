@@ -45,17 +45,23 @@
     }
 
     .button.round {
-        display: inline-block;
+        display: inline-flex; /* Use flexbox for centering */
+        align-items: center; /* Center vertically */
+        justify-content: center; /* Center horizontally */
         width: 55px; /* Set the width and height to your desired size */
-        height: 45px;
+        height: 50px;
         padding: 0; /* Remove padding to make sure it's a perfect circle */
         border-radius: 50%; /* Use 50% border-radius to make it a circle */
-        background-color: #3a424a;
+        background-color: #3b5268;
         color: #fff;
         text-decoration: none;
         border: none;
         cursor: pointer;
         transition: background-color 0.3s ease;
+    }
+
+    .button.round:hover {
+        background-color: #000000;
     }
 
     .button:hover {
@@ -207,45 +213,47 @@
 </style>
 </head>
 <body>
-<div class="container">
-    <div class="content">
-        <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='rsz_cogcards.png') }}"></a>
-        <form class="search" method="post" action="{{ url_for('search_results') }}">
-            <input type="search" value="" placeholder="Search..." name="search">
-        </form>
-        <div class="button-container">
-            <!-- Other buttons -->
-            <a href="{{ url_for('find') }}" class="button">Find Flashcards</a>
-            <a href="{{ url_for('create') }}" class="button">Create Cards</a>
-            <a href="{{ url_for('minigames') }}" class="button">Study</a>
-            {% if not session.logged_in %}
-                <a href="/login" class="button login">Login</a>
-            {% endif %}
-
-        <div class="dropdown">
-            {% if session.logged_in %}
-            <button class="button round">Profile</button>
-                <div class="dropdown-content">
-                    <a href="{{ url_for('profile_settings') }}">Settings</a>
-                    <a href="/logout">Logout</a>
+    <div class="container">
+        <div class="content">
+            <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='rsz_cogcards.png') }}"></a>
+            <form class="search" method="post" action="{{ url_for('search_results') }}">
+                <input type="search" value="" placeholder="Search..." name="search">
+            </form>
+            <div class="button-container">
+                <!-- Other buttons -->
+                <a href="{{ url_for('find') }}" class="button">Find Flashcards</a>
+                <a href="{{ url_for('create') }}" class="button">Create Cards</a>
+                <a href="{{ url_for('minigames') }}" class="button">Study</a>
+                {% if not session.logged_in %}
+                    <a href="/login" class="button login">Login</a>
+                {% endif %}
+    
+                <div class="dropdown">
+                    {% if session.logged_in %}
+                    <!-- Turn the profile circle into a button -->
+                    <a href="{{ url_for('profile_settings') }}" class="button round">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('profile_settings') }}">Settings</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+                    {% endif %}
                 </div>
-            {% endif %}
+    
+                <!-- Add the fire symbol here -->
+                {% if session.logged_in %}
+                <div class="streak-container">
+                    <div class="streak-fire">
+                        <div class="streak-number">34</div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         </div>
-
-        <!-- Add the fire symbol here -->
-        {% if session.logged_in %}
-        <div class="streak-container">
-            <div class="streak-fire">
-                <div class="streak-number">34</div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-            </div>
-        {% endif %}
-        </div>
-            </div>
-            </div>
     </div>
-</div>
+</body>
+</html>

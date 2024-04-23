@@ -1,12 +1,25 @@
-class Grid {
-    constructor(width = 10, height = 20) {
+
+function generateRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+const list_of_display = ["Question A", "Question B", "Question C", "Question D"];
+
+  class Grid {
+ 
+  constructor(width = 10, height = 20) {
       this.width = width;
       this.height = height;
       this.board = null;
       this.activeShape = null;
       this.fullReset();
     }
-  
+
     fullReset() {
       this.activeShape = null;
       this.resetGrid();
@@ -114,7 +127,7 @@ class Grid {
       return false;
     }
   }
-  
+
   class HTMLGrid {
     constructor(grid, sel) {
         this.grid = grid;
@@ -123,18 +136,41 @@ class Grid {
     }
 
     setupBoard() {
-        this.grid.getBoardWithActiveShape().forEach((row) => {
+        const canvasWidth = 50; // Desired canvas width in em
+        const squareWidth = this.el.offsetWidth / this.grid.width; // Calculate the width of each square based on the current width of the grid
+
+        this.el.style.width = canvasWidth + "em"; // Set the width of the canvas
+
+        this.grid.getBoardWithActiveShape().forEach((row, i) => {
             const rowDiv = document.createElement("div");
             rowDiv.className = "row";
-            row.forEach((square) => {
+            row.forEach((square, j) => {
                 const squareDiv = document.createElement("div");
                 squareDiv.className = "square";
+                squareDiv.style.width = squareWidth + "px"; // Set the width of each square dynamically
+                squareDiv.style.height = squareWidth + "px"; // Set the height of each square dynamically
                 if (square) {
                     squareDiv.style.backgroundColor = square.color || "";
                     squareDiv.style.border = "1px solid transparent"; // Initially, set border to transparent
                     if (square.highlighted) {
                         squareDiv.style.border = "1px solid black"; // Add border when highlighted
                     }
+                    const text = document.createElement("p"); // Create a paragraph element for the text
+                    const randomIndex = Math.floor(Math.random() * questions.length); // Generate a random index for questions array
+                    text.innerText = questions[randomIndex].question; // Set text content to a random question
+                    squareDiv.appendChild(text); // Append text to the square
+
+                    // Add event listener to check answer when clicked
+                    squareDiv.addEventListener("click", () => {
+                        const userAnswer = prompt("Answer the question: " + questions[randomIndex].question);
+                        const correctAnswer = questions[randomIndex].answer;
+                        if (userAnswer && userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                            alert("Correct!");
+                            fetchNextQuestion(); // Fetch the next question if the answer is correct
+                        } else {
+                            alert("Incorrect. Try again!");
+                        }
+                    });
                 }
                 rowDiv.appendChild(squareDiv);
             });
@@ -163,7 +199,6 @@ class Grid {
         }
     }
 }
-
 
   class Shape {
     constructor(definition, color) {
@@ -234,19 +269,19 @@ class Grid {
     }
   
     static random() {
-      const colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"];
+      const colors = [generateRandomColor(), generateRandomColor(), generateRandomColor(), generateRandomColor(), generateRandomColor()];
       const shapes = ["rect3x2", "rect4x2", "rect5x2", "square"];
       const shape = shapes[Math.floor(Math.random() * shapes.length)];
       const color = colors[Math.floor(Math.random() * colors.length)];
       return this[shape](color);
-    }
   }
+}
   
   class Tetris {
     constructor() {
       this.grid = new Grid();
       this.screen = new HTMLGrid(this.grid, "#grid");
-      this.TICK_TIME = 300;
+      this.TICK_TIME = 100; // FALL TIME!!!
       this.gameOver = false;
       this.lines = 0;
       this.isPaused = false;
@@ -326,6 +361,13 @@ class Grid {
       }
     }
   }
+
+  let questions = [
+    {"question": "Question 1", "answer": "1"},
+    {"question": "Question 2", "answer": "2"},
+    {"question": "Question 3", "answer": "3"},
+    {"question": "Question 4", "answer": "4"}
+  ];
 
   const game = new Tetris();  
   

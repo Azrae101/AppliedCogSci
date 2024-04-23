@@ -2,146 +2,149 @@
 <html lang="en">
 <head>
     <title>Tetris</title>
+    <script src="static/tetribbb.js" type="module"></script>
     <style>
         * {
-    box-sizing: border-box;
-  }
-  
-  .grid {
-    font-size: 35px;
-    height: 20em;
-    width: 10em;
-    background: #ffffff;
-  }
-  
-  .sidebar {
-    padding: 1em;
-    margin: 0 1em;
-  }
-  
-  .flex {
-    flex: 1;
-  }
-  
-  .square {
-    flex: 1;
-    max-width: 1em;
-    height: 1em;
-    background-color: #000000;
-  }
-  
-  .preview .square {
-    box-shadow: none;
-  }
-  
-  .square__empty {
-    border-color: transparent;
-  }
-  
-  .square__red {
-    background: red;
-  }
-  
-  .square__green {
-    background: greenyellow;
-  }
-  
-  .square__orange {
-    background: orange;
-  }
-  
-  .square__aqua {
-    background: aqua;
-  }
-  
-  .square__yellow {
-    background: yellow;
-  }
-  
-  .sidebar > * {
-    margin-bottom: 50em;
-  }
-  
-  .game {
-    margin: 0 auto; /* This centers the game horizontally */
-    background: #000000;
-    position: relative;
-    display: flex; /* Enable flexbox layout */
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-  }
-
-  .game-message {
-    top: 0;
-    margin-top: 0;
-    background: rgb(199, 10, 10);
-    color: white;
-    font-family: Courier;
-    text-align: center;
-    position: absolute;
-    width: 100%;
-    line-height: 4em;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  nav > button {
-    display: block;
-  }
-  
-  .button {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 10px;
-    bottom: -10px;
-    background-color: #ff2200;
-    position: absolute;
-    color: #fff;
-    text-decoration: none;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    .grid {
+      font-size: 35px;
+      height: 20em;
+      width: 10em;
+      background: #000000;
+    }
+    
+    .sidebar {
+      padding: 1em;
+      margin: 0 1em;
+    }
+    
+    .flex {
+      flex: 1;
+    }
+    
+    .square {
+      flex: 1;
+      max-width: 1em;
+      height: 1em;
+      background-color: #000000;
+    }
+    
+    .preview .square {
+      box-shadow: none;
+    }
+    
+    .square__empty {
+      border-color: transparent;
+    }
+    
+    .square__red {
+      background: red;
+    }
+    
+    .square__green {
+      background: greenyellow;
+    }
+    
+    .square__orange {
+      background: orange;
+    }
+    
+    .square__aqua {
+      background: aqua;
+    }
+    
+    .square__yellow {
+      background: yellow;
+    }
+    
+    .sidebar > * {
+      margin-bottom: 50em;
+    }
+    
+    .game {
+      margin: 0 auto; /* This centers the game horizontally */
+      background: #949494;
+      position: relative;
+      display: flex; /* Enable flexbox layout */
+      justify-content: center;
+      align-items: center;
+      width: 50em;
     }
 
-  .button:hover {
-    background-color: #c62b00;
+    .game-message {
+      top: 0;
+      margin-top: 0;
+      background: rgb(199, 10, 10);
+      color: white;
+      font-family: Courier;
+      text-align: center;
+      justify-content: center; 
+      position: absolute;
+      width: 100%;
+      line-height: 4em;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    nav > button {
+      display: block;
+    }
+    
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px;
+      bottom: -10px;
+      background-color: #ff2200;
+      position: absolute;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
-  .back-btn {
-    position: absolute;
-    bottom: -50px; 
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    .button:hover {
+      background-color: #c62b00;
+    }
+
+    .back-btn {
+      position: absolute;
+      bottom: -50px; 
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
     }
 
     .back-btn:hover {
-        background-color: #0056b3;
+          background-color: #0056b3;
     }
 
     .row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     h1 {
-        text-align: center; /* Center the text horizontally */
+          text-align: center; /* Center the text horizontally */
     }
-    
+      
     .user-input-container {
-    width: 50em; 
-    height: 5em; 
-    position: relative; 
+      width: 50em; 
+      height: 5em; 
+      position: relative; 
     }
 
     #userInput {
@@ -153,7 +156,6 @@
     }
 
     </style>
-    <script src="static/tetrilol.js" type="module"></script>
 </head>
 <body>
 <h1>TetriCards</h1>
