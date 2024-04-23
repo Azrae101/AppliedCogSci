@@ -5,71 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Overview</title>
     <style>
-        /* Add your CSS styles here */
         body {
             font-family: Arial, sans-serif;
+            margin: 0; 
+            padding: 0; 
         }
-        .container {
+
+        .containerlol {
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* Center the content horizontally */
+            width: 95%; /* Ensure the container takes up the full width of the viewport */
+            margin: auto; /* Center the container */
         }
-        .left, .right {
-            width: 45%;
+
+        .left-container, .right-container {
+            flex-grow: 1; /* Allow the containers to grow to fill available space */
+            border: 1px solid #ccc;
+            padding: 10px;
+            place-content: center;
         }
-        button {
+
+        .left-container {
+            text-align: center; /* Center align content inside the left-container */
+        }
+
+        .left-container img {
+            max-width: 100%; /* Ensure the image does not exceed its container width */
+        }
+
+        .buttonlol {
             background-color: green;
             color: white;
+            padding: 15px 30px; /* Increase button size */
+            border: none;
+            cursor: pointer;
+            display: block; /* Display the button as block element */
+            margin: 10px auto; /* Center the button horizontally */
+            border-radius: 5px;
+        }
+
+        .buttonlol:hover {
+            background-color: darkgreen; /* Change the background color on hover */
+        }
+
+        .toggle-button {
+            background-color: lightgray;
+            color: #333;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
+            margin-left: -1px;
         }
+
+        .toggle-button:hover {
+            background-color: rgb(190, 190, 190); /* Change the background color on hover */
+        }
+
+        .settings-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .settings-title {
+            margin-top: 0;
+        }
+
+        .options-menu {
+            margin-bottom: 10px;
+        }
+
+        .highscores-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .highscores-list li {
+            margin-bottom: 5px;
+        }
+
+        .containernew {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally */
+            text-align: center; /* Center text within the container */
+        }
+
+        .containernew h3 {
+            margin-bottom: 10px; /* Adjust margin between title and button */
+        }
+
+        .buttonnew {
+            background-color: lightgray;
+            color: rgb(0, 0, 0);
+            border-radius: 5px;
+            border: 0;
+            padding: 1px 5px; /* Adjust padding to make the button smaller in height */
+        }
+
+        .buttonnew:hover {
+            background-color: rgb(190, 190, 190); /* Change the background color on hover */
+        }
+
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="content">
+            {% include "navbar.html" %}
+        </div>
+    </div>
+    <div class="containerlol">
+        <div class="left-container">
+            <!-- Cardchase section -->
+            <h2>Cardchase</h2>
+            <!-- Study deck -->
+            <div class="containernew">
+                <h3>Study Deck: Random Deck Name</h3>
+                <a href="{{ url_for('create') }}" class="button">Change deck</a>
+            </div>            
+            <p> </p>
+            <p> </p>
+            <!-- Placeholder for game GIF preview -->
+            <img src="static/cardchased.gif" alt="[Game Preview]">
+        </div>
 
-<div class="container">
-    <div class="left">
-        <!-- Game preview section -->
-        <h2>Study Set 1</h2>
-        
-         <!-- Placeholder for game GIF preview -->
-         <img src="game-preview.gif" alt="[Game Preview]">
+        <div class="right-container">        
+            <!-- Settings section -->
+            <div class="settings-container">
+                <h2>Settings</h2>
 
-         <!-- Game settings -->
-         <h3>Settings</h3>
-         <!-- Add settings options here -->
+                <!-- Options menu -->
+                <h3 class="settings-title">Difficulty</h3>
+                <select id="options" name="options" class="options-menu">
+                    <option value="" disabled selected>Select Difficulty</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <p> </p>
+                <button class="toggle-button" onclick="toggleEndlessMode()">Endless Mode: Off</button>
+            </div>
+            <!-- High scores section -->
+            <div class="settings-container">
+                <h2>High Scores</h2>
+                <ul class="highscores-list">
+                    <li>Player 1: 10</li>
+                    <li>Player 2: 12</li>
+                    <li>Player 3: 8</li>
+                </ul>
+            </div>
 
-         <!-- Start game button -->
-         <button onclick="startGame()">Let's Study!</button>
+            <!-- Start game button -->
+            <button class="buttonlol" onclick="startGame()">Let's Study!</button>
+        </div>
+    </div>
 
-     </div>
+    <script type='text/javascript'>
+        function startGame() {
+            // Redirect to cardchase.html
+            window.location.href = 'cardchase';
+        }
 
-     <div class="right">
-          <!-- Game options and high scores section -->
-          <h2>CARDCHASE</h2>
-
-          <!-- Options menu -->
-          <select id="options" name="options">
-              <option value="" disabled selected>Options</option>
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-          </select>
-
-          <!-- High scores table or list -->
-          <!-- Populate with actual data as needed -->
-
-      </div>
-
-   </div>
-
-   <!-- JavaScript to handle game start and other interactive elements -->
-   <!--<script src='script.js'></script>-->
-   
-   <!--<script type='text/javascript'>
-       function startGame() {
-           // Add code to start the game
-       }
-   </script>-->
-   
-</body></html>
+        function toggleEndlessMode() {
+            // Toggle Endless Mode
+            var button = document.querySelector('.toggle-button');
+            if (button.textContent === 'Endless Mode: Off') {
+                button.textContent = 'Endless Mode: On';
+            } else {
+                button.textContent = 'Endless Mode: Off';
+            }
+        }
+    </script>
+</body>
+</html>
