@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cardchase</title>
-    <link rel="stylesheet" type="text/css" href="static/game_settingss.css">
+    {% include "game_settings/game_settings.html" %}
     <div class="container">
         <div class="content">
             {% include "navbar.html" %}
         </div>
     </div>
+    <h1 class="title main-title">Card Chase</h1>
+    <h4 class="title under-title">Write the answer to the question before the time runs out</h4>
     <div class="containerlol">
         <div class="left-container">
             <!-- Cardchase section -->
-            <h2>Cardchase</h2>
             <!-- Study deck -->
             <div class="containernew">
                 <h3>Study Deck: Cognitive Science</h3>
@@ -27,7 +28,10 @@
             </div>
         </div>
 
-        <div class="right-container">        
+        <div class="right-container">
+            <!-- Back to Home Button -->
+            <button class="button_settings" onclick="location.href='/minigames'">Back to Mingames</button>
+                
             <!-- Settings section -->
             <div class="settings-container">
                 <h2>Settings</h2>

@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Define Dash</title>
-    <link rel="stylesheet" type="text/css" href="static/game_settingss.css">
+    {% include "game_settings/game_settings.html" %}
     <div class="container">
         <div class="content">
             {% include "navbar.html" %}
         </div>
     </div>
+    <h1 class="title main-title">Define Dash</h1>
+    <h4 class="title under-title">Define the term as quickly as possible</h4>
     <div class="containerlol">
         <div class="left-container">
             <!-- Cardchase section -->
@@ -27,7 +29,9 @@
             </div>        
         </div>
 
-        <div class="right-container">        
+        <div class="right-container">      
+            <!-- Back to Home Button -->
+            <button class="button_settings" onclick="location.href='/minigames'">Back to Mingames</button>
             <!-- Settings section -->
             <div class="settings-container">
                 <h2>Settings</h2>
