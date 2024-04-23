@@ -115,6 +115,20 @@
             background-color: rgb(182, 0, 0) !important;
         }
 
+        .title {
+            text-align: center;
+        }
+        .main-title {
+            font-size: 42px;
+            font-weight: bold; 
+            margin-bottom: 0;
+            margin-top: 5vh;
+        }
+        .under-title {
+            font-size: 24px;
+            font-weight: lighter;
+        }
+
     </style>
 </head>
 <body>
@@ -123,33 +137,35 @@
             {% include "navbar.html" %}
         </div>
     </div>
-    <h1 class="title">Minigames</h1>  
+    <h1 class="title main-title">Minigames</h1>
+    <h4 class="title under-title">Transforming education through playful learning experiences</h4>
     <div class="minigame-container">
         <div class="minigame">
-            <a href="{{ url_for('flashcards') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
-            <span>Flashcards</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('quiz') }}"><img src="{{ url_for('static', filename='quiz.png') }}" class="resized-img"></a>
-            <span>Quiz</span>
-        </div>
-    </div>
-    <div class="minigame-container">
-        <div class="minigame">
-            <a href="{{ url_for('cardchase') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
+            <a href="{{ url_for('game_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
             <span>CardChase</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('tetris') }}"><img src="{{ url_for('static', filename='tetris.png') }}" class="resized-img"></a>
-            <span>Tetris</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('termtime') }}"><img src="{{ url_for('static', filename='TermTime.png') }}" class="resized-img"></a>
-            <span>TermTime</span>
         </div>
         <div class="minigame">
             <a href="{{ url_for('definedash') }}"><img src="{{ url_for('static', filename='definedash.png') }}" class="resized-img"></a>
             <span>DefineDash</span>
+        </div>
+        <div class="minigame">
+            <a href="{{ url_for('flashcards') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
+            <span>Flashcards</span>
+        </div>
+    </div>
+    <p> </p>
+    <div class="minigame-container">
+        <div class="minigame">
+            <a href="{{ url_for('tetris') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
+            <span>Tetris</span>
+        </div>
+        <div class="minigame">
+            <a href="{{ url_for('termtime') }}"><img src="{{ url_for('static', filename='termtimes.png') }}" class="resized-img"></a>
+            <span>TermTime</span>
+        </div>
+        <div class="minigame">
+            <a href="{{ url_for('quiz') }}"><img src="{{ url_for('static', filename='quiz.png') }}" class="resized-img"></a>
+            <span>Quiz</span>
         </div>
     </div>
 </body>

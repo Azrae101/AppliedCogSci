@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Overview</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .left, .right {
+            width: 45%;
+        }
+        button {
+            background-color: green;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="left">
+        <!-- Game preview section -->
+        <h2>Study Set 1</h2>
+        
+         <!-- Placeholder for game GIF preview -->
+         <img src="game-preview.gif" alt="[Game Preview]">
+
+         <!-- Game settings -->
+         <h3>Settings</h3>
+         <!-- Add settings options here -->
+
+         <!-- Start game button -->
+         <button onclick="startGame()">Let's Study!</button>
+
+     </div>
+
+     <div class="right">
+          <!-- Game options and high scores section -->
+          <h2>CARDCHASE</h2>
+
+          <!-- Options menu -->
+          <select id="options" name="options">
+              <option value="" disabled selected>Options</option>
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+          </select>
+
+          <!-- High scores table or list -->
+          <!-- Populate with actual data as needed -->
+
+      </div>
+
+   </div>
+
+   <!-- JavaScript to handle game start and other interactive elements -->
+   <!--<script src='script.js'></script>-->
+   
+   <!--<script type='text/javascript'>
+       function startGame() {
+           // Add code to start the game
+       }
+   </script>-->
+   
+</body></html>

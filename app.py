@@ -76,19 +76,25 @@ def minigames():
 
 @app.route('/cardchase')
 def cardchase():
-    return render_template('cardchase.html')
+    return render_template('games/cardchase.html')
 
 @app.route('/tetris')
 def tetris():
-    return render_template('tetris.html')
+    return render_template('games/tetris.html')
 
 @app.route('/termtime')
 def termtime():
-    return render_template('termtime.html')
+    return render_template('games/termtime.html')
 
 @app.route('/definedash')
 def definedash():
-    return render_template('definedash.html')
+    return render_template('games/definedash.html')
+
+# Game settings
+
+@app.route('/game_settings')
+def game_settings():
+    return render_template('game_settings/game_settings.html')
 
 # Flashcards viewing
 @app.route('/flashcards')
@@ -101,7 +107,7 @@ def flashcards():
     term = list_of_display[current_index]
     if current_side == "d":
         term = list_of_answers[current_index]
-    return render_template('flashcards.html', term=term, list_of_display=list_of_display, list_of_answers=list_of_answers, current_index=current_index, current_side=current_side)
+    return render_template('games/flashcards.html', term=term, list_of_display=list_of_display, list_of_answers=list_of_answers, current_index=current_index, current_side=current_side)
 
 @app.route('/prev')
 def prev_flashcard():
@@ -136,7 +142,7 @@ def quiz():
         current_question = list_of_display[0]
     else:
         current_question = f"No more questions. You answered {questions} questions."
-    return render_template('quiz.html', question=current_question)
+    return render_template('games/quiz.html', question=current_question)
 
 @app.route('/answer', methods=['POST'])
 def handle_answer():
