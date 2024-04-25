@@ -1,3 +1,19 @@
+function fetchNextQuestion() {
+  points++;
+  currentQuestionIndex++;
+  if (currentQuestionIndex >= questions.length) {
+      currentQuestionIndex = 0;
+      shuffleQuestions();
+  }
+
+  // Remove the first block
+  game.grid.board[0][0] = ""; // Assuming the first block is at position [0][0]
+
+  // Set the current question and update the game
+  updateQuestion();
+  // Reset movement speed for the new question
+  movementSpeed = 2;
+}
 
 function generateRandomColor() {
   const letters = '0123456789ABCDEF';
@@ -136,47 +152,52 @@ const list_of_display = ["Question A", "Question B", "Question C", "Question D"]
     }
 
     setupBoard() {
-        const canvasWidth = 50; // Desired canvas width in em
-        const squareWidth = this.el.offsetWidth / this.grid.width; // Calculate the width of each square based on the current width of the grid
-
-        this.el.style.width = canvasWidth + "em"; // Set the width of the canvas
-
-        this.grid.getBoardWithActiveShape().forEach((row, i) => {
-            const rowDiv = document.createElement("div");
-            rowDiv.className = "row";
-            row.forEach((square, j) => {
-                const squareDiv = document.createElement("div");
-                squareDiv.className = "square";
-                squareDiv.style.width = squareWidth + "px"; // Set the width of each square dynamically
-                squareDiv.style.height = squareWidth + "px"; // Set the height of each square dynamically
-                if (square) {
-                    squareDiv.style.backgroundColor = square.color || "";
-                    squareDiv.style.border = "1px solid transparent"; // Initially, set border to transparent
-                    if (square.highlighted) {
-                        squareDiv.style.border = "1px solid black"; // Add border when highlighted
-                    }
-                    const text = document.createElement("p"); // Create a paragraph element for the text
-                    const randomIndex = Math.floor(Math.random() * questions.length); // Generate a random index for questions array
-                    text.innerText = questions[randomIndex].question; // Set text content to a random question
-                    squareDiv.appendChild(text); // Append text to the square
-
-                    // Add event listener to check answer when clicked
-                    squareDiv.addEventListener("click", () => {
-                        const userAnswer = prompt("Answer the question: " + questions[randomIndex].question);
-                        const correctAnswer = questions[randomIndex].answer;
-                        if (userAnswer && userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-                            alert("Correct!");
-                            fetchNextQuestion(); // Fetch the next question if the answer is correct
-                        } else {
-                            alert("Incorrect. Try again!");
-                        }
-                    });
-                }
-                rowDiv.appendChild(squareDiv);
-            });
-            this.el.appendChild(rowDiv);
-        });
-    }
+      const canvasWidth = 50; // Desired canvas width in em
+      const squareWidth = this.el.offsetWidth / this.grid.width; // Calculate the width of each square based on the current width of the grid
+  
+      this.el.style.width = canvasWidth + "em"; // Set the width of the canvas
+  
+      this.grid.getBoardWithActiveShape().forEach((row, i) => {
+          const rowDiv = document.createElement("div");
+          rowDiv.className = "row";
+          row.forEach((square, j) => {
+              const squareDiv = document.createElement("div");
+              squareDiv.className = "square";
+              squareDiv.style.width = squareWidth + "px"; // Set the width of each square dynamically
+              squareDiv.style.height = squareWidth + "px"; // Set the height of each square dynamically
+              if (square) {
+                  squareDiv.style.backgroundColor = square.color || "";
+                  squareDiv.style.border = "1px solid transparent"; // Initially, set border to transparent
+                  if (square.highlighted) {
+                      squareDiv.style.border = "1px solid black"; // Add border when highlighted
+                  }
+                  if (square && square.text) { // Check if square has text
+                    const text = document.createElement("p");
+                    text.innerText = square.text; // Set the text content to the square's text
+                    squareDiv.appendChild(text);
+                }                
+                document.getElementById("userInput").addEventListener("keydown", function(event) {
+                  if (event.key === "Enter") {
+                      event.preventDefault(); // Prevent the default Enter key behavior (e.g., submitting a form)
+              
+                      // Check if the user has written something in the text field
+                      const userInput = document.getElementById("userInput").value.trim();
+                      if (userInput) {
+                          fetchNextQuestion();
+                          game.grid.resetGrid(); // Reset the grid after removing the block
+                          document.getElementById("userInput").value = ""; // Clear the input field
+                          game.addPiece(); // Add a new piece to continue the game
+                      }
+                  }
+              });              
+                          
+              }
+              rowDiv.appendChild(squareDiv);
+          });
+          this.el.appendChild(rowDiv);
+      });
+  }
+  
 
     render() {
         const grid = this.grid.getBoardWithActiveShape();
@@ -200,15 +221,16 @@ const list_of_display = ["Question A", "Question B", "Question C", "Question D"]
     }
 }
 
-  class Shape {
-    constructor(definition, color) {
+class Shape {
+  constructor(definition, color, text) {
       this.x = 0;
       this.y = 0;
       this.color = color;
+      this.text = text; // Store the text string
       this.definition = definition;
       this.resetDimensions();
       if (Math.random() > 0.5) this.mirror();
-    }
+  }
   
     mirror() {
       const dims = Array(this.height)
@@ -315,7 +337,8 @@ const list_of_display = ["Question A", "Question B", "Question C", "Question D"]
     }
   
     addPiece() {
-      this.currentShape = Shape.random();
+      const text = list_of_display.shift(); // Remove the first element from the list
+      this.currentShape = new Shape(Shape.random().definition, Shape.random().color, text); // Pass the text to the Shape constructor
       this.grid.setActiveShape(this.currentShape);
     }
   
@@ -369,5 +392,7 @@ const list_of_display = ["Question A", "Question B", "Question C", "Question D"]
     {"question": "Question 4", "answer": "4"}
   ];
 
-  const game = new Tetris();  
+  document.addEventListener('DOMContentLoaded', function() {
+    const game = new Tetris(); // Initialize Tetris game when DOM content is loaded
+});
   
