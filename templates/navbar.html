@@ -5,55 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
     .body {
-        font-family: 'Arial', sans-serif;        
+        font-family: 'calibri', sans-serif;
         position: relative;
-        height: 100vh;
         margin: 0;
         display: flex;
         align-items: center;
-        justify-content: flex-start; 
+        justify-content: flex-start;
         flex-direction: column;
-        padding-left: 10vh;
-        padding-right: 10vh;
+        padding: 0 10px 10px 10px; /* Adjust padding */
+    }
+
+    .content {
+        font-family: 'calibri', sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Align content at the center */
+        padding: 10px 10px 5px 10px;
+        width: 100%; /* Ensure the content spans the full width */
     }
 
     .container {
         padding: 0px;
-        background-color: #f9f9f9;
+        background-color: #ffffff;
         width: 100%; 
         box-sizing: border-box; 
     }
 
-    .content {
-        font-family: 'Arial', sans-serif;
-        display: flex; 
-        align-items: center; 
-        justify-content: flex-start; 
-        padding: 0px 10px; 
+    .logo {
+        margin-right: 10px;
+        height: 70px; /* Reduce height of the logo */
     }
 
     .button {
-        font-family: 'Arial', sans-serif;
+        font-family: 'calibri', sans-serif;
+        font-weight: 500;
+        font-size: larger; /* Reduce font size */
         display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        background-color: #007bff;
-        color: #fff;
+        padding: 10px 20px 10px 20px; /* Adjust padding */
+        background-color: #ffffff;
+        color: #000000;
         text-decoration: none;
-        border: none;
-        border-radius: 5px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: color 0.3s ease;
+        align-items: center;
+    }
+
+    .button:hover {
+        background-color: rgb(235, 235, 235); /* Set background color to white */
+    }
+
+    /* Button active effect */
+    .button:active {
+        background-color: rgb(215, 215, 215); /* Even darker blue background when clicked */
+        transform: translateY(1px); /* Shift button down slightly when clicked */
     }
 
     .button.round {
-        display: inline-flex; /* Use flexbox for centering */
-        align-items: center; /* Center vertically */
-        justify-content: center; /* Center horizontally */
-        width: 55px; /* Set the width and height to your desired size */
-        height: 50px;
-        padding: 0; /* Remove padding to make sure it's a perfect circle */
-        border-radius: 50%; /* Use 50% border-radius to make it a circle */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 55px;
+        height: 40px; /* Reduce height of the round button */
+        padding: 5px;
+        margin: 10px 10px 10px 20px; 
+        margin-right: 5vh;
+        border-radius: 50%;
         background-color: #3b5268;
         color: #fff;
         text-decoration: none;
@@ -66,23 +82,16 @@
         background-color: #000000;
     }
 
-    .button:hover {
-        background-color: #0056b3;
-    }
-
-    /* Button active effect */
-    .button:active {
-        background-color: #0057b3; /* Even darker blue background when clicked */
-        transform: translateY(1px); /* Shift button down slightly when clicked */
-    }
-
     /* styles login/logout button */
     .button.login {
-        background-color: red;
+        background-color: rgb(240, 100, 100);
+        color: #ffffff;
+        margin: 10px 10px 10px 20px;
+        margin-right: 5vh;
     }
 
     .button.login:hover {
-        background-color: #ec5008;
+        background-color: rgb(220, 80, 80);
     }
 
     /* styles logout button */
@@ -100,17 +109,18 @@
         top: 0px; 
     }
 
-    .logo {
-        margin-right: 10px; 
-    }
-
     .search {
         margin-right: auto;
     }
 
     .button-container {
-        margin-left: auto; 
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Align buttons at the center */
+        flex-wrap: wrap; /* Allow buttons to wrap if necessary */
+        margin-left: auto;
     }
+
     .dropdown {
         position: relative;
         display: inline-block;
@@ -127,7 +137,7 @@
 
     .dropdown-content a {
         color: black;
-        padding: 12px 16px;
+        padding: 10px 16px; /* Adjust padding */
         text-decoration: none;
         display: block;
     }
@@ -140,92 +150,20 @@
         display: block;
     }
 
-    .streak-container {
-        position: relative;
-        display: inline-block;
-    }
-
-    .streak-fire {
-        width: 40px;
-        height: 80px;
-        position: relative; 
-    }
-
-    .flame {
-        position: absolute;
-        bottom: -10px;
-        width: 10px;
-        height: 40px;
-        background: #ff5733; /* Firey color */
-        border-radius: 50% 50% 0 0;
-        transform: rotate(-45deg);
-        animation: flame 1s ease-in-out infinite alternate;
-    }
-
-    .flame:nth-child(2) {
-        left: 10px;
-        width: 10px;
-        height: 45px;
-        background: #f82e01; /* Firey color */
-        animation-delay: 0.1s;
-    }
-
-    .flame:nth-child(3) {
-        right: 10px;
-        width: 10px;
-        height: 47px;
-        background: #fffb00; /* Firey color */
-        animation-delay: 0.2s;
-    }
-
-    .flame:nth-child(4) {
-        left: 20px;
-        width: 10px;
-        height: 45px;
-        background: #ff5e00; /* Firey color */
-        animation-delay: 0.3s; 
-    }
-
-    .flame:nth-child(5) {
-        left: 30px;
-        background: #ffae00; /* Firey color */
-        animation-delay: 0.4s;
-    }
-
-    .streak-number {
-        position: absolute;
-        bottom: 0; /* Position at the bottom of the flames */
-        left: 50%;
-        transform: translateX(-50%);
-        color: #000000;
-        font-size: 16px;
-        font-weight: bold;
-        z-index: 1; /* Ensure the number is on top of the flames */
-    }
-
-    @keyframes flame {
-        0% {
-            transform: rotate(0deg) scaleY(1);
-        }
-        100% {
-            transform: rotate(0deg) scaleY(1.2);
-        }
-    }
-
 </style>
 </head>
 <body>
     <div class="container">
         <div class="content">
             <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='rsz_cogcards.png') }}"></a>
-            <form class="search" method="post" action="{{ url_for('search_results') }}">
-                <input type="search" value="" placeholder="Search..." name="search">
-            </form>
             <div class="button-container">
                 <!-- Other buttons -->
                 <a href="{{ url_for('find') }}" class="button">Find Flashcards</a>
                 <a href="{{ url_for('create') }}" class="button">Create Cards</a>
-                <a href="{{ url_for('minigames') }}" class="button">Study</a>
+                <a href="{{ url_for('create') }}" class="button">Your Decks</a>
+                <a href="{{ url_for('minigames') }}" class="button">Study & Play</a>
+                <a href="{{ url_for('create') }}" class="button">Science Behind</a>
+                <a href="{{ url_for('contact') }}" class="button">Contact</a>
                 {% if not session.logged_in %}
                     <a href="/login" class="button login">Login</a>
                 {% endif %}
@@ -240,20 +178,6 @@
                     </div>
                     {% endif %}
                 </div>
-    
-                <!-- Add the fire symbol here -->
-                {% if session.logged_in %}
-                <div class="streak-container">
-                    <div class="streak-fire">
-                        <div class="streak-number">34</div>
-                        <div class="flame"></div>
-                        <div class="flame"></div>
-                        <div class="flame"></div>
-                        <div class="flame"></div>
-                        <div class="flame"></div>
-                    </div>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>

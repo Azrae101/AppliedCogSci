@@ -130,6 +130,82 @@
             font-weight: lighter;
         }
 
+        /* steak */
+        
+    .streak-container {
+        position: relative;
+        display: inline-block;
+        padding: 10px 10px 5px 10px;
+    }
+
+    .streak-number {
+        position: absolute;
+        font-family: 'calibri', sans-serif;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #ffffff;
+        font-size: 24px; /* Reduce font size */
+        font-weight: bold;
+        z-index: 1;
+    }
+
+    .streak-fire {
+        width: 50px;
+        height: 50px; /* Reduce height of the streak container */
+        position: relative;
+    }
+
+    .flame {
+        position: absolute;
+        bottom: -10px;
+        width: 10px;
+        height: 50px; /* Reduce height of the flames */
+        background: #ff5733;
+        border-radius: 50% 50% 0 0;
+        transform: rotate(-45deg);
+        animation: flame 1s ease-in-out infinite alternate;
+    }
+
+    .flame:nth-child(2) {
+        left: 10px;
+        width: 10px;
+        height: 65px; /* Reduce height of the flames */
+        background: #e92b00;
+        animation-delay: 0.1s;
+    }
+
+    .flame:nth-child(3) {
+        right: 10px;
+        width: 10px;
+        height: 60px; /* Reduce height of the flames */
+        background: #ff5100;
+        animation-delay: 0.2s;
+    }
+
+    .flame:nth-child(4) {
+        left: 20px;
+        width: 10px;
+        height: 65px; /* Reduce height of the flames */
+        background: #e35502;
+        animation-delay: 0.3s;
+    }
+
+    .flame:nth-child(5) {
+        left: 40px;
+        background: #ffae00;
+        animation-delay: 0.4s;
+    }
+
+    @keyframes flame {
+        0% {
+            transform: rotate(0deg) scaleY(1);
+        }
+        100% {
+            transform: rotate(0deg) scaleY(1.2);
+        }
+    }
+
     </style>
 </head>
 <body>
@@ -138,6 +214,19 @@
             {% include "navbar.html" %}
         </div>
     </div>
+    <!-- Add the fire symbol here -->
+    {% if session.logged_in %}
+    <div class="streak-container">
+        <div class="streak-fire">
+            <div class="streak-number">34</div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+        </div>
+    </div>
+    {% endif %}
     <h1 class="title main-title">Minigames</h1>
     <h4 class="title under-title">Transforming education through playful learning experiences</h4>
     <div class="minigame-container">

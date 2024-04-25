@@ -20,41 +20,40 @@
             padding: 20px;
             text-align: center;
         }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
-        }
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-        }
+
         section {
             padding: 20px;
             align-items: center;
             padding-left: 25vh;
             padding-right: 25vh;
+            font-size: large;
+
         }
 
         h2 {
             color: darkblue;
         }
+
         .game {
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
             overflow: auto;
-
+            display: flex; /* Use flexbox to divide into two halves */
         }
+
+        .game-description {
+            flex: 1; /* Take half of the available space */
+            font-size: 24px;
+        }
+        
         .game img {
-            width: 250px; 
-            height: 250px; 
+            width: 400px; 
+            height: 400px; 
             float: right;
             margin-left: 20px;
         }
+
         footer {
             background-color: #333;
             color: #fff;
@@ -74,12 +73,7 @@
         {% include "navbar.html" %}
     </div>
     <header>
-        <h1>About CogCards</h1>
-        <nav>
-            <ul>
-                <li><a href="contact">Contact</a></li>
-            </ul>
-        </nav>
+        <h1>About CogCards</h1> 
     </header>
 
     <section id="intro">
@@ -102,37 +96,49 @@
     <section id="games">
         <h2>Featured Games</h2>
         <div class="game">
-            <h3>Cardchase</h3>
-            <p>Cardchase is a fast-paced game where users must match flashcards with their corresponding definitions before time runs out. It tests memory recall and helps reinforce learning in a fun and challenging way.</p>
+            <div class="game-description">
+                <h3>Cardchase</h3>
+                <p>Cardchase is a fast-paced game where users must match flashcards with their corresponding definitions before time runs out. It tests memory recall and helps reinforce learning in a fun and challenging way. Players can compete against the clock to improve their speed and accuracy, making it an exciting way to review key concepts.</p>
+            </div>
             <img src="static/Cardchase.png" alt="Cardchase">
         </div>
         <div class="game">
-            <h3>DefineDash</h3>
-            <p>DefineDash presents users with a series of terms and prompts them to type out their definitions. It helps users solidify their understanding of key concepts through active recall.</p>
+            <div class="game-description">
+                <h3>DefineDash</h3>
+                <p>DefineDash presents users with a series of terms and prompts them to type out their definitions. It helps users solidify their understanding of key concepts through active recall. This mode encourages users to engage deeply with the material, enhancing comprehension and retention.</p>
+            </div>
             <img src="static/DefineDash.png" alt="DefineDash">
         </div>
         <div class="game">
-            <h3>Flashcards</h3>
-            <p>The classic flashcard mode allows users to flip through virtual flashcards at their own pace, reviewing both term and definition to reinforce learning through repetition.</p>
+            <div class="game-description">
+                <h3>Flashcards</h3>
+                <p>The classic flashcard mode allows users to flip through virtual flashcards at their own pace, reviewing both term and definition to reinforce learning through repetition. Users can easily navigate between cards, marking their progress and focusing on areas that require more practice. This mode is particularly effective for consolidating information and improving memory retention.</p>
+            </div>
             <img src="static/Flashcards.png" alt="Flashcards">
         </div>
         <div class="game">
-            <h3>TetriCards</h3>
-            <p>TetriCards combines the addictive gameplay of Tetris with the study of flashcards. Users must clear lines by matching flashcards with their corresponding definitions, making learning as addictive as gaming.</p>
+            <div class="game-description">
+                <h3>TetriCards</h3>
+                <p>TetriCards combines the addictive gameplay of Tetris with the study of flashcards. Users must clear lines by matching flashcards with their corresponding definitions, making learning as addictive as gaming. This mode offers a unique approach to studying, blending entertainment with educational content to keep users engaged and motivated.</p>
+            </div>
             <img src="static/tetriss.png" alt="TetriCards">
         </div>
         <div class="game">
-            <h3>TermTime</h3>
-            <p>TermTime is a timed challenge where users must match terms with their definitions as quickly as possible. It helps improve memory recall and speed while making learning more exciting.</p>
+            <div class="game-description">
+                <h3>TermTime</h3>
+                <p>TermTime is a timed challenge where users must match terms with their definitions as quickly as possible. It helps improve memory recall and speed while making learning more exciting. This mode is ideal for users who enjoy competitive challenges and want to test their knowledge under pressure.</p>
+            </div>
             <img src="static/TermTimes.png" alt="TermTime">
         </div>
         <div class="game">
-            <h3>Quiz</h3>
-            <p>The Quiz mode presents users with multiple-choice questions based on the flashcards they've studied. It's a fun way to test knowledge retention and track progress.</p>
+            <div class="game-description">
+                <h3>Quiz</h3>
+                <p>The Quiz mode presents users with multiple-choice questions based on the flashcards they've studied. It's a fun way to test knowledge retention and track progress. Users can challenge themselves with different difficulty levels and compete with friends to see who can achieve the highest scores.</p>
+            </div>
             <img src="static/Quiz.png" alt="Quiz">
         </div>
     </section>
-
+    
     <section id="reviews">
         <h2>What Our Users Say</h2>
         <div class="review">
