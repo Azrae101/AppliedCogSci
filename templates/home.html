@@ -4,13 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CogCards - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        header {
+            background-color: darkblue;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        section {
+            padding: 20px;
+            align-items: center;
+            padding-left: 25vh;
+            padding-right: 25vh;
+        }
+
+        h2 {
+            color: darkblue;
+        }
+        .game {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            overflow: auto;
+
+        }
+        .game img {
+            width: 250px; 
+            height: 250px; 
+            float: right;
+            margin-left: 20px;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .navbar-container {
+            padding: 0; /* Remove padding for navbar */
+        }
+
+    </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="content">
-            {% include "navbar.html" %}
-        </div>
+    <div class=".navbar-container">
+        {% include "navbar.html" %}
     </div>
-    <img src="{{ url_for('static', filename='home.png') }}" class="resized-img">
+    <header>
+        <h1>About CogCards</h1>
+        <nav>
+            <ul>
+                <li><a href="contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="intro">
+        <h2>Welcome to CogCards</h2>
+        <p>CogCards is an interactive app and website designed to enhance student learning through personalized flashcards and memory techniques. Drawing from research on the effectiveness of flashcards, CogCards offers a unique approach to studying key concepts and terms. With features like synesthetic memory techniques, mini-games, and research-based learning strategies, CogCards transforms the traditional flashcard experience into an engaging and effective learning tool.</p>
+    </section>
+
+    <section id="product-details">
+        <h2>Product Details</h2>
+        <p>The frontend product is an interactive website. It offers various learning modes to better match individual user expectations, from standard flashcards viewing, to tetris-like mini-games, which gamify the experience and allow users to study the material by having fun. The website allows users to create their own study content or access other user-generated material via a search tool. The decks can then be modified, shared, exported, deleted and used for studying.</p>
+        <p>The app consists of four different learning modes in total. First, a traditional-like flashcard viewing based on real-life use of flashcards. Then, an open-answers quiz, which allows the users to test their familiarity with the material by typing out the definitions. Finally, there are two mini-games designed to engage users in the learning process by making it more enjoyable and fun.</p>
+    </section>
+
+    <section id="product-details">
+        <h2>Cognitive Science</h2>
+        <p>CogCards utilizes effective learning techniques like spaced repetition and mnemonics, fostering improved memory retention. Through gamification and diverse flashcard categories, it offers an engaging user experience with seamless integration across devices. However, potential overreliance may impede critical thinking, while ethical concerns such as addiction risk and reinforcement of extrinsic motivation arise. 
+        </p>
+    </section>
+
+    <section id="games">
+        <h2>Featured Games</h2>
+        <div class="game">
+            <h3>Cardchase</h3>
+            <p>Cardchase is a fast-paced game where users must match flashcards with their corresponding definitions before time runs out. It tests memory recall and helps reinforce learning in a fun and challenging way.</p>
+            <img src="static/Cardchase.png" alt="Cardchase">
+        </div>
+        <div class="game">
+            <h3>DefineDash</h3>
+            <p>DefineDash presents users with a series of terms and prompts them to type out their definitions. It helps users solidify their understanding of key concepts through active recall.</p>
+            <img src="static/DefineDash.png" alt="DefineDash">
+        </div>
+        <div class="game">
+            <h3>Flashcards</h3>
+            <p>The classic flashcard mode allows users to flip through virtual flashcards at their own pace, reviewing both term and definition to reinforce learning through repetition.</p>
+            <img src="static/Flashcards.png" alt="Flashcards">
+        </div>
+        <div class="game">
+            <h3>TetriCards</h3>
+            <p>TetriCards combines the addictive gameplay of Tetris with the study of flashcards. Users must clear lines by matching flashcards with their corresponding definitions, making learning as addictive as gaming.</p>
+            <img src="static/tetriss.png" alt="TetriCards">
+        </div>
+        <div class="game">
+            <h3>TermTime</h3>
+            <p>TermTime is a timed challenge where users must match terms with their definitions as quickly as possible. It helps improve memory recall and speed while making learning more exciting.</p>
+            <img src="static/TermTimes.png" alt="TermTime">
+        </div>
+        <div class="game">
+            <h3>Quiz</h3>
+            <p>The Quiz mode presents users with multiple-choice questions based on the flashcards they've studied. It's a fun way to test knowledge retention and track progress.</p>
+            <img src="static/Quiz.png" alt="Quiz">
+        </div>
+    </section>
+
+    <section id="reviews">
+        <h2>What Our Users Say</h2>
+        <div class="review">
+            <p>"CogCards has been a lifesaver during my exam preparation. The games make studying fun, and I've noticed a significant improvement in my retention of key concepts."</p>
+            <p class="author">- Maria, University Student</p>
+        </div>
+        <div class="review">
+            <p>"I love how I can create my own flashcard decks or access decks created by other users. It's made studying so much more efficient!"</p>
+            <p class="author">- Jonas, College Student</p>
+        </div>
+        <div class="review">
+            <p>"The mini-games are addictive! I find myself studying for hours without even realizing it."</p>
+            <p class="author">- Emma, Graduate Student</p>
+        </div>
+    </section>
+    <section id="product-details">
+        <h2> </h2>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 CogCards. All rights reserved.</p>
+    </footer>
 </body>
 </html>

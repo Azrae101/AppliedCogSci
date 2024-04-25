@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - CogCards</title>
+</head>
+<style>
+    /* styles.css */
+
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #fff; /* Set background color to white */
+}
+
+/* Contact form container */
+#contact-form {
+    max-width: 1000px; /* Limit width of the form */
+    width: 100%; /* Take full width of the container */
+    margin: auto; /* Center horizontally */
+    padding: 20px; /* Add padding for better spacing */
+    box-sizing: border-box; /* Include padding in the width */
+    background-color: #fff; /* Set background color to white */
+}
+
+header {
+    background-color: darkblue;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+section {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+/* Contact info container */
+#contact-info {
+    background-color: #f0f0f0; /* Change background color */
+    padding-bottom: 60px; /* Add padding to the bottom */
+    padding-left: 40vh;
+    padding-right: 40vh;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+/* Form styles */
+form label {
+    display: block;
+    margin-bottom: 5px;
+    background-color: #fff; /* Set background color to white */
+}
+
+form input[type="text"],
+form input[type="email"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form textarea {
+    height: 150px;
+    background-color: #fff; /* Set background color to white */
+
+}
+
+form button {
+    background-color: darkcyan;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Footer styles */
+footer {
+    background-color:darkblue;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    bottom: 0;
+    width: 100%;
+}
+
+</style>
+
+<body>
+    <div class="container">
+        <div class="content">
+            {% include "navbar.html" %}
+        </div>
+    </div>
+    <header>
+        <h1>Contact Us</h1>
+    </header>
+
+    <section id="contact-form">
+        <h2>Send us a Message</h2>
+        <form action="submit_contact_form.php" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
+    <section id="contact-info">
+        <h2>Contact Information</h2>
+        <p>If you have any questions or feedback, feel free to reach out to us using the form above or via the contact information below:</p>
+        <ul>
+            <li>Email: info@cogcards.com</li>
+            <li>Phone: +45 1234 5678</li>
+            <li>Address: 123 Study Street, Aarhus, Denmark</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 CogCards. All rights reserved.</p>
+    </footer>
+</body>
+</html>
