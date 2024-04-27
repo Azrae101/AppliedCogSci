@@ -6,7 +6,8 @@
     <title>Study with minigames</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;        
+            font-family: 'Arial', sans-serif;    
+            background-color: white;    
             position: relative;
             height: 100vh;
             margin: 0;
@@ -14,6 +15,24 @@
             align-items: center;
             justify-content: flex-start; 
             flex-direction: column;
+        }
+
+        header {
+            background-color: #5689a2d7; /* Change the background color */
+            color: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for a more visible effect */
+        }
+
+        footer {
+            background-color:#5689a2d7;
+            color: #fff;
+            text-align: center;
+            margin-top: 10vh;
+            padding: 20px;
+            width: 100%;            
         }
 
         .title {
@@ -206,6 +225,19 @@
         }
     }
 
+    /* Style the main title */
+h1 {
+    font-size: 36px; /* Increase font size */
+    margin-bottom: 5px; /* Add some margin bottom */
+}
+
+/* Style the sub title */
+h4 {
+    font-size: 18px; /* Increase font size */
+    font-weight: normal; /* Remove bold style */
+    margin-top: 5px; /* Add some margin top */
+}
+
     </style>
 </head>
 <body>
@@ -214,21 +246,25 @@
             {% include "navbar.html" %}
         </div>
     </div>
-    <!-- Add the fire symbol here -->
-    {% if session.logged_in %}
-    <div class="streak-container">
-        <div class="streak-fire">
-            <div class="streak-number">34</div>
-            <div class="flame"></div>
-            <div class="flame"></div>
-            <div class="flame"></div>
-            <div class="flame"></div>
-            <div class="flame"></div>
+    <header>
+        <h1>Minigames</h1>
+        <h4>Transforming education through playful learning experiences</h4>
+    </header>
+    <p> </p>
+        <!-- Add the fire symbol here -->
+        {% if session.logged_in %}
+        <div class="streak-container">
+            <div class="streak-fire">
+                <div class="streak-number">34</div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+            </div>
         </div>
-    </div>
-    {% endif %}
-    <h1 class="title main-title">Minigames</h1>
-    <h4 class="title under-title">Transforming education through playful learning experiences</h4>
+        <p> </p>
+        {% endif %}
     <div class="minigame-container">
         <div class="minigame">
             <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
@@ -258,5 +294,8 @@
             <span>Quiz</span>
         </div>
     </div>
+    <footer>
+        <p>&copy; 2024 CogCards. All rights reserved.</p>
+    </footer>
 </body>
 </html>

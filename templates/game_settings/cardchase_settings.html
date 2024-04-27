@@ -10,11 +10,14 @@
             {% include "navbar.html" %}
         </div>
     </div>
-    <h1 class="title main-title">Card Chase</h1>
-    <h4 class="title under-title">Write the answer to the question before the time runs out</h4>
+    <header>
+        <h1 class="title main-title">Card Chase</h1>
+        <h4 class="title under-title">Write the answer to the question before the time runs out</h4>
+    </header>
     <div class="containerlol">
         <div class="left-container">
             <!-- Cardchase section -->
+            <h2>Cardchase</h2>
             <!-- Study deck -->
             <div class="containernew">
                 <h3>Study Deck: Cognitive Science</h3>
@@ -24,14 +27,28 @@
             <p> </p>
             <!-- Placeholder for game GIF preview -->
             <div class="gif-container">
-                <img src="static/cardchased.gif" alt="[Game Preview]">
+                <img src="static/cardchased.gif" width="350">
             </div>
         </div>
 
         <div class="right-container">
             <!-- Back to Home Button -->
             <button class="button_settings" onclick="location.href='/minigames'">Back to Mingames</button>
-                
+            
+            <div class="description-container">
+                <h2>Description</h2>
+                <p>Get ready for the "Card Chase Game"!</p>
+                <p>Here's how it works:</p>
+                <ul>
+                    <li>Questions will appear on the screen and move downwards. </li>
+                    <li>Type your answer before they reach the bottom.</li>
+                    <li>Press Enter to submit your answer in the text-box.</li>
+                    <li>Get it right, and you'll earn points and move on to the next question.</li>
+                </ul>
+                <p>But be quick - mistakes or delays mean game over!</p>
+                <p>With new questions each time, it's always fresh and exciting.</p>
+                <p>Let's see how far you can go!</p>
+            </div>
             <!-- Settings section -->
             <div class="settings-container">
                 <h2>Settings</h2>

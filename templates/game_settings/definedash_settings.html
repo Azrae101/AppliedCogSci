@@ -10,8 +10,10 @@
             {% include "navbar.html" %}
         </div>
     </div>
-    <h1 class="title main-title">Define Dash</h1>
-    <h4 class="title under-title">Define the term as quickly as possible</h4>
+    <header>
+        <h1 class="title main-title">Define Dash</h1>
+        <h4 class="title under-title">Define the term as quickly as possible</h4>    
+    </header>
     <div class="containerlol">
         <div class="left-container">
             <!-- Cardchase section -->
@@ -25,13 +27,34 @@
             <p> </p>
             <!-- Placeholder for game GIF preview -->
             <div class="gif-container">
-                <img src="static/definedash.gif" alt="[Game Preview]">
+                <img src="static/definedash.gif" width="400">
             </div>        
         </div>
 
         <div class="right-container">      
             <!-- Back to Home Button -->
             <button class="button_settings" onclick="location.href='/minigames'">Back to Mingames</button>
+            
+            <div class="description-container">
+                <h2>Description</h2>
+                <p>In this game, your goal is to define the given term as precisely as you can before the time runs out.</p>
+                <p>Let's see how sharp your vocabulary and memory skills are!</p>
+                <ul>
+                    <li>Look at the term provided at the top of the screen.</li>
+                    <li>Type your definition into the input box below the term.</li>
+                    <li>Press "Enter" on your keyboard to submit your definition.</li>
+                    <li>Be as accurate and detailed as possible!</li>
+                    <li>If you want to quit, simply type "q" or "quit" and press "Enter".</li>
+                    <li>You have 60 seconds to define each term.</li>
+                </ul>
+                <p>Tips and advice</p>
+                <ul>
+                    <li>Pay close attention to the term and try to recall its meaning accurately.</li>
+                    <li>Think about the most essential aspects of the term and include them in your definition.</li>
+                    <li>Don't worry if you're unsure about a term; give it your best shot!</li>
+                </ul>
+                <p>Ready to test your vocabulary skills? Let's DefineDash!</p>
+            </div>
             <!-- Settings section -->
             <div class="settings-container">
                 <h2>Settings</h2>

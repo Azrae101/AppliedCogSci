@@ -15,7 +15,7 @@
             margin: 0 auto;
         }
         header {
-            background-color: darkblue;
+            background-color:#5689a2d7;
             color: #fff;
             padding: 20px;
             text-align: center;
@@ -28,6 +28,20 @@
             padding-right: 25vh;
             font-size: large;
 
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-items: right;
         }
 
         h2 {
@@ -44,7 +58,7 @@
 
         .game-description {
             flex: 1; /* Take half of the available space */
-            font-size: 24px;
+            font-size: 18px;
         }
         
         .game img {
@@ -55,7 +69,7 @@
         }
 
         footer {
-            background-color: #333;
+            background-color:#5689a2d7;
             color: #fff;
             text-align: center;
             padding: 20px;
@@ -99,6 +113,15 @@
             <div class="game-description">
                 <h3>Cardchase</h3>
                 <p>Cardchase is a fast-paced game where users must match flashcards with their corresponding definitions before time runs out. It tests memory recall and helps reinforce learning in a fun and challenging way. Players can compete against the clock to improve their speed and accuracy, making it an exciting way to review key concepts.</p>
+                <p>Here's how it works:</p>
+                <ul>
+                    <li>Questions will appear on the screen and move downwards. </li>
+                    <li>Type your answer before they reach the bottom.</li>
+                    <li>Press Enter to submit your answer in the text-box.</li>
+                    <li>Get it right, and you'll earn points and move on to the next question.</li>
+                </ul>
+                <p>But be quick - mistakes or delays mean game over!</p>
+                <p>Let's see how far you can go!</p>
             </div>
             <img src="static/Cardchase.png" alt="Cardchase">
         </div>
@@ -106,6 +129,14 @@
             <div class="game-description">
                 <h3>DefineDash</h3>
                 <p>DefineDash presents users with a series of terms and prompts them to type out their definitions. It helps users solidify their understanding of key concepts through active recall. This mode encourages users to engage deeply with the material, enhancing comprehension and retention.</p>
+                <p>In this game, your goal is to define the given term as precisely as you can before the time runs out.</p>
+                <p>Tips and advice</p>
+                <ul>
+                    <li>Pay close attention to the term and try to recall its meaning accurately.</li>
+                    <li>Think about the most essential aspects of the term and include them in your definition.</li>
+                    <li>Don't worry if you're unsure about a term; give it your best shot!</li>
+                </ul>
+                <p>Ready to test your vocabulary skills? Let's DefineDash!</p>
             </div>
             <img src="static/DefineDash.png" alt="DefineDash">
         </div>
@@ -113,6 +144,16 @@
             <div class="game-description">
                 <h3>Flashcards</h3>
                 <p>The classic flashcard mode allows users to flip through virtual flashcards at their own pace, reviewing both term and definition to reinforce learning through repetition. Users can easily navigate between cards, marking their progress and focusing on areas that require more practice. This mode is particularly effective for consolidating information and improving memory retention.</p>
+                <p>Tips and advice:</p>
+                <ul>
+                    <li>Take your time to think about each term before revealing the answer.
+                    </li>
+                    <li>Try to recall the answer before flipping the card to test your memory.
+                    </li>
+                    <li>Don't worry if you're unsure about a term; use the "Next" button to move forward and come back to it later.
+                    </li>
+                </ul>
+                <p>Prepare to sharpen your memory and knowledge with our interactive flashcard game.</p>
             </div>
             <img src="static/Flashcards.png" alt="Flashcards">
         </div>
@@ -120,6 +161,16 @@
             <div class="game-description">
                 <h3>TetriCards</h3>
                 <p>TetriCards combines the addictive gameplay of Tetris with the study of flashcards. Users must clear lines by matching flashcards with their corresponding definitions, making learning as addictive as gaming. This mode offers a unique approach to studying, blending entertainment with educational content to keep users engaged and motivated.</p>
+                <p>In this unique twist on the classic Tetris game, you'll be combining the challenge of Tetris with the fun of answering questions.</p>
+                <p>Tips and advice</p>
+                <ul>
+                    <li>Focus on both answering questions accurately and strategically placing the falling shapes.
+                    </li>
+                    <li>Pay attention to the shapes' colors and the questions displayed on them.
+                    </li>
+                </ul>
+                <p>Are you ready to test your Tetris skills and knowledge? Let's dive into the TetriCards challenge!
+                </p>
             </div>
             <img src="static/tetriss.png" alt="TetriCards">
         </div>
@@ -127,6 +178,13 @@
             <div class="game-description">
                 <h3>TermTime</h3>
                 <p>TermTime is a timed challenge where users must match terms with their definitions as quickly as possible. It helps improve memory recall and speed while making learning more exciting. This mode is ideal for users who enjoy competitive challenges and want to test their knowledge under pressure.</p>
+                <p>Get ready to test your typing skills and knowledge in this exciting challenge.</p>
+                <p>The goal is simple: type as many terms as you can before time runs out!</p>
+                <ul>
+                    <li>Begin by typing your answers into the text field provided. Each term you type should match one of the elements displayed on the screen.</li>
+                    <li>Watch the timer countdown to see how much time you have left. You have 60 seconds to type as many correct terms as possible.</li>
+                    <li>The game ends when time runs out. If you successfully type all the displayed terms before time is up, you win!</li>
+                </ul>
             </div>
             <img src="static/TermTimes.png" alt="TermTime">
         </div>
@@ -134,6 +192,13 @@
             <div class="game-description">
                 <h3>Quiz</h3>
                 <p>The Quiz mode presents users with multiple-choice questions based on the flashcards they've studied. It's a fun way to test knowledge retention and track progress. Users can challenge themselves with different difficulty levels and compete with friends to see who can achieve the highest scores.</p>
+                <p>Here is how it works:</p>
+                <ul>
+                    <li>Read the question displayed on the screen carefully. Each question is based on a flashcard term.</li>
+                    <li>Enter your answer in the text field provided below the question. Type your response accurately to match the correct term.</li>
+                    <li>Once you're confident with your answer, click the "Submit" button to check if you're correct.</li>
+                </ul>
+                <p>Get ready to put your knowledge to the test with our multiple-choice quiz game!</p>
             </div>
             <img src="static/Quiz.png" alt="Quiz">
         </div>
