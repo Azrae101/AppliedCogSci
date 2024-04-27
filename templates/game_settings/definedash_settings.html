@@ -17,24 +17,15 @@
     <div class="containerlol">
         <div class="left-container">
             <!-- Cardchase section -->
-            <h2>Define Dash</h2>
-            <!-- Study deck -->
-            <div class="containernew">
-                <h3>Study Deck: Cognitive Science</h3>
-                <a href="{{ url_for('create') }}" class="button">Change deck</a>
-            </div>            
-            <p> </p>
-            <p> </p>
             <!-- Placeholder for game GIF preview -->
             <div class="gif-container">
-                <img src="static/definedash.gif" width="400">
-            </div>        
+                <img src="static/definedash.gif" width="800">
+            </div>
+            <!-- Start game button -->
+            <button class="buttonlol" onclick="startGame()">Let's Study!</button>
         </div>
 
         <div class="right-container">      
-            <!-- Back to Home Button -->
-            <button class="button_settings" onclick="location.href='/minigames'">Back to Mingames</button>
-            
             <div class="description-container">
                 <h2>Description</h2>
                 <p>In this game, your goal is to define the given term as precisely as you can before the time runs out.</p>
@@ -58,6 +49,11 @@
             <!-- Settings section -->
             <div class="settings-container">
                 <h2>Settings</h2>
+                <!-- Study deck -->
+                <div class="containernew">
+                    <h3>Study Deck: Cognitive Science</h3>
+                    <a href="{{ url_for('create') }}" class="button">Change deck</a>
+                </div>  
                 <!-- Options menu -->
                 <h3 class="settings-title">Difficulty</h3>
                 <select id="options" name="options" class="options-menu">
@@ -73,13 +69,13 @@
             <div class="settings-container">
                 <h2>High Scores</h2>
                 <ul class="highscores-list">
-                    <li>Player 1: 10</li>
+                    <li>Player 1: 15</li>
                     <li>Player 2: 12</li>
                     <li>Player 3: 8</li>
                 </ul>
             </div>
-            <!-- Start game button -->
-            <button class="buttonlol" onclick="startGame()">Let's Study!</button>
+            <!-- Back to Home Button -->
+            <button class="button_settings" onclick="location.href='/minigames'">Back to Mingames</button>
         </div>
     </div>
     <script type='text/javascript'>

@@ -74,6 +74,10 @@ def find():
 def create():
     return render_template('create.html')
 
+@app.route('/sciencebehind')
+def sciencebehind():
+    return render_template('science_behind.html')
+
 @app.route('/minigames')
 def minigames():
     return render_template('minigames.html')

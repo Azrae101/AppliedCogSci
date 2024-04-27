@@ -24,16 +24,16 @@
         .left-container {
             flex-grow: 1;
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 0;
             margin-top: 0%;
         }
 
         .right-container {
             flex-grow: 1;
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 1px 10px; /* Adjusted padding */
             place-content: center;
-            width: calc(45% - 240px); /* Adjusted width */
+            width: calc(80% - 240px); /* Adjusted width */
         }
 
         .left-container {
@@ -54,6 +54,7 @@
             display: block;
             margin: 10px auto;
             border-radius: 5px;
+            width: 95%;
         }
 
         .buttonlol:hover {
@@ -110,8 +111,7 @@
         .containernew {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
+            width: 25%;
         }
 
         .containernew h3 {
@@ -131,10 +131,16 @@
             background-color: rgb(190, 190, 190);
         }
 
-        /* Assuming you have a container class named "gif-container" */
         .gif-container {
             outline: 2px solid black; /* Adjust the color and width of the outline as needed */
             display: inline-block; /* Ensure the container doesn't stretch to full width */
+            padding: 0; /* Remove any existing padding */
+            margin: 0; /* Reset margin */
+        }
+
+        .gif-container img {
+            margin-left: 1px; /* Set left margin */
+            margin-right: 1px; /* Set right margin */
         }
 
         /* Button Style */
