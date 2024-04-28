@@ -5,103 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TetriCards</title>
     {% include "game_settings/game_settings.html" %}
-    <link rel="stylesheet" type="text/css" href="static/game_settingss.css">
+</head>
+<body>
     <div class="container">
         <div class="content">
+            <!-- Navbar -->
             {% include "navbar.html" %}
         </div>
     </div>
     <header>
         <h1 class="title main-title">TetriCards</h1>
-        <h4 class="title under-title">Write the term to the definition before the blocks stack up</h4>
+        <h4 class="title under-title">Write the term to the definition before the blocks stack up</h4>    
     </header>
     <div class="containerlol">
+        <!-- Left Container -->
         <div class="left-container">
-            <!-- Cardchase section -->
-            <h2>TetriCards</h2>
-            <!-- Study deck -->
-            <div class="containernew">
-                <h3>Study Deck: Cognitive Science</h3>
-                <a href="{{ url_for('create') }}" class="button">Change deck</a>
-            </div>            
-            <p> </p>
-            <p> </p>
-            <!-- Placeholder for game GIF preview -->
-            <div class="gif-container">
-                <img src="static/tetris.gif" alt="[Game Preview]">
-            </div>        
+            <!-- High Scores Container -->
+            <div class="highscores-container">
+                <h2 class="highscores-title">High Scores</h2>
+                <ul class="highscores-list">
+                    <li><span class="player-name">Player 7:</span> <span class="player-score">19</span></li>
+                    <li><span class="player-name">Player 10:</span> <span class="player-score">16</span></li>
+                    <li><span class="player-name">Player 1:</span> <span class="player-score">15</span></li>
+                    <li><span class="player-name">Player 6:</span> <span class="player-score">14</span></li>
+                    <li><span class="player-name">Player 8:</span> <span class="player-score">13</span></li>
+                    <li><span class="player-name">Player 2:</span> <span class="player-score">12</span></li>
+                    <li><span class="player-name">Player 9:</span> <span class="player-score">11</span></li>
+                    <li><span class="player-name">Player 5:</span> <span class="player-score">10</span></li>
+                    <li><span class="player-name">Player 3:</span> <span class="player-score">8</span></li>
+                    <li><span class="player-name">Player 4:</span> <span class="player-score">7</span></li>
+                </ul>            
+            </div>
         </div>
 
-        <div class="right-container">
-            <!-- Back to Home Button -->
-            <button class="button_settings" onclick="location.href='/minigames'">Back to Mingames</button>        
-            
-            <div class="description-container">
-                <h2>Description</h2>
-                <p>In this unique twist on the classic Tetris game, you'll be combining the challenge of Tetris with the fun of answering questions.</p>
-                <p>Get ready for an exciting brain-teaser!</p>
-                <p>Here's how it works:</p>
-                <ul>
-                    <li> Use the arrow keys on your keyboard to move and rotate the falling shapes. Arrange them to create horizontal lines without any gaps.</li>
-                    <li>As you play, you'll encounter questions displayed on the shapes. Type the correct answer into the text field below the game board and press "Enter" to submit your answer.</li>
-                    <li>Successfully answering questions and clearing lines will earn you points. Keep an eye on your score displayed on the screen.</li>
-                    <li>The game ends when the falling shapes reach the top of the grid or when you're unable to answer a question correctly.</li>
-                    <li> If you want to play again, simply click the "Restart" button to reset the game and start fresh.</li>
-                </ul>
-                <p>Tips and advice</p>
-                <ul>
-                    <li>Focus on both answering questions accurately and strategically placing the falling shapes.
-                    </li>
-                    <li>Pay attention to the shapes' colors and the questions displayed on them.
-                    </li>
-                    <li>Keep a close watch on the game board and the questions to maximize your score.
-                    </li>
-                </ul>
-                <p>Are you ready to test your Tetris skills and knowledge? Let's dive into the TetriCards challenge!
-                </p>
+        <!-- Center Container -->
+        <div class="center-container">
+            <!-- Preview of the game (gif) and "Let's study" button -->
+            <div class="gif-container">
+                <img src="static/tetris.gif" width="375">
+                <button class="buttonlol" onclick="startGame()">Let's Study!</button>
             </div>
-            
-            <!-- Settings section -->
-            <div class="settings-container">
-                <h2>Settings</h2>
-                <!-- Options menu -->
-                <h3 class="settings-title">Difficulty</h3>
-                <select id="options" name="options" class="options-menu">
-                    <option value="" disabled selected>Select Difficulty</option>
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                </select>
-                <p> </p>
+        </div>
+
+    <!-- Right Container -->
+    <div class="right-container">      
+        <!-- Settings Container -->
+        <div class="settings-container">
+            <h2>Settings</h2>
+            <!-- Study deck -->
+            <h3 class="settings-title">Study Deck</h3>
+            <div class="containernew">
+                <div class="button-containerdeck">
+                    <div class="deck-box">
+                        Cognitive Science
+                    </div>
+                    <a href="{{ url_for('create') }}" class="button">View Deck</a>
+                    <a href="{{ url_for('find') }}" class="button">Change Deck</a>
+                </div>
+            </div>  
+            <!-- Options menu -->
+            <h3 class="settings-title">Difficulty</h3>
+            <select id="options" name="options" class="options-menu">
+                <option value="" disabled selected>Select Difficulty</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <p> </p>
+            <!-- Toggle buttons -->
+            <h3 class="settings-title">Modes</h3>
+            <div class="button-containerlol">
                 <button class="toggle-button" onclick="toggleEndlessMode()">Endless Mode: Off</button>
                 <button class="toggle-button2" onclick="toggleTimeMode()">Time limit: Off</button>
             </div>
-            <!-- High scores section -->
-            <div class="settings-container">
-                <h2>High Scores</h2>
-                <ul class="highscores-list">
-                    <li>Player 1: 10</li>
-                    <li>Player 2: 12</li>
-                    <li>Player 3: 8</li>
-                </ul>
-            </div>
-            <!-- Start game button -->
-            <button class="buttonlol" onclick="startGame()">Let's Study!</button>
         </div>
     </div>
+</div>
+
+<!-- Game Description -->
+<div class="description-container">
+    <div class="game-description">
+        <h2>Description</h2>
+        <p>In this unique twist on the classic Tetris game, you'll be combining the challenge of Tetris with the fun of answering questions.</p>
+        <p>TetriCards combines the addictive gameplay of Tetris with the study of flashcards. Users must clear lines by matching flashcards with their corresponding definitions, making learning as addictive as gaming. This mode offers a unique approach to studying, blending entertainment with educational content to keep users engaged and motivated. In this unique twist on the classic Tetris game, you'll be combining the challenge of Tetris with the fun of answering questions.</p>
+        <p>Get ready for an exciting brain-teaser!</p>
+    </div>
+    <div class="game-instructions">
+        <h2>Instructions</h2>
+        <p>Here's how it works:</p>
+        <ul>
+            <li> Use the arrow keys on your keyboard to move and rotate the falling shapes. Arrange them to create horizontal lines without any gaps.</li>
+            <li>As you play, you'll encounter questions displayed on the shapes. Type the correct answer into the text field below the game board and press "Enter" to submit your answer.</li>
+            <li>Successfully answering questions and clearing lines will earn you points. Keep an eye on your score displayed on the screen.</li>
+            <li>The game ends when the falling shapes reach the top of the grid or when you're unable to answer a question correctly.</li>
+            <li> If you want to play again, simply click the "Restart" button to reset the game and start fresh.</li>
+        </ul>
+        <p>Tips and advice</p>
+        <ul>
+            <li>Focus on both answering questions accurately and strategically placing the falling shapes.
+            </li>
+            <li>Pay attention to the shapes' colors and the questions displayed on them.
+            </li>
+            <li>Keep a close watch on the game board and the questions to maximize your score.
+            </li>
+        </ul>
+        <p>Are you ready to test your Tetris skills and knowledge? Let's dive into the TetriCards challenge!
+        </p>
+    </div>
+</div>
+
     <script type='text/javascript'>
         function startGame() {
             // Redirect to cardchase.html
             window.location.href = 'tetris';
         }
 
+        /* JavaScript */
         function toggleEndlessMode() {
             // Toggle Endless Mode
             var button = document.querySelector('.toggle-button');
             if (button.textContent === 'Endless Mode: Off') {
                 button.textContent = 'Endless Mode: On';
+                button.classList.add('on'); // Add 'on' class
             } else {
                 button.textContent = 'Endless Mode: Off';
+                button.classList.remove('on'); // Remove 'on' class
+            }
+        }
+
+        function toggleTimeMode() {
+            // Toggle Time Mode
+            var button = document.querySelector('.toggle-button2');
+            if (button.textContent === 'Time limit: Off') {
+                button.textContent = 'Time limit: On';
+                button.classList.add('on'); // Add 'on' class
+            } else {
+                button.textContent = 'Time limit: Off';
+                button.classList.remove('on'); // Remove 'on' class
             }
         }
     </script>

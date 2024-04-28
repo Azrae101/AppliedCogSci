@@ -30,9 +30,7 @@
         #userInput {
             display: block;
             position: absolute; /* Position absolutely */
-            bottom: 10px; /* Align to the bottom */
-            left: calc(50% - 255px); /* Center horizontally */
-            width: 520px; /* Width same as canvas width */
+            width: 820px; /* Width same as canvas width */
             margin: 0 auto; /* Center horizontally */
             background-color: white; /* Set input background color to transparent */
             color: black; /* Set input text color to white */
@@ -50,7 +48,7 @@
         }
         .back-btn {
             position: absolute;
-            bottom: -50px; 
+            bottom: -100px; 
             left: 50%;
             transform: translateX(-50%);
             padding: 10px 20px;
@@ -72,7 +70,7 @@
     <div id="container">
         <h1>Card Chase Game</h1>
         <!-- Canvas element where the game will be drawn -->
-        <canvas id="gameCanvas" width="500" height="750"></canvas>
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
         <!-- Input field for user's answer -->
         <input type="text" id="userInput" placeholder="Enter your answer...">
         <!-- Submit button to submit the user's answer (hidden) -->
@@ -85,8 +83,10 @@
         <!-- Point counter -->
         <p id="pointCounter" style="font-size: 20px; margin-top: 20px;"></p>
     </div>
+    <!-- TODO: Add space here -->
+
     <!-- Back to Home Button -->
-    <button class="back-btn" onclick="location.href='/minigames'">Back to Mingames</button>
+    <button class="back-btn" onclick="location.href='/cardchase_settings'">Back to Menu</button>
 
     <!-- JavaScript code -->
     <script>
