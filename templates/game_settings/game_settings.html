@@ -21,27 +21,72 @@
         }
 
         /* Left and right containers */
-        .left-container {
-            flex-grow: 1;
-            border: 1px solid #ccc;
-            padding: 0;
-            margin-top: 0%;
-        }
-
+        .left-container,
         .right-container {
             flex-grow: 1;
-            border: 1px solid #ccc;
-            padding: 1px 10px; /* Adjusted padding */
-            place-content: center;
-            width: calc(80% - 240px); /* Adjusted width */
+            padding: 0;
+            width: 25%; /* Set a fixed width */
         }
 
-        .left-container {
+        /* Center container */
+        .center-container {
+            flex-grow: 1;
+            padding: 0;
+            align-items: center;
             text-align: center;
+            display: flex; /* Add this */
+            flex-direction: column; /* Add this */
+            border-color: #007bff;
+            border-width: 2vh;
         }
 
-        .left-container img {
-            max-width: 100%;
+        .deck-box {
+            border: 5px solid rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin: 10px 0;
+            margin-right: 10px;
+            text-align: center;
+            background-color: lightskyblue;
+            font-size: large;
+            font-weight: bold;
+        }
+
+        /* Description container */
+        .description-container {
+            margin-top: 50px;
+            display: flex; /* Add this to make the containers side by side */
+            justify-content: space-between; /* Add space between the containers */
+        }
+
+        /* Game Description and Instructions */
+        .game-description, .game-instructions {
+            border: 2px solid lightgray;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            margin: 20px;
+            flex: 1; /* This will make the containers take up equal width */
+        }
+
+        .game-description h2, .game-instructions h2 {
+            color: #007bff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .game-description p, .game-instructions p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .game-description ul, .game-instructions ul {
+            list-style-type: disc;
+        }
+
+        .game-description ul li, .game-instructions ul li {
+            margin-bottom: 10px;
+            color: #333;
         }
 
         /* Green button */
@@ -52,59 +97,117 @@
             border: none;
             cursor: pointer;
             display: block;
-            margin: 10px auto;
-            border-radius: 5px;
-            width: 95%;
+            font-size: large;
+            width: 100%;
+            border-radius: 10px;
         }
 
         .buttonlol:hover {
             background-color: darkgreen;
         }
 
-        /* Toggle button */
-        .toggle-button {
+        .button-containerlol {
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+            gap: 10px;
+        }
+
+        .button-containerdeck {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        /* CSS */
+        .toggle-button,
+        .toggle-button2 {
             font-family: 'Arial', sans-serif;
-            background-color: lightgray;
+            font-weight: bold;
+            background-color: rgba(240, 0, 0, 0.5); /* Default to red when it's off */
             color: #333;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
-            margin-left: -1px;
+            align-items: left;
+            font-size: 16px;
         }
 
-        .toggle-button:hover {
-            background-color: rgb(190, 190, 190);
+        .toggle-button.on,
+        .toggle-button2.on {
+            background-color: rgb(0, 240, 0, 0.5); /* Change to green when it's on */
         }
 
-        /* Settings container */
-        .settings-container {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-top: 10px;
+        .toggle-button:hover,
+        .toggle-button2:hover {
+            background-color: rgb(200, 0, 0, 0.5);
+        }
+        .toggle-button.on:hover,
+        .toggle-button2.on:hover {
+            background-color: rgb(0, 200, 0);
         }
 
-        /* Description container */
-        .description-container {
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        .settings-title {
+        /* Highscores container */
+        .highscores-container {
+            padding: 20px;
             margin-top: 0;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
         }
 
-        .options-menu {
-            margin-bottom: 10px;
+        .highscores-title {
+            text-align: center;
+            margin-top: 0;
+            color: #007bff;
+            font-size: 24px;
+            font-weight: bold;
         }
 
-        /* Highscores list */
         .highscores-list {
             list-style-type: none;
             padding: 0;
         }
 
         .highscores-list li {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .player-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .player-score {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        /* Settings container */
+        .settings-container {
+            border: 2px solid lightgrey; /* Use a solid blue border */
+            padding: 20px; /* Increase padding for more space inside the container */
+            background-color: #f9f9f9; /* Add a light background color */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Keep the shadow for a more visible effect */
+        }
+
+        .settings-title {
+            margin-top: 25px;
             margin-bottom: 5px;
+            color: #007bff; /* Make the title color match the border color */
+            font-size: 18px; /* Increase the font size */
+            font-weight: bold; /* Make the title bold */
+        }
+
+        .options-menu {
+            margin-bottom: 20px; /* Increase margin-bottom for more space below the menu */
         }
 
         /* New container */
@@ -132,10 +235,12 @@
         }
 
         .gif-container {
-            outline: 2px solid black; /* Adjust the color and width of the outline as needed */
+            outline: 2px solid lightgrey; /* Adjust the color and width of the outline as needed */
             display: inline-block; /* Ensure the container doesn't stretch to full width */
             padding: 0; /* Remove any existing padding */
             margin: 0; /* Reset margin */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            border-radius: 10px;
         }
 
         .gif-container img {
@@ -204,10 +309,11 @@
         header {
             background-color: #5f56a2d7; /* Change the background color */
             color: #f9f9f9;
-            padding: 20px;
+            padding: 0.1px;
             text-align: center;
             width: 100%;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for a more visible effect */
         }
     </style>
+</body>
 </html>

@@ -250,7 +250,14 @@ h4 {
         <h1>Minigames</h1>
         <h4>Transforming education through playful learning experiences</h4>
     </header>
-    <p> </p>
+        <h3 class="settings-title">Sort the games</h3>
+        <select id="options" name="options" class="options-menu">
+            <option value="" disabled selected>Select sorting</option>
+            <option value="easy">Alfabetically</option>
+            <option value="medium">Recently played</option>
+            <option value="hard">Newest</option>
+        </select>
+        <p> </p>
         <!-- Add the fire symbol here -->
         {% if session.logged_in %}
         <div class="streak-container">
