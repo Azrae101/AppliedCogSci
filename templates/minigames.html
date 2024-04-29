@@ -26,6 +26,13 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for a more visible effect */
         }
 
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px; /* Adjust margin as needed */
+        }
+
         footer {
             background-color:#5689a2d7;
             color: #fff;
@@ -33,6 +40,11 @@
             margin-top: 10vh;
             padding: 20px;
             width: 100%;            
+        }
+
+        .sorting {
+            padding: 10px;
+            margin-bottom: 10px;
         }
 
         .title {
@@ -149,94 +161,62 @@
             font-weight: lighter;
         }
 
-        /* steak */
-        
-    .streak-container {
-        position: relative;
-        display: inline-block;
-        padding: 10px 10px 5px 10px;
-    }
-
-    .streak-number {
-        position: absolute;
-        font-family: 'calibri', sans-serif;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        color: #ffffff;
-        font-size: 24px; /* Reduce font size */
-        font-weight: bold;
-        z-index: 1;
-    }
-
-    .streak-fire {
-        width: 50px;
-        height: 50px; /* Reduce height of the streak container */
-        position: relative;
-    }
-
-    .flame {
-        position: absolute;
-        bottom: -10px;
-        width: 10px;
-        height: 50px; /* Reduce height of the flames */
-        background: #ff5733;
-        border-radius: 50% 50% 0 0;
-        transform: rotate(-45deg);
-        animation: flame 1s ease-in-out infinite alternate;
-    }
-
-    .flame:nth-child(2) {
-        left: 10px;
-        width: 10px;
-        height: 65px; /* Reduce height of the flames */
-        background: #e92b00;
-        animation-delay: 0.1s;
-    }
-
-    .flame:nth-child(3) {
-        right: 10px;
-        width: 10px;
-        height: 60px; /* Reduce height of the flames */
-        background: #ff5100;
-        animation-delay: 0.2s;
-    }
-
-    .flame:nth-child(4) {
-        left: 20px;
-        width: 10px;
-        height: 65px; /* Reduce height of the flames */
-        background: #e35502;
-        animation-delay: 0.3s;
-    }
-
-    .flame:nth-child(5) {
-        left: 40px;
-        background: #ffae00;
-        animation-delay: 0.4s;
-    }
-
-    @keyframes flame {
-        0% {
-            transform: rotate(0deg) scaleY(1);
+        .dropdown {
+            position: relative;
         }
-        100% {
-            transform: rotate(0deg) scaleY(1.2);
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 110px;
+            box-shadow: 10px 8px 16px 10px rgba(0,0,0,0.2);
+            left: 50%;
+            transform: translateX(-50%);
         }
-    }
 
-    /* Style the main title */
-h1 {
-    font-size: 36px; /* Increase font size */
-    margin-bottom: 5px; /* Add some margin bottom */
-}
+        .dropdown-content a {
+            color: black;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+        }
 
-/* Style the sub title */
-h4 {
-    font-size: 18px; /* Increase font size */
-    font-weight: normal; /* Remove bold style */
-    margin-top: 5px; /* Add some margin top */
-}
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Style the main title */
+        h1 {
+            font-size: 36px; /* Increase font size */
+            margin-bottom: 5px; /* Add some margin bottom */
+        }
+
+        /* Style the sub title */
+        h4 {
+            font-size: 18px; /* Increase font size */
+            font-weight: normal; /* Remove bold style */
+            margin-top: 5px; /* Add some margin top */
+        }
+
+        .button.search-button {
+            padding: 5px 10px;
+            background-color: rgb(169, 169, 169)color;
+            color: #000000; /* White text color */            
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid #d3d3d3;
+            transition: background-color 0.3s ease;
+        }
+
+        .button.search-button:hover {
+            background-color: #d4d4d4; /* Darker shade of blue on hover */
+        }
 
     </style>
 </head>
@@ -250,28 +230,22 @@ h4 {
         <h1>Minigames</h1>
         <h4>Transforming education through playful learning experiences</h4>
     </header>
-        <h3 class="settings-title">Sort the games</h3>
+    <div class="header-container">
+        <!-- Search form on the left -->
+        <form action="/search" method="POST" class="search-form">
+            <input type="text" name="search" placeholder="Search games...">
+            <button type="submit" class="button search-button">Search</button>
+        </form>        
+        <!-- Sorting dropdown on the right -->
+    </div>
+    <div class="sorting">
         <select id="options" name="options" class="options-menu">
             <option value="" disabled selected>Select sorting</option>
-            <option value="easy">Alfabetically</option>
+            <option value="easy">Alphabetically</option>
             <option value="medium">Recently played</option>
             <option value="hard">Newest</option>
         </select>
-        <p> </p>
-        <!-- Add the fire symbol here -->
-        {% if session.logged_in %}
-        <div class="streak-container">
-            <div class="streak-fire">
-                <div class="streak-number">34</div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-            </div>
-        </div>
-        <p> </p>
-        {% endif %}
+    </div>
     <div class="minigame-container">
         <div class="minigame">
             <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>

@@ -13,6 +13,55 @@
         h1 {
             text-align: center;
         }
+        
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-items: right;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+            
+        .button-round {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto; /* Adjust width as needed */
+            height: 30px; /* Reduce height of the round button */
+            padding: 10px 10px 10px 45px; /* Added padding on the left to create space */
+            margin: 10px 10px 10px 20px;
+            margin-right: 5vh;
+            border-radius: 25px;
+            background-color: rgba(200, 200, 200, 0.5);
+            color: #000000;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-image: url('static/pfpp.png');
+            background-size: 35px; /* Adjust size of the profile picture */
+            background-position: 5px center; /* Adjust position of the profile picture */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+        }
+        .button-round:hover {
+            background-color:lightgray;
+        }
+            
+        .profile-picture {
+            width: 20px; /* Adjust the width of the profile picture as needed */
+            height: auto;
+            margin-right: 5px; /* Add space between the picture and the text */
+        }
 
         .containerlol {
             display: flex;

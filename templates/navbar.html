@@ -60,26 +60,35 @@
         transform: translateY(1px); /* Shift button down slightly when clicked */
     }
 
-    .button.round {
+    .button-round {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 55px;
-        height: 40px; /* Reduce height of the round button */
-        padding: 5px;
-        margin: 10px 10px 10px 20px; 
+        width: auto; /* Adjust width as needed */
+        height: 30px; /* Reduce height of the round button */
+        padding: 10px 10px 10px 45px; /* Added padding on the left to create space */
+        margin: 10px 10px 10px 20px;
         margin-right: 5vh;
-        border-radius: 50%;
-        background-color: #3b5268;
-        color: #fff;
+        border-radius: 25px;
+        background-color: rgba(200, 200, 200, 0.5);
+        color: #000000;
         text-decoration: none;
         border: none;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        background-image: url('static/pfpp.png');
+        background-size: 35px; /* Adjust size of the profile picture */
+        background-position: 5px center; /* Adjust position of the profile picture */
+        background-repeat: no-repeat; /* Prevent the image from repeating */
+    }
+    .button-round:hover {
+        background-color:lightgray;
     }
 
-    .button.round:hover {
-        background-color: #000000;
+    .profile-picture {
+        width: 20px; /* Adjust the width of the profile picture as needed */
+        height: auto;
+        margin-right: 5px; /* Add space between the picture and the text */
     }
 
     /* styles login/logout button */
@@ -120,34 +129,124 @@
         flex-wrap: wrap; /* Allow buttons to wrap if necessary */
         margin-left: auto;
     }
-
+    
     .dropdown {
-        position: relative;
-        display: inline-block;
+        position: relative; /* Set relative positioning for the dropdown container */
     }
 
     .dropdown-content {
         display: none;
         position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
+        background-color: white;
+        min-width: 100px;
+        box-shadow: 10px 8px 16px 10px rgba(0,0,0,0.2);
+        left: 50%; /* Adjust left position to center the dropdown */
+        transform: translateX(-50%); /* Center the dropdown horizontally */
     }
 
     .dropdown-content a {
         color: black;
         padding: 10px 16px; /* Adjust padding */
         text-decoration: none;
+        transform: translateX(10%); /* Center the dropdown horizontally */
         display: block;
     }
 
     .dropdown-content a:hover {
-        background-color: #f1f1f1;
+        color: black;
+        padding: 10px 16px; /* Adjust padding */
+        text-decoration: none;
+        transform: translateX(0%); /* Center the dropdown horizontally */
+        display: block;
+        background-color: whitesmoke;
     }
 
     .dropdown:hover .dropdown-content {
         display: block;
+    }
+    
+    footer {
+            background-color:#5689a2d7;
+            color: #fff;
+            text-align: center;
+            margin-top: 10vh;
+            padding: 20px;
+            width: 100%;            
+        }
+
+    /* steak */    
+    .streak-container {
+        position: relative;
+        display: inline-block;
+        padding: 10px 10px 5px 10px;
+    }
+
+    .streak-number {
+        position: absolute;
+        font-family: 'calibri', sans-serif;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #ffffff;
+        font-size: 24px; /* Reduce font size */
+        font-weight: bold;
+        z-index: 1;
+    }
+
+    .streak-fire {
+        width: 50px;
+        height: 40px; /* Reduce height of the streak container */
+        position: relative;
+    }
+
+    .flame {
+        position: absolute;
+        bottom: -2px;
+        width: 10px;
+        height: 40px; /* Reduce height of the flames */
+        background: #ff5733;
+        border-radius: 50% 50% 0 0;
+        transform: rotate(-45deg);
+        animation: flame 1s ease-in-out infinite alternate;
+    }
+
+    .flame:nth-child(2) {
+        left: 10px;
+        width: 10px;
+        height: 55px; /* Reduce height of the flames */
+        background: #e92b00;
+        animation-delay: 0.1s;
+    }
+
+    .flame:nth-child(3) {
+        right: 10px;
+        width: 10px;
+        height: 50px; /* Reduce height of the flames */
+        background: #ff5100;
+        animation-delay: 0.2s;
+    }
+
+    .flame:nth-child(4) {
+        left: 20px;
+        width: 10px;
+        height: 55px; /* Reduce height of the flames */
+        background: #e35502;
+        animation-delay: 0.3s;
+    }
+
+    .flame:nth-child(5) {
+        left: 40px;
+        background: #ffae00;
+        animation-delay: 0.4s;
+    }
+
+    @keyframes flame {
+        0% {
+            transform: rotate(0deg) scaleY(1);
+        }
+        100% {
+            transform: rotate(0deg) scaleY(1.2);
+        }
     }
 
 </style>
@@ -158,20 +257,43 @@
             <a href="{{ url_for('home')}}"><img class="logo" src="{{ url_for('static', filename='rsz_cogcards.png') }}"></a>
             <div class="button-container">
                 <!-- Other buttons -->
-                <a href="{{ url_for('find') }}" class="button">Find Flashcards</a>
-                <a href="{{ url_for('create') }}" class="button">Create Cards</a>
-                <a href="{{ url_for('create') }}" class="button">Your Decks</a>
+                <a href="{{ url_for('find') }}" class="button">Public library</a>
+                <a href="{{ url_for('create') }}" class="button">My decks</a>
                 <a href="{{ url_for('minigames') }}" class="button">Study & Play</a>
                 <a href="{{ url_for('sciencebehind') }}" class="button">Science Behind</a>
-                <a href="{{ url_for('contact') }}" class="button">Contact</a>
+                
+                <div class="dropdown">
+                    <a href="{{ url_for('home') }}" class="button">About us</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('contact') }}">Contact</a>
+                    </div>
+                </div>
+
                 {% if not session.logged_in %}
                     <a href="/login" class="button login">Login</a>
                 {% endif %}
-    
+                        <!-- Add the fire symbol here -->
+                {% if session.logged_in %}
+                <div class="streak-container">
+                    <div class="streak-fire">
+                        <div class="streak-number">34</div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                    </div>
+                </div>
+                <p> </p>
+                {% endif %}
                 <div class="dropdown">
                     {% if session.logged_in %}
                     <!-- Turn the profile circle into a button -->
-                    <a href="{{ url_for('profile_settings') }}" class="button round">Profile</a>
+                    <div class="button-container">
+                        <a href="{{ url_for('profile_settings') }}" class="button-round">
+                            Name Nameson
+                        </a>
+                    </div>                    
                     <div class="dropdown-content">
                         <a href="{{ url_for('profile_settings') }}">Settings</a>
                         <a href="/logout">Logout</a>
