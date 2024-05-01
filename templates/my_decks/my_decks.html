@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Cards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgba(211, 211, 211, 0.1) !important;
+        }
+
+        .container_library {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(211, 211, 211, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .deck {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 25px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            width: calc(25% - 1px);
+            box-sizing: border-box;
+            display: inline-block;
+            vertical-align: top;
+            align-items: center;
+        }
+
+        .deck:hover {
+            background-color: #f0f0f0;
+        }
+
+        .button.search-button {
+            padding: 5px 10px;
+            background-color: #e6e6e6;
+            color: #000;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid #d3d3d3;
+            transition: background-color 0.3s ease;
+        }
+
+        .button.search-button:hover {
+            background-color: #d4d4d4;
+        }
+
+
+        .toc {
+            flex-basis: 200px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+            transition: height 0.3s ease;
+            overflow: hidden;
+            max-height: 300px;
+        }
+
+        .toc.collapsed {
+            height: 0;
+            padding: 0;
+            border: none;
+            max-height: 0;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .toc li {
+            margin-bottom: 10px;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+
+        .toc a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background-color: #5689a2d7;
+            color: #fff;
+            text-align: center;
+            margin-top: 10vh;
+            padding: 20px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .toc {
+                flex-basis: 100%;
+                margin-top: 20px;
+            }
+        }
+
+    </style>
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
+</head>
+<body>
+<div class="container">
+    <div class="content">
+        {% include "navbar.html" %}
+    </div>
+</div>
+<div class="container_library">
+    <h1>My Library</h1>
+    <div class="header-container">
+        <form action="/search" method="POST" class="search-form">
+            <input type="text" name="search" placeholder="Search decks...">
+            <button type="submit" class="button search-button">Search</button>
+        </form>
+        <button class="button" id="toggleTocButton">Toggle Table of Contents</button>
+    </div>
+    <div class="toc" id="toc">
+        <h3>Overview of decks</h3>
+        <ul>
+            <li><a href="/deck_one">Cognitive Science</a></li>
+            <li><a>Biology Basics</a></li>
+            <li><a>Chemistry Concepts</a></li>
+            <li><a>Mathematical Methods</a></li>
+            <li><a>Historical Events</a></li>
+            <li><a>Geographical Locations</a></li>
+            <li><a>Foreign Languages</a></li>
+            <li><a>Artistic Creations</a></li>
+            <li><a>Music Theory</a></li>
+            <li><a>Psychological Concepts</a></li>
+            <li><a>Computer Science Fundamentals</a></li>
+            <li><a>Economic Principles</a></li>
+        </ul>
+    </div>
+    <h2>Pinned</h2>
+    <div class="deck" onclick="location.href='deck_one';">
+        <h3>Study Set 1</h3>
+        <p>Created by Pinetree</p>
+        <p>69 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_three';">
+        <h3>Study Set 3</h3>
+        <p>Created by Bluejay</p>
+        <p>82 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_four';">
+        <h3>Study Set 4</h3>
+        <p>Created by Sunshine</p>
+        <p>75 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_five';">
+        <h3>Study Set 5</h3>
+        <p>Created by Starlight</p>
+        <p>63 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_six';">
+        <h3>Study Set 6</h3>
+        <p>Created by Moonbeam</p>
+        <p>55 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_seven';">
+        <h3>Study Set 7</h3>
+        <p>Created by Firefly</p>
+        <p>47 Definitions</p>
+    </div>
+    
+    <h2>Recently Studied</h2>
+    <div class="deck" onclick="location.href='deck_two';">
+        <h3>Study Set 2</h3>
+        <p>Created by Pinetree</p>
+        <p>50 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_ten';">
+        <h3>Study Set 10</h3>
+        <p>Created by Snowflake</p>
+        <p>42 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_eleven';">
+        <h3>Study Set 11</h3>
+        <p>Created by Rainbow</p>
+        <p>38 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_twelve';">
+        <h3>Study Set 12</h3>
+        <p>Created by Aurora</p>
+        <p>49 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_thirteen';">
+        <h3>Study Set 13</h3>
+        <p>Created by Mountain</p>
+        <p>57 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_fourteen';">
+        <h3>Study Set 14</h3>
+        <p>Created by Ocean</p>
+        <p>65 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_fifteen';">
+        <h3>Study Set 15</h3>
+        <p>Created by Forest</p>
+        <p>72 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='deck_sixteen';">
+        <h3>Study Set 16</h3>
+        <p>Created by Desert</p>
+        <p>68 Definitions</p>
+    </div>
+
+    <div class="deck" onclick="location.href='deck_seventeen';">
+        <h3>Study Set 17</h3>
+        <p>Created by Clara</p>
+        <p>42 Definitions</p>
+    </div>
+    
+</div>
+<footer>
+    <p>&copy; 2024 CogCards. All rights reserved.</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toc = document.getElementById('toc');
+        const toggleTocButton = document.getElementById('toggleTocButton');
+        
+        toggleTocButton.addEventListener('click', function () {
+            toc.classList.toggle('collapsed');
+        });
+    });
+</script>
+
+</body>
+</html>

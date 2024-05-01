@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Cards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgba(211, 211, 211, 0.1) !important;
+        }
+
+        .container_library {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(211, 211, 211, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .deck {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 25px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            width: calc(25% - 1px);
+            box-sizing: border-box;
+            display: inline-block;
+            vertical-align: top;
+            align-items: center;
+        }
+
+        .deck:hover {
+            background-color: #f0f0f0;
+        }
+
+        .button.search-button {
+            padding: 5px 10px;
+            background-color: #e6e6e6;
+            color: #000;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid #d3d3d3;
+            transition: background-color 0.3s ease;
+        }
+
+        .button.search-button:hover {
+            background-color: #d4d4d4;
+        }
+
+
+        .toc {
+            flex-basis: 200px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+            transition: height 0.3s ease;
+            overflow: hidden;
+            max-height: 300px;
+        }
+
+        .toc.collapsed {
+            height: 0;
+            padding: 0;
+            border: none;
+            max-height: 0;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .toc li {
+            margin-bottom: 10px;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+
+        .toc a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background-color: #5689a2d7;
+            color: #fff;
+            text-align: center;
+            margin-top: 10vh;
+            padding: 20px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .toc {
+                flex-basis: 100%;
+                margin-top: 20px;
+            }
+        }
+
+    </style>
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
+</head>
+<body>
+<div class="container">
+    <div class="content">
+        {% include "navbar.html" %}
+    </div>
+</div>
+<div class="container_library">
+    <h1>Public Library</h1>
+    <div class="header-container">
+        <form action="/search" method="POST" class="search-form">
+            <input type="text" name="search" placeholder="Search decks...">
+            <button type="submit" class="button search-button">Search</button>
+        </form>
+        <button class="button" id="toggleTocButton">Toggle Table of Contents</button>
+    </div>
+    <div class="toc" id="toc">
+        <h3>Overview of decks</h3>
+        <ul>
+            <li><a href="/deck_one">Cognitive Science</a></li>
+            <li><a>Biology Basics</a></li>
+            <li><a>Chemistry Concepts</a></li>
+            <li><a>Mathematical Methods</a></li>
+            <li><a>Historical Events</a></li>
+            <li><a>Geographical Locations</a></li>
+            <li><a>Foreign Languages</a></li>
+            <li><a>Artistic Creations</a></li>
+            <li><a>Music Theory</a></li>
+            <li><a>Psychological Concepts</a></li>
+            <li><a>Computer Science Fundamentals</a></li>
+            <li><a>Economic Principles</a></li>
+        </ul>
+    </div>
+
+    <h2>Science</h2>
+    <div class="deck" onclick="location.href='deck_one';">
+        <h3>Cognitive Science</h3>
+        <p>Created by Pinetree</p>
+        <p>69 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='biology_basics';">
+        <h3>Biology Basics</h3>
+        <p>Created by Bluejay</p>
+        <p>82 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='chemistry_concepts';">
+        <h3>Chemistry Concepts</h3>
+        <p>Created by Sunshine</p>
+        <p>75 Definitions</p>
+    </div>
+    <div id="moreScience" style="display: none;">
+        <div class="deck" onclick="location.href='neuroscience';">
+            <h3>Neuroscience</h3>
+            <p>Created by Sunflower</p>
+            <p>56 Definitions</p>
+        </div>
+    
+        <div class="deck" onclick="location.href='physics_fundamentals';">
+            <h3>Physics Fundamentals</h3>
+            <p>Created by Stardust</p>
+            <p>78 Definitions</p>
+        </div>
+    
+        <div class="deck" onclick="location.href='environmental_science';">
+            <h3>Environmental Science</h3>
+            <p>Created by Raindrop</p>
+            <p>62 Definitions</p>
+        </div>
+    </div>
+    <button class="button" onclick="toggleVisibility(this, 'moreScience')">See more...</button>
+    
+    <h2>Language</h2>
+    <div class="deck" onclick="location.href='foreign_languages';">
+        <h3>Foreign Languages</h3>
+        <p>Created by Starlight</p>
+        <p>63 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='artistic_creations';">
+        <h3>Artistic Creations</h3>
+        <p>Created by Moonbeam</p>
+        <p>55 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='music_theory';">
+        <h3>Music Theory</h3>
+        <p>Created by Firefly</p>
+        <p>47 Definitions</p>
+    </div>
+    <div id="moreLanguage" style="display: none;">
+        <div class="deck" onclick="location.href='spanish_vocabulary';">
+            <h3>Spanish Vocabulary</h3>
+            <p>Created by Nightingale</p>
+            <p>45 Definitions</p>
+        </div>
+    
+        <div class="deck" onclick="location.href='french_phrases';">
+            <h3>French Phrases</h3>
+            <p>Created by Aurora</p>
+            <p>50 Definitions</p>
+        </div>
+    
+        <div class="deck" onclick="location.href='german_grammar';">
+            <h3>German Grammar</h3>
+            <p>Created by Thunderstorm</p>
+            <p>55 Definitions</p>
+        </div>
+    </div>
+    <button class="button" onclick="toggleVisibility(this,'moreLanguage')">See more...</button>
+
+    <h2>Sports</h2>
+    <div class="deck" onclick="location.href='basketball';">
+        <h3>Basketball</h3>
+        <p>Created by Pinetree</p>
+        <p>50 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='soccer';">
+        <h3>Soccer</h3>
+        <p>Created by Snowflake</p>
+        <p>42 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='tennis';">
+        <h3>Tennis</h3>
+        <p>Created by Rainbow</p>
+        <p>38 Definitions</p>
+    </div>
+    <div id="moreSports" style="display: none;">
+        <div class="deck" onclick="location.href='basketball_skills';">
+            <h3>Basketball Skills</h3>
+            <p>Created by HoopMaster</p>
+            <p>40 Definitions</p>
+        </div>
+
+        <div class="deck" onclick="location.href='football_tactics';">
+            <h3>Football Tactics</h3>
+            <p>Created by SoccerFanatic</p>
+            <p>55 Definitions</p>
+        </div>
+
+        <div class="deck" onclick="location.href='tennis_strategies';">
+            <h3>Tennis Strategies</h3>
+            <p>Created by RacketAce</p>
+            <p>48 Definitions</p>
+        </div>
+    </div>    
+    <button class="button" onclick="toggleVisibility(this,'moreSports')">See more...</button>
+
+    <h2>Literature</h2>
+    <div class="deck" onclick="location.href='english_literature';">
+        <h3>English Literature</h3>
+        <p>Created by Aurora</p>
+        <p>49 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='american_literature';">
+        <h3>American Literature</h3>
+        <p>Created by Mountain</p>
+        <p>57 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='world_literature';">
+        <h3>World Literature</h3>
+        <p>Created by Ocean</p>
+        <p>65 Definitions</p>
+    </div>
+    <div id="moreLiterature" style="display: none;">
+        <div class="deck" onclick="location.href='english_classics';">
+            <h3>English Classics</h3>
+            <p>Created by Bookworm</p>
+            <p>60 Definitions</p>
+        </div>
+
+        <div class="deck" onclick="location.href='world_literature';">
+            <h3>World Literature</h3>
+            <p>Created by Globetrotter</p>
+            <p>52 Definitions</p>
+        </div>
+
+        <div class="deck" onclick="location.href='poetry_analysis';">
+            <h3>Poetry Analysis</h3>
+            <p>Created by PoetDreamer</p>
+            <p>45 Definitions</p>
+        </div>
+    </div>    
+    <button class="button" onclick="toggleVisibility(this,'moreLiterature')">See more...</button>
+
+    <h2>Politics</h2>
+    <div class="deck" onclick="location.href='political_theory';">
+        <h3>Political Theory</h3>
+        <p>Created by Forest</p>
+        <p>72 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='international_relations';">
+        <h3>International Relations</h3>
+        <p>Created by Desert</p>
+        <p>68 Definitions</p>
+    </div>
+    
+    <div class="deck" onclick="location.href='government_systems';">
+        <h3>Government Systems</h3>
+        <p>Created by Clara</p>
+        <p>42 Definitions</p>
+    </div>
+    <div id="morePolitics" style="display: none;">
+        <div class="deck" onclick="location.href='political_theory';">
+            <h3>Political Theory</h3>
+            <p>Created by ThinkTank</p>
+            <p>58 Definitions</p>
+        </div>
+    
+        <div class="deck" onclick="location.href='international_relations';">
+            <h3>International Relations</h3>
+            <p>Created by Diplomat</p>
+            <p>47 Definitions</p>
+        </div>
+    
+        <div class="deck" onclick="location.href='government_structures';">
+            <h3>Government Structures</h3>
+            <p>Created by PolicyMaker</p>
+            <p>50 Definitions</p>
+        </div>
+    </div>
+    <button class="button" onclick="toggleVisibility(this,'morePolitics')">See more...</button>
+
+</div>
+
+<footer>
+    <p>&copy; 2024 CogCards. All rights reserved.</p>
+</footer>
+
+<script>
+    function toggleVisibility(button, id) {
+        var element = document.getElementById(id);
+        if (element.style.display === "none") {
+            element.style.display = "block";
+            button.textContent = 'See less';
+        } else {
+            element.style.display = "none";
+            button.textContent = 'See more...';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const toc = document.getElementById('toc');
+        const toggleTocButton = document.getElementById('toggleTocButton');
+        
+        toggleTocButton.addEventListener('click', function () {
+            toc.classList.toggle('collapsed');
+        });
+    });
+</script>
+
+</body>
+</html>

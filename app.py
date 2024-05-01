@@ -38,6 +38,12 @@ def get_db():
         if 'account_name' not in column_names:
             cursor.execute("ALTER TABLE user ADD COLUMN account_name TEXT")
             g.db.commit()
+        if 'question' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN question TEXT")
+            g.db.commit()
+        if 'answer' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN answer TEXT")
+            g.db.commit()
     return g.db
 
 def close_db(e=None):
@@ -67,13 +73,9 @@ def home():
 def contact():
     return render_template('contact.html')
 
-@app.route('/find')
-def find():
-    return render_template('find.html')
-
-@app.route('/create')
-def create():
-    return render_template('create.html')
+@app.route('/publiclibrary')
+def publiclibrary():
+    return render_template('public_library.html')
 
 @app.route('/sciencebehind')
 def sciencebehind():
@@ -83,6 +85,16 @@ def sciencebehind():
 def minigames():
     return render_template('minigames.html')
 
+# Decks
+@app.route('/mydecks')
+def mydecks():
+    return render_template('my_decks/my_decks.html')
+
+@app.route('/deck_two')
+def deck_two():
+    return render_template('my_decks/deck_two.html')
+
+# Games
 @app.route('/cardchase')
 def cardchase():
     return render_template('games/cardchase.html')
@@ -203,6 +215,74 @@ def search_results():
     # Check if the search query matches any predefined result
     results = [result for result in predefined_results if search_query.lower() in result]
     return render_template('search_results.html', search_query=search_query, results=results)
+
+
+@app.route('/deck_one')
+def deck_one():
+    # Check if the user is logged in
+    if not g.logged_in:
+        # Redirect the user to the login page or handle it based on your logic
+        flash('Please log in to access this page.')
+        return redirect(url_for('login'))
+
+    # Retrieve the logged-in user's information
+    db = get_db()
+    user_id = session.get('user_id')
+    cur = db.execute("SELECT * FROM user WHERE id=?", (user_id,))
+    user = cur.fetchone()
+
+    # Check if user information is found in the database
+    if user is None:
+        flash('User information not found. Please try again.')
+        return redirect(url_for('login'))
+
+    # Pass the user variable to the template context
+    return render_template('my_decks/deck_one.html', user=user)
+
+### Deck
+@app.route('/my_decks/deck_one', methods=['GET', 'POST'])
+def edit_deck():
+    """Update flashcard"""
+    if not g.logged_in:
+        # Redirect the user to the login page or handle it based on your logic
+        flash('Please log in to access this page.')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Connect to the database
+        db = get_db()
+
+        # Retrieve the logged-in user's ID
+        user_id = session.get('user_id')
+
+        # Retrieve form data
+        question = request.form['question']
+        answer = request.form['answer']
+
+        # Update user data in the database
+        db.execute("UPDATE user SET question=?, answer=? WHERE id=?",
+                   (question, answer, user_id))
+        db.commit()
+
+        flash('Flashcard updated successfully.')
+
+        # Redirect to the page
+        return redirect(url_for('deck_one'))
+
+    # Retrieve the logged-in user's information
+    db = get_db()
+    user_id = session.get('user_id')
+    cur = db.execute("SELECT * FROM user WHERE id=?", (user_id,))
+    user = cur.fetchone()
+
+    if user is None:
+        # Handle the case where the user is not found in the database
+        flash('User not found.')
+        return redirect(url_for('login'))
+
+    # Pass the user variable to the template context
+    return render_template('my_decks/deck_one.html', user=user)
+
 
 ### Profile
 @app.route('/profile/settings', methods=['GET', 'POST'])
