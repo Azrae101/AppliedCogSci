@@ -5,7 +5,7 @@ This repository contains a Flask web application designed to provide various fea
 **Prerequisites**
 - Python 3.6 or newer
 - Flask
-- SQLite3
+- Optional: SQLite3
 
 **Installation**
 
