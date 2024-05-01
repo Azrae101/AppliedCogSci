@@ -46,8 +46,9 @@ def close_db(e=None):
         db.close()
 
 # Quiz data
-list_of_display = ["Question A", "Question B", "Question C", "Question D"]
-list_of_answers = ["1", "2", "3", "4"]
+list_of_display = ["A condition where an individual can perceive visual stimuli but cannot recognize or interpret them correctly.", "A theory proposing that attention is necessary to bind individual features of an object together to perceive it as a whole.", "The process by which a skill becomes automatic through practice and experience.", "A brain structure involved in processing emotions, particularly fear and aggression."]
+list_of_answers = ["Visual Agnosia", "Feature Integration Theory", "Proceduralization", "Amygdala"]
+list_of_answers_quiz = ["1", "2", "3", "4"]
 list_type = list_of_display
 current_index = 0
 current_side = "t"
@@ -174,15 +175,24 @@ def quiz():
 @app.route('/answer', methods=['POST'])
 def handle_answer():
     global questions
-    user_input = request.form.get('answer').lower()
+    user_input = request.form.get('answer').strip().lower()  # Normalize user input
 
-    if user_input in list_of_answers:
-        term_index = list_of_answers.index(user_input)
-        if term_index < len(list_of_display) and list_of_display[0] == list_of_display[term_index]:
-            list_of_display.pop(0)
-            list_of_answers.pop(0)
-            questions += 1
+    # Check if user input is in list_of_answers
+    if user_input in list_of_answers_quiz:
+        # Get the index of the answer
+        answer_index = list_of_answers_quiz.index(user_input)
+
+        # Check if the index is within bounds
+        if answer_index < len(list_of_display):
+            # Check if the question corresponding to the answer matches the current question
+            if list_of_display[current_index] == list_of_display[answer_index]:
+                # If matched, remove both question and answer
+                list_of_display.pop(current_index)
+                list_of_answers_quiz.pop(answer_index)
+                questions += 1
+
     return redirect(url_for('quiz'))
+
 
 ### Search
 @app.route('/search', methods=['POST'])

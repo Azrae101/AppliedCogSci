@@ -94,10 +94,10 @@
     <script>
         // Define your questions directly in JavaScript
         let questions = [
-            {"question": "Question 1", "answer": "1"},
-            {"question": "Question 2", "answer": "2"},
-            {"question": "Question 3", "answer": "3"},
-            {"question": "Question 4", "answer": "4"}
+            {"question": "A condition where an individual can perceive visual stimuli but cannot recognize or interpret them correctly.", "answer": "Visual Agnosia"},
+            {"question": "A theory proposing that attention is necessary to bind individual features of an object together to perceive it as a whole.", "answer": "Feature Integration Theory"},
+            {"question": "The process by which a skill becomes automatic through practice and experience.", "answer": "Proceduralization"},
+            {"question": "A brain structure involved in processing emotions, particularly fear and aggression.", "answer": "Amygdala"}
         ];
 
         let currentQuestionIndex = 0;
@@ -117,11 +117,15 @@
             // Draw the current question on the canvas
             ctx.font = '24px Arial';
             const questionText = questions[currentQuestionIndex].question;
-            const textWidth = ctx.measureText(questionText).width;
-            const x = (canvas.width - textWidth) / 2;
-            ctx.fillText(questionText, x, movementSpeed);
+            const questionParts = getQuestionParts(questionText, ctx, canvas.width);
+            const x = (canvas.width - ctx.measureText(questionParts[0]).width) / 2;
+            let y = movementSpeed;
+            for (const part of questionParts) {
+                ctx.fillText(part, x, y);
+                y += 30; // Adjust line spacing
+            }
             // Increment the movement speed
-            movementSpeed += 1;
+            movementSpeed += 0.5;
             // Check if the text hits the bottom of the canvas
             if (movementSpeed > canvas.height - 20) {
                 // Replace the question with "Game Over"
@@ -151,6 +155,26 @@
             requestAnimationFrame(animate);
         }
 
+        // Function to split the question into smaller parts to fit within the canvas width
+        function getQuestionParts(questionText, ctx, maxWidth) {
+            const words = questionText.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i];
+                const width = ctx.measureText(currentLine + ' ' + word).width;
+                if (width < maxWidth - 40) { // Adjust 40 for padding
+                    currentLine += ' ' + word;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+
         // Function to fetch the next question from the server and update the game
         function fetchNextQuestion() {
             points++;
@@ -162,7 +186,7 @@
             // Set the current question and update the game
             updateQuestion();
             // Reset movement speed for the new question
-            movementSpeed = 2;
+            movementSpeed = 1;
         }
 
         // Function to shuffle the questions array
@@ -195,7 +219,7 @@
         // Fetch the first question and start the game
         updateQuestion();
         // Initialize the movement speed
-        let movementSpeed = 2;
+        let movementSpeed = 1;
         // Start the animation loop
         animate();
 

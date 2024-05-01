@@ -71,13 +71,15 @@
         }
     </style>
     <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
-    <script src="flashcards.js" defer></script>
+    <script src="flashcardsa.js" defer></script>
 </head>
 <body>
     <div class="flashcard-container">
         <h1>Flashcards</h1>
         <div id="flashcard">
-            <p id="term">{{ term }}</p>
+            <div id="term" style="display: block;">
+                <p id="term">{{ term }}</p>
+            </div>
             <p id="answer" style="display: none;">{{ list_of_answers[current_index] }}</p>
         </div>
         <div class="button-container">
