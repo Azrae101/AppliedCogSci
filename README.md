@@ -22,7 +22,7 @@ python app.py
 
 2. Access the application in your web browser at http://localhost:5000 or the given URL in the terminal
 
-## To run the application in a new Python environment, follow these steps:
+## Running the programme in a new Python environment
 
 1. Create a new virtual environment:
     ```bash
