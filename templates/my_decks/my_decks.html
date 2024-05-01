@@ -116,6 +116,28 @@
             background-color: #f0f0f0;
         }
 
+        h2 {
+            color: #000000;
+            margin: 5px 0;
+            padding: 10px;
+        }
+
+        h1, h4 {
+            color: #ffffff;
+            margin: 5px 0;
+            padding: 10px;
+        }
+
+        .header {
+            background-color: #5689a2d7; /* Change the background color */
+            color: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for a more visible effect */
+            margin-bottom: 25px;
+        }
+
         .header-container {
             display: flex;
             justify-content: space-between;
@@ -130,6 +152,27 @@
             margin-top: 10vh;
             padding: 20px;
             width: 100%;
+        }
+
+        .pinned-deck {
+        position: relative;
+        }
+        .pin-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px; /* Adjust size as needed */
+            height: auto;
+        }
+
+        .plus {
+        position: relative;
+        }
+        .plus-icon {
+            position: relative;
+            width: 25px; /* Adjust size as needed */
+            height: auto;
+            align-items: center;
         }
 
         @media (max-width: 768px) {
@@ -153,7 +196,10 @@
     </div>
 </div>
 <div class="container_library">
-    <h1>My Library</h1>
+    <div class="header">
+        <h1>My Decks</h1>
+        <h4>Here you can view, edit and find your own study decks</h4>
+    </div>
     <div class="header-container">
         <form action="/search" method="POST" class="search-form">
             <input type="text" name="search" placeholder="Search decks...">
@@ -165,109 +211,95 @@
         <h3>Overview of decks</h3>
         <ul>
             <li><a href="/deck_one">Cognitive Science</a></li>
-            <li><a>Biology Basics</a></li>
-            <li><a>Chemistry Concepts</a></li>
+            <li><a>Philosophy</a></li>
             <li><a>Mathematical Methods</a></li>
-            <li><a>Historical Events</a></li>
-            <li><a>Geographical Locations</a></li>
-            <li><a>Foreign Languages</a></li>
-            <li><a>Artistic Creations</a></li>
-            <li><a>Music Theory</a></li>
-            <li><a>Psychological Concepts</a></li>
-            <li><a>Computer Science Fundamentals</a></li>
-            <li><a>Economic Principles</a></li>
+            <li><a>Applied Cog-Sci</a></li>
+            <li><a>Programming</a></li>
+            <li><a>Danish</a></li>
         </ul>
     </div>
+    <div class="deck plus" onclick="location.href='deck_one';">
+        <h3>Create a new deck</h3>
+        <img src="static/plus.png" alt="plus" class="plus-icon">
+    </div>
     <h2>Pinned</h2>
-    <div class="deck" onclick="location.href='deck_one';">
-        <h3>Study Set 1</h3>
+    <div class="deck pinned-deck" onclick="location.href='deck_one';">
+        <img src="static/pin.png" alt="Pin" class="pin-icon">
+        <h3>Cognitive Science</h3>
         <p>Created by Pinetree</p>
         <p>69 Definitions</p>
     </div>
     
-    <div class="deck" onclick="location.href='deck_three';">
-        <h3>Study Set 3</h3>
+    <div class="deck pinned-deck" onclick="location.href='deck_three';">
+        <img src="static/pin.png" alt="Pin" class="pin-icon">
+        <h3>Philosophy</h3>
         <p>Created by Bluejay</p>
         <p>82 Definitions</p>
     </div>
     
-    <div class="deck" onclick="location.href='deck_four';">
-        <h3>Study Set 4</h3>
+    <div class="deck pinned-deck" onclick="location.href='deck_four';">
+        <img src="static/pin.png" alt="Pin" class="pin-icon">
+        <h3>Methods 2</h3>
         <p>Created by Sunshine</p>
         <p>75 Definitions</p>
     </div>
     
-    <div class="deck" onclick="location.href='deck_five';">
-        <h3>Study Set 5</h3>
+    <div class="deck pinned-deck" onclick="location.href='deck_five';">
+        <img src="static/pin.png" alt="Pin" class="pin-icon">
+        <h3>Programming in Python</h3>
         <p>Created by Starlight</p>
         <p>63 Definitions</p>
     </div>
     
-    <div class="deck" onclick="location.href='deck_six';">
-        <h3>Study Set 6</h3>
+    <div class="deck pinned-deck" onclick="location.href='deck_six';">
+        <img src="static/pin.png" alt="Pin" class="pin-icon">
+        <h3>Hello World</h3>
         <p>Created by Moonbeam</p>
         <p>55 Definitions</p>
     </div>
     
-    <div class="deck" onclick="location.href='deck_seven';">
-        <h3>Study Set 7</h3>
+    <div class="deck pinned-deck" onclick="location.href='deck_seven';">
+        <img src="static/pin.png" alt="Pin" class="pin-icon">
+        <h3>Applied Cognitive Science</h3>
         <p>Created by Firefly</p>
         <p>47 Definitions</p>
     </div>
     
     <h2>Recently Studied</h2>
-    <div class="deck" onclick="location.href='deck_two';">
-        <h3>Study Set 2</h3>
+    <div class="deck" onclick="location.href='deck_one';">
+        <h3>Cognitive Science</h3>
         <p>Created by Pinetree</p>
-        <p>50 Definitions</p>
+        <p>69 Definitions</p>
+    </div>
+        
+    <div class="deck" onclick="location.href='deck_six';">
+        <h3>Danish</h3>
+        <p>Created by Moonbeam</p>
+        <p>55 Definitions</p>
     </div>
     
-    <div class="deck" onclick="location.href='deck_ten';">
-        <h3>Study Set 10</h3>
-        <p>Created by Snowflake</p>
-        <p>42 Definitions</p>
+    <div class="deck" onclick="location.href='deck_seven';">
+        <h3>GitHub</h3>
+        <p>Created by Firefly</p>
+        <p>47 Definitions</p>
     </div>
     
-    <div class="deck" onclick="location.href='deck_eleven';">
-        <h3>Study Set 11</h3>
-        <p>Created by Rainbow</p>
-        <p>38 Definitions</p>
-    </div>
-    
-    <div class="deck" onclick="location.href='deck_twelve';">
-        <h3>Study Set 12</h3>
-        <p>Created by Aurora</p>
-        <p>49 Definitions</p>
-    </div>
-    
-    <div class="deck" onclick="location.href='deck_thirteen';">
-        <h3>Study Set 13</h3>
-        <p>Created by Mountain</p>
-        <p>57 Definitions</p>
-    </div>
-    
-    <div class="deck" onclick="location.href='deck_fourteen';">
-        <h3>Study Set 14</h3>
-        <p>Created by Ocean</p>
-        <p>65 Definitions</p>
-    </div>
-    
-    <div class="deck" onclick="location.href='deck_fifteen';">
-        <h3>Study Set 15</h3>
-        <p>Created by Forest</p>
-        <p>72 Definitions</p>
-    </div>
-    
-    <div class="deck" onclick="location.href='deck_sixteen';">
-        <h3>Study Set 16</h3>
-        <p>Created by Desert</p>
-        <p>68 Definitions</p>
+    <div class="deck" onclick="location.href='deck_four';">
+        <h3>Methods 2</h3>
+        <p>Created by Sunshine</p>
+        <p>75 Definitions</p>
     </div>
 
-    <div class="deck" onclick="location.href='deck_seventeen';">
-        <h3>Study Set 17</h3>
-        <p>Created by Clara</p>
-        <p>42 Definitions</p>
+    <div class="deck" onclick="location.href='deck_five';">
+        <h3>Programming in Python</h3>
+        <p>Created by Starlight</p>
+        <p>63 Definitions</p>
+    </div>
+
+    <div class="deck" onclick="location.href='deck_three';">
+        <h3>Philosophy</h3>
+        <p>Created by Bluejay</p>
+        <p>82 Definitions</p>
     </div>
     
 </div>
