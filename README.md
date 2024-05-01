@@ -9,7 +9,7 @@ This repository contains a Flask web application designed to provide various fea
 
 **Installation**
 
-Clone this repository to your VSCode IDE:
+Clone this repository to your IDE:
 ```bash
 git clone https://github.com/Azrae101/AppliedCogSci.git
 ```
