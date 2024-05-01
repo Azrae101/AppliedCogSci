@@ -15,14 +15,10 @@ git clone https://github.com/Azrae101/AppliedCogSci.git
 ```
 
 **Usage**
-1. Set up the database by running the following command:
-```bash
-python setup_database.py
-```
-2. Run the Flask application:
+1. Run the Flask application:
 ```bash
 python app.py
 ```
 
-4. Access the application in your web browser at http://localhost:5000 or the given URL in the terminal
+2. Access the application in your web browser at http://localhost:5000 or the given URL in the terminal
 
