@@ -106,10 +106,22 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            align-items: center;
             background-color: rgba(211, 211, 211, 0.1); /* Updated background color */
             border-radius: 10px; /* Added border radius for consistency */
         }
         
+        .container_loggedin {
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: center;
+            padding: 20px;
+            margin-top: 25px;
+            background-color: white; /* Updated background color */
+            border-radius: 10px; /* Added border radius for consistency */
+        }
+
+
         .minigame-container {
             display: flex;
             align-items: center;
@@ -118,18 +130,59 @@
             gap: 20px; /* Gap between minigame items */
         }
 
+        .minigame {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .minigame img {
+            height: 200px; /* Set the height as needed */
+            width: auto; /* Maintain aspect ratio */
+            cursor: pointer; /* Change cursor to pointer */
+            border-radius: 5px; /* Add border radius */
+            transition: transform 0.3s ease; /* Add transition effect */
+            border: 2px solid #000000; /* Add border */
+        }
+
+        .minigame img:hover {
+            transform: scale(1.1); /* Enlarge on hover */
+        }
+
+        .minigame span {
+            margin-top: 10px; /* Adjust margin */
+        }
+
+        h4 {
+            color: #ffffff;
+            margin: 5px 0;
+            padding: 10px;
+            align-items: center;
+        }
+
         h2 {
             color: #000000;
             margin: 5px 0;
             padding: 10px;
         }
 
-        h1, h4 {
-            color: #ffffff;
+        h1 {
+            color: #000000;
             margin: 5px 0;
             padding: 10px;
             align-items: center;
         }
+
+        .white-container {
+            background-color: rgb(250, 250, 250); /* Set white background */
+            margin: 0 auto; /* Center the container horizontally */
+            max-width: 1200px; /* Set maximum width */
+            padding: 20px; /* Add padding */
+            border-radius: 10px; /* Add border radius */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+
     </style>
     <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
@@ -164,20 +217,17 @@
     {% endif %}
     <!-- LOGGED IN -->
     {% if session.logged_in %}
-    <div class="containerlol" style="color: #fff; padding: 20px; border-radius: 10px;">
+    <p> </p>
+    <div class="white-container">
         <h2>Welcome back!</h2>
-    </div>
-    <div class="container_library">
-        <h3>Continue</h3>
-        <p>Study set</p>
-    </div>
-
-    <div class="deck plus" onclick="location.href='deck_one';">
-        <h3>Create a new deck</h3>
-        <img src="static/plus.png" alt="plus" class="plus-icon">
-    </div>
-    
-        <div class="container_library">
+        <div class="deck plus" onclick="location.href='deck_one';">
+            <h3>Create a new deck</h3>
+            <img src="static/plus.png" alt="plus" class="plus-icon">
+        </div>
+            <h3>Continue ...</h3>
+            <div class="deck" onclick="location.href='deck_one';">
+                <h3>Cognitive Science</h3>
+            </div>
             <h3>Recently studied</h3>
             <div class="deck" onclick="location.href='deck_one';">
                 <h3>Cognitive Science</h3>
@@ -196,20 +246,28 @@
                 <p>Created by Firefly</p>
                 <p>47 Definitions</p>
             </div>
-        </div>
-    <h3>Recently played</h3>
-    <div class="minigame-container">
-        <div class="minigame">
-            <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
-            <span>CardChase</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='definedash.png') }}" class="resized-img"></a>
-            <span>DefineDash</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('flashcards_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
-            <span>Flashcards</span>
+        <h3>Recently played</h3>
+        <div class="minigame-container">
+            <div class="minigame">
+                <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
+                <span>CardChase</span>
+            </div>
+            <div class="minigame">
+                <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='definedash.png') }}" class="resized-img"></a>
+                <span>DefineDash</span>
+            </div>
+            <div class="minigame">
+                <a href="{{ url_for('flashcards_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
+                <span>Flashcards</span>
+            </div>
+            <div class="minigame">
+                <a href="{{ url_for('tetris_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
+                <span>TetriCards</span>
+            </div>
+            <div class="minigame">
+                <a href="{{ url_for('quiz_settings') }}"><img src="{{ url_for('static', filename='quiz.png') }}" class="resized-img"></a>
+                <span>Quiz</span>
+            </div>
         </div>
     </div>
     {% endif %}
