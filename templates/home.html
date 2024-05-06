@@ -3,33 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CogCards - Home</title>
+    <title>Home Page</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f0f0f0;
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
         .container {
-            width: 80%;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
-        header {
-            background-color:#5689a2d7;
-            color: #fff;
+        .containerlol {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .welcome, .loginlol {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
+            color: #333;
+            width: 48%;
         }
-
-        section {
+        .welcome h1, .login h3 {
+            margin-top: 0;
+        }
+        .loginlol {
+            text-align: center;
             padding: 20px;
-            align-items: center;
-            padding-left: 25vh;
-            padding-right: 25vh;
-            font-size: large;
-
+            color: #333;
         }
-
         .button {
             display: inline-block;
             padding: 10px 20px;
@@ -41,211 +52,166 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            align-items: right;
+        }
+        .buttonlol {
+            display: inline-block;
+            padding: 15px 40px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .buttonlol:hover {
+            background-color: #666;
+        }
+        .deck {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 25px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            width: calc(25% - 1px);
+            box-sizing: border-box;
+            display: inline-block;
+            vertical-align: top;
+            align-items: center;
+        }
+
+        .deck:hover {
+            background-color: #f0f0f0;
+        }
+
+        .plus {
+            position: relative;
+        }
+        .plus-icon {
+            position: relative;
+            width: 25px; /* Adjust size as needed */
+            height: auto;
+            align-items: center;
+        }
+
+        .container_library {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(211, 211, 211, 0.1); /* Updated background color */
+            border-radius: 10px; /* Added border radius for consistency */
+        }
+        
+        .minigame-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping */
+            justify-content: center; /* Center the items */
+            gap: 20px; /* Gap between minigame items */
         }
 
         h2 {
-            color: darkblue;
-        }
-
-        .game {
-            border: 1px solid #ccc;
+            color: #000000;
+            margin: 5px 0;
             padding: 10px;
-            margin-bottom: 10px;
-            overflow: auto;
-            display: flex; /* Use flexbox to divide into two halves */
         }
 
-        .game-description {
-            flex: 1; /* Take half of the available space */
-            font-size: 18px;
+        h1, h4 {
+            color: #ffffff;
+            margin: 5px 0;
+            padding: 10px;
+            align-items: center;
         }
-        
-        .game img {
-            width: 400px; 
-            height: 400px; 
-            float: right;
-            margin-left: 20px;
-        }
-
-        footer {
-            background-color:#5689a2d7;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .navbar-container {
-            padding: 0; /* Remove padding for navbar */
-        }
-
-    .button-contact {
-        font-family: 'calibri', sans-serif;
-        font-weight: bold;
-        font-size: larger; /* Reduce font size */
-        display: inline-block;
-        padding: 10px 20px 10px 20px; /* Adjust padding */
-        background-color: rgba(235, 235, 235, 0.75);
-        color: #000000;
-        text-decoration: none;
-        cursor: pointer;
-        transition: color 0.3s ease;
-        align-items: center;
-        border-radius: 10px;
-        border: 1px solid #00000048;
-    }
-
-    .button-contact:hover {
-        background-color: rgb(200, 200, 200); /* Set background color to white */
-    }
-
     </style>
-        <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
 <body>
-    <div class=".navbar-container">
-        {% include "navbar.html" %}
+    <div class="container">
+        <div class="content">
+            {% include "navbar.html" %}
+        </div>
     </div>
-    <header>
-        <h1>About CogCards</h1> 
-        <a href="{{ url_for('contact') }}" class="button-contact">Contact</a>
-    </header>
+    {% if not session.logged_in %}
+        <div class="containerlol">
+            <div class="welcome">
+                <h1>Welcome!</h1>
+                <div style="border:solid;">
+                    <img src="static/cardchase.gif" width="200">
+                    <img src="static/definedash.gif" width="200">
+                    <img src="static/tetris.gif" width="200">
+                    <img src="static/quiz.gif" width="200">
+                    <img src="static/termtime.gif" width="200">
+                    <img src="static/flashcards.gif" width="200">
+                </div>
+            </div>
+            <div class="loginlol">
+                <h3>Ready to gamify your learning?</h3>
+                <button class="buttonlol" style="background-color: #ff5454" onclick="window.location.href='login'">Log in</button><br/>
+                <large>Don't have an account?</large><br/>
+                <button class="buttonlol" style="background-color: #c7ae41" onclick="window.location.href='register'">Sign up</button><br/>
+                <large>Want to try out our functions?</large><br/>
+                <button class="buttonlol" style="background-color: #35a44b" onclick="window.location.href='minigames'">Play a demo set</button>
+            </div>
+        </div>
+    {% endif %}
+    <!-- LOGGED IN -->
+    {% if session.logged_in %}
+    <div class="containerlol" style="color: #fff; padding: 20px; border-radius: 10px;">
+        <h2>Welcome back!</h2>
+    </div>
+    <div class="container_library">
+        <h3>Continue</h3>
+        <p>Study set</p>
+    </div>
 
-    <section id="intro">
-        <h2>Welcome to CogCards</h2>
-        <p>CogCards is an interactive app and website designed to enhance student learning through personalized flashcards and memory techniques. Drawing from research on the effectiveness of flashcards, CogCards offers a unique approach to studying key concepts and terms. With features like synesthetic memory techniques, mini-games, and research-based learning strategies, CogCards transforms the traditional flashcard experience into an engaging and effective learning tool.</p>
-    </section>
-
-    <section id="product-details">
-        <h2>Product Details</h2>
-        <p>The frontend product is an interactive website. It offers various learning modes to better match individual user expectations, from standard flashcards viewing, to tetris-like mini-games, which gamify the experience and allow users to study the material by having fun. The website allows users to create their own study content or access other user-generated material via a search tool. The decks can then be modified, shared, exported, deleted and used for studying.</p>
-        <p>The app consists of four different learning modes in total. First, a traditional-like flashcard viewing based on real-life use of flashcards. Then, an open-answers quiz, which allows the users to test their familiarity with the material by typing out the definitions. Finally, there are two mini-games designed to engage users in the learning process by making it more enjoyable and fun.</p>
-    </section>
-
-    <section id="product-details">
-        <h2>Cognitive Science</h2>
-        <p>CogCards utilizes effective learning techniques like spaced repetition and mnemonics, fostering improved memory retention. Through gamification and diverse flashcard categories, it offers an engaging user experience with seamless integration across devices. However, potential overreliance may impede critical thinking, while ethical concerns such as addiction risk and reinforcement of extrinsic motivation arise. 
-        </p>
-    </section>
-
-    <section id="games">
-        <h2>Featured Games</h2>
-        <div class="game">
-            <div class="game-description">
-                <h3>Cardchase</h3>
-                <p>Cardchase is a fast-paced game where users must match flashcards with their corresponding definitions before time runs out. It tests memory recall and helps reinforce learning in a fun and challenging way. Players can compete against the clock to improve their speed and accuracy, making it an exciting way to review key concepts.</p>
-                <p>Here's how it works:</p>
-                <ul>
-                    <li>Questions will appear on the screen and move downwards. </li>
-                    <li>Type your answer before they reach the bottom.</li>
-                    <li>Press Enter to submit your answer in the text-box.</li>
-                    <li>Get it right, and you'll earn points and move on to the next question.</li>
-                </ul>
-                <p>But be quick - mistakes or delays mean game over!</p>
-                <p>Let's see how far you can go!</p>
-            </div>
-            <img src="static/Cardchase.png" alt="Cardchase">
-        </div>
-        <div class="game">
-            <div class="game-description">
-                <h3>DefineDash</h3>
-                <p>DefineDash presents users with a series of terms and prompts them to type out their definitions. It helps users solidify their understanding of key concepts through active recall. This mode encourages users to engage deeply with the material, enhancing comprehension and retention.</p>
-                <p>In this game, your goal is to define the given term as precisely as you can before the time runs out.</p>
-                <p>Tips and advice</p>
-                <ul>
-                    <li>Pay close attention to the term and try to recall its meaning accurately.</li>
-                    <li>Think about the most essential aspects of the term and include them in your definition.</li>
-                    <li>Don't worry if you're unsure about a term; give it your best shot!</li>
-                </ul>
-                <p>Ready to test your vocabulary skills? Let's DefineDash!</p>
-            </div>
-            <img src="static/DefineDash.png" alt="DefineDash">
-        </div>
-        <div class="game">
-            <div class="game-description">
-                <h3>Flashcards</h3>
-                <p>The classic flashcard mode allows users to flip through virtual flashcards at their own pace, reviewing both term and definition to reinforce learning through repetition. Users can easily navigate between cards, marking their progress and focusing on areas that require more practice. This mode is particularly effective for consolidating information and improving memory retention.</p>
-                <p>Tips and advice:</p>
-                <ul>
-                    <li>Take your time to think about each term before revealing the answer.
-                    </li>
-                    <li>Try to recall the answer before flipping the card to test your memory.
-                    </li>
-                    <li>Don't worry if you're unsure about a term; use the "Next" button to move forward and come back to it later.
-                    </li>
-                </ul>
-                <p>Prepare to sharpen your memory and knowledge with our interactive flashcard game.</p>
-            </div>
-            <img src="static/Flashcards.png" alt="Flashcards">
-        </div>
-        <div class="game">
-            <div class="game-description">
-                <h3>TetriCards</h3>
-                <p>TetriCards combines the addictive gameplay of Tetris with the study of flashcards. Users must clear lines by matching flashcards with their corresponding definitions, making learning as addictive as gaming. This mode offers a unique approach to studying, blending entertainment with educational content to keep users engaged and motivated.</p>
-                <p>In this unique twist on the classic Tetris game, you'll be combining the challenge of Tetris with the fun of answering questions.</p>
-                <p>Tips and advice</p>
-                <ul>
-                    <li>Focus on both answering questions accurately and strategically placing the falling shapes.
-                    </li>
-                    <li>Pay attention to the shapes' colors and the questions displayed on them.
-                    </li>
-                </ul>
-                <p>Are you ready to test your Tetris skills and knowledge? Let's dive into the TetriCards challenge!
-                </p>
-            </div>
-            <img src="static/tetriss.png" alt="TetriCards">
-        </div>
-        <div class="game">
-            <div class="game-description">
-                <h3>TermTime</h3>
-                <p>TermTime is a timed challenge where users must match terms with their definitions as quickly as possible. It helps improve memory recall and speed while making learning more exciting. This mode is ideal for users who enjoy competitive challenges and want to test their knowledge under pressure.</p>
-                <p>Get ready to test your typing skills and knowledge in this exciting challenge.</p>
-                <p>The goal is simple: type as many terms as you can before time runs out!</p>
-                <ul>
-                    <li>Begin by typing your answers into the text field provided. Each term you type should match one of the elements displayed on the screen.</li>
-                    <li>Watch the timer countdown to see how much time you have left. You have 60 seconds to type as many correct terms as possible.</li>
-                    <li>The game ends when time runs out. If you successfully type all the displayed terms before time is up, you win!</li>
-                </ul>
-            </div>
-            <img src="static/TermTimes.png" alt="TermTime">
-        </div>
-        <div class="game">
-            <div class="game-description">
-                <h3>Quiz</h3>
-                <p>The Quiz mode presents users with multiple-choice questions based on the flashcards they've studied. It's a fun way to test knowledge retention and track progress. Users can challenge themselves with different difficulty levels and compete with friends to see who can achieve the highest scores.</p>
-                <p>Here is how it works:</p>
-                <ul>
-                    <li>Read the question displayed on the screen carefully. Each question is based on a flashcard term.</li>
-                    <li>Enter your answer in the text field provided below the question. Type your response accurately to match the correct term.</li>
-                    <li>Once you're confident with your answer, click the "Submit" button to check if you're correct.</li>
-                </ul>
-                <p>Get ready to put your knowledge to the test with our multiple-choice quiz game!</p>
-            </div>
-            <img src="static/Quiz.png" alt="Quiz">
-        </div>
-    </section>
+    <div class="deck plus" onclick="location.href='deck_one';">
+        <h3>Create a new deck</h3>
+        <img src="static/plus.png" alt="plus" class="plus-icon">
+    </div>
     
-    <section id="reviews">
-        <h2>What Our Users Say</h2>
-        <div class="review">
-            <p>"CogCards has been a lifesaver during my exam preparation. The games make studying fun, and I've noticed a significant improvement in my retention of key concepts."</p>
-            <p class="author">- Maria, University Student</p>
+        <div class="container_library">
+            <h3>Recently studied</h3>
+            <div class="deck" onclick="location.href='deck_one';">
+                <h3>Cognitive Science</h3>
+                <p>Created by Pinetree</p>
+                <p>69 Definitions</p>
+            </div>
+                
+            <div class="deck" onclick="location.href='deck_six';">
+                <h3>Danish</h3>
+                <p>Created by Moonbeam</p>
+                <p>55 Definitions</p>
+            </div>
+            
+            <div class="deck" onclick="location.href='deck_seven';">
+                <h3>GitHub</h3>
+                <p>Created by Firefly</p>
+                <p>47 Definitions</p>
+            </div>
         </div>
-        <div class="review">
-            <p>"I love how I can create my own flashcard decks or access decks created by other users. It's made studying so much more efficient!"</p>
-            <p class="author">- Jonas, College Student</p>
+    <h3>Recently played</h3>
+    <div class="minigame-container">
+        <div class="minigame">
+            <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
+            <span>CardChase</span>
         </div>
-        <div class="review">
-            <p>"The mini-games are addictive! I find myself studying for hours without even realizing it."</p>
-            <p class="author">- Emma, Graduate Student</p>
+        <div class="minigame">
+            <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='definedash.png') }}" class="resized-img"></a>
+            <span>DefineDash</span>
         </div>
-    </section>
-    <section id="product-details">
-        <h2> </h2>
-    </section>
-
-    <footer>
-        <p>&copy; 2024 CogCards. All rights reserved.</p>
-    </footer>
+        <div class="minigame">
+            <a href="{{ url_for('flashcards_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
+            <span>Flashcards</span>
+        </div>
+    </div>
+    {% endif %}
 </body>
 </html>

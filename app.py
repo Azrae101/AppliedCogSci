@@ -69,6 +69,10 @@ def before_request():
 def home():
     return render_template('home.html')
 
+@app.route('/about_us')
+def about_us():
+    return render_template('about_us.html')
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
