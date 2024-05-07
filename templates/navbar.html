@@ -42,7 +42,7 @@
         font-size: larger; /* Reduce font size */
         display: inline-block;
         padding: 10px 20px 10px 20px; /* Adjust padding */
-        background-color: rgb(235, 235, 235);
+        background-color: rgb(255, 255, 255);
         color: #000000;
         text-decoration: none;
         cursor: pointer;
@@ -51,7 +51,7 @@
     }
 
     .button:hover {
-        background-color: rgb(200, 200, 200); /* Set background color to white */
+        background-color: rgb(240, 240, 240); /* Set background color to white */
     }
 
     /* Button active effect */
@@ -68,7 +68,6 @@
         height: 30px; /* Reduce height of the round button */
         padding: 10px 10px 10px 45px; /* Added padding on the left to create space */
         margin: 10px 10px 10px 20px;
-        margin-right: 5vh;
         border-radius: 25px;
         background-color: rgba(200, 200, 200, 0.5);
         color: #000000;
@@ -95,7 +94,7 @@
     .button.login {
         background-color: rgb(240, 100, 100);
         color: #ffffff;
-        margin: 10px 10px 10px 20px;
+        height: fit-content;
         margin-right: 5vh;
     }
 
@@ -269,11 +268,10 @@
                         <a href="{{ url_for('contact') }}">Contact</a>
                     </div>
                 </div>
-
                 {% if not session.logged_in %}
                     <a href="/login" class="button login">Login</a>
                 {% endif %}
-                        <!-- Add the fire symbol here -->
+                <!-- Add the fire symbol here -->
                 {% if session.logged_in %}
                 <div class="streak-container">
                     <div class="streak-fire">

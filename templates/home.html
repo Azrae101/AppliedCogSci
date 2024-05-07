@@ -5,26 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            background-color: #f0f0f0;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f5ff; /* Light blue background */
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .containerlol {
+
+        .container-lol {
             display: flex;
             justify-content: space-between;
             max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
         }
-        .welcome, .loginlol {
+
+        .welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 120vh;
+            background-color: lightslategray; /* Light blue background */
+            color: #fff;
+            text-align: center;
+        }
+
+        .welcome h1 {
+            font-size: 4em;
+            margin-bottom: 0;
+        }
+
+        .welcome p {
+            font-size: 1.5em;
+            margin-top: 0;
+        }
+
+        .login h3 {
+            margin-top: 0;
+        }
+
+        .login-lol {
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -33,27 +55,24 @@
             color: #333;
             width: 48%;
         }
-        .welcome h1, .login h3 {
-            margin-top: 0;
-        }
-        .loginlol {
-            text-align: center;
-            padding: 20px;
-            color: #333;
-        }
+
         .button {
             display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            background-color: #007bff;
+            padding: 15px 30px;
+            margin: 20px 0;
+            background-color: #ff5454; /* Red button */
             color: #fff;
             text-decoration: none;
-            border: none;
             border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-size: 1.5em;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .buttonlol {
+
+        .button:hover {
+            background-color: #b32f34; /* Darker red on hover */
+        }
+
+        .button-lol {
             display: inline-block;
             padding: 15px 40px;
             margin-bottom: 20px;
@@ -66,12 +85,11 @@
             transition: background-color 0.3s ease;
             font-size: 16px;
         }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        .buttonlol:hover {
+
+        .button-lol:hover {
             background-color: #666;
         }
+
         .deck {
             border: 1px solid #ddd;
             padding: 20px;
@@ -95,6 +113,7 @@
         .plus {
             position: relative;
         }
+
         .plus-icon {
             position: relative;
             width: 25px; /* Adjust size as needed */
@@ -102,7 +121,7 @@
             align-items: center;
         }
 
-        .container_library {
+        .container-library {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
@@ -110,17 +129,6 @@
             background-color: rgba(211, 211, 211, 0.1); /* Updated background color */
             border-radius: 10px; /* Added border radius for consistency */
         }
-        
-        .container_loggedin {
-            max-width: 1200px;
-            margin: 0 auto;
-            align-items: center;
-            padding: 20px;
-            margin-top: 25px;
-            background-color: white; /* Updated background color */
-            border-radius: 10px; /* Added border radius for consistency */
-        }
-
 
         .minigame-container {
             display: flex;
@@ -138,7 +146,7 @@
         }
 
         .minigame img {
-            height: 200px; /* Set the height as needed */
+            height: 300px; /* Set the height as needed */
             width: auto; /* Maintain aspect ratio */
             cursor: pointer; /* Change cursor to pointer */
             border-radius: 5px; /* Add border radius */
@@ -168,7 +176,7 @@
         }
 
         h1 {
-            color: #000000;
+            color: #ffffff;
             margin: 5px 0;
             padding: 10px;
             align-items: center;
@@ -183,40 +191,207 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow */
         }
 
+        .info-section {
+            background-color: #f0f0f0;
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .info-section h2, .info-section p {
+            margin: 10px 0;
+        }
+
+        .container-landing {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .container-landing > div {
+            width: calc(50% - 20px);
+            box-sizing: border-box;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Light blue background */
+            border-radius: 10px; /* Add border radius */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+
+        /* Left and right containers */
+        .container-left, .container-right {
+            background-color: rgba(255, 255, 255, 0.8); /* Light blue background */
+            border-radius: 10px; /* Add border radius */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+            align-items: center;
+
+        }
+
+        /* Second and third containers */
+        .container-img, .container-text {
+            background-color: rgba(255, 255, 255, 0.8); /* Light blue background */
+            border-radius: 10px; /* Add border radius */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+
+        .image-resize {
+            width: 100%; /* Set image width to 100% of its container */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Ensure the image is displayed as a block element */
+            margin: 0 auto; /* Center the image horizontally */
+        }
+
+        .image-resized {
+            width: 100%; /* Set image width to 100% of its container */
+            height: 100%; /* Maintain aspect ratio */
+            display: block; /* Ensure the image is displayed as a block element */
+            margin: 0 auto; /* Center the image horizontally */
+            align-items: left;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-items: right;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color:#5689a2d7;
+            color: #fff;
+            text-align: center;
+            margin-top: 10vh;
+            padding: 20px;
+            width: 100%;            
+        }
+
+        .button_overlay {
+            position: absolute; /* Set button position to absolute */
+            top: 99%; /* Align button to the middle vertically */
+            left: 83%; /* Align button to the middle horizontally */
+            transform: translate(-50%, -50%); /* Center button */
+            z-index: 1; /* Ensure button is above the image */
+            display: inline-block;
+            padding: 20px 40px; /* Increased padding for a bigger button */
+            margin-bottom: 20px;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.1); /* Blue background */
+            color: #ffffff00;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 25px; /* Increased font size for better visibility */
+            width: 600px;
+            height: 100px;
+        }
+
+        .button_overlay:hover {
+            background-color: lightskyblue; /* Darker blue background on hover */
+            color: #ffffff;
+        }
+
+        .welcome img {
+            display: block; /* Ensure image is a block element */
+            width: 100%; /* Set image width to 100% */
+        }
+
     </style>
     <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            {% include "navbar.html" %}
-        </div>
-    </div>
     {% if not session.logged_in %}
-        <div class="containerlol">
-            <div class="welcome">
-                <h1>Welcome!</h1>
-                <div style="border:solid;">
-                    <img src="static/cardchase.gif" width="200">
-                    <img src="static/definedash.gif" width="200">
-                    <img src="static/tetris.gif" width="200">
-                    <img src="static/quiz.gif" width="200">
-                    <img src="static/termtime.gif" width="200">
-                    <img src="static/flashcards.gif" width="200">
+        <div class="container">
+            <div class="content">
+                {% include "navbar.html" %}
+            </div>
+        </div>
+        <div class="welcome">
+            <img src="static/home.png" class="image-resized">
+                <button class="button_overlay">Find or create flashcards here</button>
+            </a>
+        </div>
+        <div class="container-landing">
+            <!-- First container (left) -->
+            <div class="container-left">
+                <h2>CogCards</h2>
+                <p style="font-size: 25px;">The frontend product is an interactive website.</p>
+                <p style="font-size: 25px;">It offers various learning modes to better match individual user expectations, from standard flashcards viewing, to tetris-like mini-games, which gamify the experience and allow users to study the material by having fun.</p>
+                <p style="font-size: 25px;">The website allows users to create their own study content or access other user-generated material via a search tool. </p>
+                <p style="font-size: 25px;">The decks can then be modified, shared, exported, deleted and used for studying.</p>            
+            </div>
+            <!-- Second container (right) -->
+            <div class="container-right">
+                <img src="static/game.jpg" class="image-resize">
+            </div>
+            <!-- Third container (left, below the first) -->
+            <div class="container-left">
+                <img src="static/brain.png" class="image-resize">
+            </div>
+            <!-- Fourth container (right, below the second) -->
+            <div class="container-right">
+                <h2>Cognitive Science</h2>
+                <p style="font-size: 25px;">CogCards utilizes effective learning techniques like spaced repetition and mnemonics, fostering improved memory retention.</p>
+                <p style="font-size: 25px;">Through gamification and diverse flashcard categories, it offers an engaging user experience with seamless integration across devices.</p>
+                <p style="font-size: 25px;">However, potential overreliance may impede critical thinking, while ethical concerns such as addiction risk and reinforcement of extrinsic motivation arise.</p>
+            </div>
+        </div>
+        <div class="welcome">
+            <h1>Preview of the minigames</h1>
+            <p> </p>
+            <p> </p>
+            <div class="minigame-container">
+                <div class="minigame">
+                    <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
+                    <span>CardChase</span>
+                </div>
+                <div class="minigame">
+                    <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='definedash.png') }}" class="resized-img"></a>
+                    <span>DefineDash</span>
+                </div>
+                <div class="minigame">
+                    <a href="{{ url_for('flashcards_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
+                    <span>Flashcards</span>
                 </div>
             </div>
-            <div class="loginlol">
-                <h3>Ready to gamify your learning?</h3>
-                <button class="buttonlol" style="background-color: #ff5454" onclick="window.location.href='login'">Log in</button><br/>
-                <large>Don't have an account?</large><br/>
-                <button class="buttonlol" style="background-color: #c7ae41" onclick="window.location.href='register'">Sign up</button><br/>
-                <large>Want to try out our functions?</large><br/>
-                <button class="buttonlol" style="background-color: #35a44b" onclick="window.location.href='minigames'">Play a demo set</button>
+            <p> </p>
+            <div class="minigame-container">
+                <div class="minigame">
+                    <a href="{{ url_for('tetris_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
+                    <span>TetriCards</span>
+                </div>
+                <div class="minigame">
+                    <a href="{{ url_for('termtime_settings') }}"><img src="{{ url_for('static', filename='termtimes.png') }}" class="resized-img"></a>
+                    <span>TermTime</span>
+                </div>
+                <div class="minigame">
+                    <a href="{{ url_for('quiz_settings') }}"><img src="{{ url_for('static', filename='quiz.png') }}" class="resized-img"></a>
+                    <span>Quiz</span>
+                </div>
             </div>
         </div>
     {% endif %}
     <!-- LOGGED IN -->
     {% if session.logged_in %}
+    <div class="container">
+        <div class="content">
+            {% include "navbar.html" %}
+        </div>
+    </div>
     <p> </p>
     <div class="white-container">
         <h2>Welcome back!</h2>
@@ -271,5 +446,8 @@
         </div>
     </div>
     {% endif %}
+    <footer>
+        <p>&copy; 2024 CogCards. All rights reserved.</p>
+    </footer>
 </body>
 </html>
