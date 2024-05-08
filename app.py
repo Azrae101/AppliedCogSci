@@ -38,11 +38,25 @@ def get_db():
         if 'account_name' not in column_names:
             cursor.execute("ALTER TABLE user ADD COLUMN account_name TEXT")
             g.db.commit()
+
+        # Q & A in deck
         if 'question' not in column_names:
             cursor.execute("ALTER TABLE user ADD COLUMN question TEXT")
             g.db.commit()
         if 'answer' not in column_names:
             cursor.execute("ALTER TABLE user ADD COLUMN answer TEXT")
+            g.db.commit()
+        if 'question1' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN question1 TEXT")
+            g.db.commit()
+        if 'answer1' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN answer1 TEXT")
+            g.db.commit()
+        if 'question2' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN question2 TEXT")
+            g.db.commit()
+        if 'answer2' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN answer2 TEXT")
             g.db.commit()
     return g.db
 
@@ -247,10 +261,6 @@ def deck_one():
 @app.route('/my_decks/deck_one', methods=['GET', 'POST'])
 def edit_deck():
     """Update flashcard"""
-    if not g.logged_in:
-        # Redirect the user to the login page or handle it based on your logic
-        flash('Please log in to access this page.')
-        return redirect(url_for('login'))
 
     if request.method == 'POST':
         # Connect to the database
@@ -259,16 +269,28 @@ def edit_deck():
         # Retrieve the logged-in user's ID
         user_id = session.get('user_id')
 
-        # Retrieve form data
-        question = request.form['question']
-        answer = request.form['answer']
+        # Retrieve form data for each question and answer pair
+        question = request.form.get('question', '')
+        answer = request.form.get('answer', '')
+        question1 = request.form.get('question1', '')
+        answer1 = request.form.get('answer1', '')
+        question2 = request.form.get('question2', '')
+        answer2 = request.form.get('answer2', '')
 
-        # Update user data in the database
-        db.execute("UPDATE user SET question=?, answer=? WHERE id=?",
-                   (question, answer, user_id))
+        # Get the card identifier from the form data
+        card_id = request.form.get('card_id')
+
+        # Update user data in the database based on the card identifier
+        if card_id == '1':
+            db.execute("UPDATE user SET question=?, answer=? WHERE id=?", (question, answer, user_id))
+        elif card_id == '2':
+            db.execute("UPDATE user SET question1=?, answer1=? WHERE id=?", (question1, answer1, user_id))
+        elif card_id == '3':
+            db.execute("UPDATE user SET question2=?, answer2=? WHERE id=?", (question2, answer2, user_id))
+
         db.commit()
 
-        flash('Flashcard updated successfully.')
+        flash('Flashcards updated successfully.')
 
         # Redirect to the page
         return redirect(url_for('deck_one'))

@@ -156,6 +156,7 @@
         </div>
         <div class="card">
             <form action="/my_decks/deck_one" method="post">
+                <input type="hidden" name="card_id" value="1">
                 <label for="question">Definition of the term:</label>
                 <input type="text" id="question" name="question" value="{{ user.question }}"><br><br>
                 
@@ -165,6 +166,30 @@
                 <input type="submit" class="button" value="Save Changes">
             </form>
         </div>
+        <div class="card">
+            <form action="/my_decks/deck_one" method="post">
+                <input type="hidden" name="card_id" value="2">
+                <label for="question">Definition of the term:</label>
+                <input type="text" id="question1" name="question1" value="{{ user.question1 }}"><br><br>
+                
+                <label for="answer">The term:</label>
+                <input type="text" id="answer1" name="answer1" value="{{ user.answer1 }}"><br><br>
+                
+                <input type="submit" class="button" value="Save Changes">
+            </form>
+        </div>
+        <div class="card">
+            <form action="/my_decks/deck_one" method="post">
+                <input type="hidden" name="card_id" value="3">
+                <label for="question">Definition of the term:</label>
+                <input type="text" id="question2" name="question2" value="{{ user.question2 }}"><br><br>
+                
+                <label for="answer">The term:</label>
+                <input type="text" id="answer2" name="answer2" value="{{ user.answer2 }}"><br><br>
+                
+                <input type="submit" class="button" value="Save Changes">
+            </form>
+        </div>        
     </div>
     <footer>
         <p>&copy; 2024 CogCards. All rights reserved.</p>
