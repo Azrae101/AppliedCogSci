@@ -68,7 +68,6 @@ def close_db(e=None):
 # Quiz data
 list_of_display = ["A condition where an individual can perceive visual stimuli but cannot recognize or interpret them correctly.", "A theory proposing that attention is necessary to bind individual features of an object together to perceive it as a whole.", "The process by which a skill becomes automatic through practice and experience.", "A brain structure involved in processing emotions, particularly fear and aggression."]
 list_of_answers = ["Visual Agnosia", "Feature Integration Theory", "Proceduralization", "Amygdala"]
-list_of_answers_quiz = ["1", "2", "3", "4"]
 list_type = list_of_display
 current_index = 0
 current_side = "t"
@@ -196,10 +195,11 @@ def flip_flashcard():
 
 @app.route('/quiz')
 def quiz():
+    global questions
     if list_of_display:
         current_question = list_of_display[0]
     else:
-        current_question = f"No more questions. You answered {questions} questions."
+        current_question = f"No more questions. You answered {questions-1} questions."
     return render_template('games/quiz.html', question=current_question)
 
 @app.route('/answer', methods=['POST'])
@@ -208,21 +208,20 @@ def handle_answer():
     user_input = request.form.get('answer').strip().lower()  # Normalize user input
 
     # Check if user input is in list_of_answers
-    if user_input in list_of_answers_quiz:
+    if user_input in map(str.lower, list_of_answers):
         # Get the index of the answer
-        answer_index = list_of_answers_quiz.index(user_input)
+        answer_index = list(map(str.lower, list_of_answers)).index(user_input)
 
         # Check if the index is within bounds
         if answer_index < len(list_of_display):
             # Check if the question corresponding to the answer matches the current question
-            if list_of_display[current_index] == list_of_display[answer_index]:
+            if list_of_display[0].lower() == list_of_display[answer_index].lower():
                 # If matched, remove both question and answer
-                list_of_display.pop(current_index)
-                list_of_answers_quiz.pop(answer_index)
+                list_of_display.pop(0)
+                list_of_answers.pop(answer_index)
                 questions += 1
 
     return redirect(url_for('quiz'))
-
 
 ### Search
 @app.route('/search', methods=['POST'])
