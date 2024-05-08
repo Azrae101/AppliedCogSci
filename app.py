@@ -116,9 +116,9 @@ def deck_two():
 def cardchase():
     return render_template('games/cardchase.html')
 
-@app.route('/tetris')
-def tetris():
-    return render_template('games/tetris.html')
+@app.route('/tetricards')
+def tetricards():
+    return render_template('games/tetricards.html')
 
 @app.route('/termtime')
 def termtime():
@@ -228,7 +228,7 @@ def handle_answer():
 def search_results():
     search_query = request.form['search']
     # Predefined search results
-    predefined_results = ['login', 'register', 'flashcards', 'quiz', 'cardchase']
+    predefined_results = ['login', 'register', 'flashcards', 'quiz', 'cardchase','definedash','termtime','tetricards']
     # Check if the search query matches any predefined result
     results = [result for result in predefined_results if search_query.lower() in result]
     return render_template('search_results.html', search_query=search_query, results=results)
