@@ -185,6 +185,25 @@
             }
         }
 
+        #scrollToTopBtn {
+            display: none; /* Initially hide the button */
+            position: fixed; /* Make it fixed so it stays in place */
+            bottom: 20px; /* Position it 20px from the bottom */
+            right: 20px; /* Position it 20px from the right */
+            z-index: 99; /* Ensure it's on top of other elements */
+            padding: 15px 20px; /* Padding for better visibility */
+            background-color: lightskyblue; /* Button background color */
+            color: #fff; /* Button text color */
+            border: none; /* Remove border */
+            border-radius: 50px; /* Add border radius */
+            cursor: pointer; /* Change cursor to pointer */
+            transition: background-color 0.3s ease; /* Add transition effect */
+        }
+
+        #scrollToTopBtn:hover {
+            background-color: rgb(115, 176, 214); /* Darker background color on hover */
+        }
+
     </style>
     <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
@@ -316,6 +335,29 @@
         });
     });
 </script>
+      
+<!-- Scroll to top button -->
+<button onclick="topFunction()" id="scrollToTopBtn" title="Go to top">
+    <img src="static/up_arrow.png" width="25px" alt="Up Arrow">
+</button>
 
+<script>
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+            document.getElementById("scrollToTopBtn").style.display = "block";
+        } else {
+            document.getElementById("scrollToTopBtn").style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+</script>
 </body>
 </html>
