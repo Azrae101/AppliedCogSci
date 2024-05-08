@@ -26,7 +26,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 120vh;
+            height: 90vh;
             background-color: lightslategray; /* Light blue background */
             color: #fff;
             text-align: center;
@@ -146,7 +146,7 @@
         }
 
         .minigame img {
-            height: 300px; /* Set the height as needed */
+            height: 200px; /* Set the height as needed */
             width: auto; /* Maintain aspect ratio */
             cursor: pointer; /* Change cursor to pointer */
             border-radius: 5px; /* Add border radius */
@@ -243,12 +243,16 @@
             margin: 0 auto; /* Center the image horizontally */
         }
 
-        .image-resized {
-            width: 100%; /* Set image width to 100% of its container */
-            height: 100%; /* Maintain aspect ratio */
-            display: block; /* Ensure the image is displayed as a block element */
-            margin: 0 auto; /* Center the image horizontally */
-            align-items: left;
+        .image-resize-home-pictures {
+            width: 100%; /* Full width */
+            height: 85vh; /* Full viewport height */
+            object-fit: cover; /* Cover area without stretching */
+            object-position: center top; /* Align image to the top */
+        }
+
+        .container-relative {
+            position: relative;
+            overflow: hidden; /* Hide the overflowing parts of the image */
         }
 
         .button {
@@ -280,14 +284,12 @@
 
         .button_overlay {
             position: absolute; /* Set button position to absolute */
-            top: 99%; /* Align button to the middle vertically */
-            left: 83%; /* Align button to the middle horizontally */
+            top: 80%; /* Align button to the middle vertically */
+            left: 72%; /* Align button to the middle horizontally */
             transform: translate(-50%, -50%); /* Center button */
             z-index: 1; /* Ensure button is above the image */
             display: inline-block;
-            padding: 20px 40px; /* Increased padding for a bigger button */
-            margin-bottom: 20px;
-            margin-top: 10px;
+            padding: 20px 20px; /* Increased padding for a bigger button */
             background-color: rgb(100, 149, 187); /* Blue background */
             color: #ffffff;
             text-decoration: none;
@@ -296,8 +298,8 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             font-size: 25px; /* Increased font size for better visibility */
-            width: 600px;
-            height: 100px;
+            width: 500px;
+            height: 50px;
         }
 
         .button_overlay:hover {
@@ -339,9 +341,8 @@
                 {% include "navbar.html" %}
             </div>
         </div>
-        <div class="welcome">
-            <img src="static/home.png" class="image-resized">
-            <a href="{{ url_for('publiclibrary') }}" class="button_overlay">Find or create flashcards here</a>
+        <div class="container-relative">
+            <img src="static/home.png" class="image-resize-home-pictures">
         </a>
         </div>
         <div class="container-landing">

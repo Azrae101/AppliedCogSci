@@ -44,10 +44,59 @@ def get_db():
         if 'answer' not in column_names:
             cursor.execute("ALTER TABLE user ADD COLUMN answer TEXT")
             g.db.commit()
+        if 'user_id' not in column_names:
+            cursor.execute("ALTER TABLE user ADD COLUMN user_id INTEGER")
+            g.db.commit()  # Add user_id column if it doesn't exist
     return g.db
+
+# Modify your database setup to include a new table for flashcards
+def setup_database():
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS flashcards (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                question TEXT NOT NULL,
+                answer TEXT NOT NULL,
+                user_id INTEGER,
+                FOREIGN KEY(user_id) REFERENCES user(id)
+            )
+        """)
+        db.commit()
+
+# Call setup_database function to ensure the table is created
+setup_database()
 
 def close_db(e=None):
     db = g.pop('db', None)
+    if db is not None:
+        db.close()
+
+from flask import g
+
+@app.before_first_request
+def before_first_request_func():
+    setup_database()
+
+def close_db(e=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
+
+# Function to get the database connection
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db_path = os.path.join('database', 'database.sqlite')
+        db = g._database = sqlite3.connect(db_path)
+        db.row_factory = sqlite3.Row
+    return db
+
+# Function to close the database connection
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
     if db is not None:
         db.close()
 
@@ -243,7 +292,6 @@ def deck_one():
     # Pass the user variable to the template context
     return render_template('my_decks/deck_one.html', user=user)
 
-### Deck
 @app.route('/my_decks/deck_one', methods=['GET', 'POST'])
 def edit_deck():
     """Update flashcard"""
@@ -263,30 +311,27 @@ def edit_deck():
         question = request.form['question']
         answer = request.form['answer']
 
-        # Update user data in the database
-        db.execute("UPDATE user SET question=?, answer=? WHERE id=?",
-                   (question, answer, user_id))
-        db.commit()
+        try:
+            # Insert flashcard data into the flashcards table
+            db.execute("INSERT INTO flashcards (question, answer, user_id) VALUES (?, ?, ?)",
+                       (question, answer, user_id))
+            db.commit()
 
-        flash('Flashcard updated successfully.')
+            flash('Flashcard added successfully.')
 
-        # Redirect to the page
-        return redirect(url_for('deck_one'))
+            # Redirect to the page
+            return redirect(url_for('deck_one'))
+        
+        except Exception as e:
+            # If an error occurs, rollback the transaction and handle it
+            db.rollback()
+            flash('An error occurred: {}'.format(str(e)), 'error')
 
-    # Retrieve the logged-in user's information
-    db = get_db()
-    user_id = session.get('user_id')
-    cur = db.execute("SELECT * FROM user WHERE id=?", (user_id,))
-    user = cur.fetchone()
+            # Redirect back to the page with the form data preserved
+            return render_template('my_decks/deck_one.html', question=question, answer=answer)
 
-    if user is None:
-        # Handle the case where the user is not found in the database
-        flash('User not found.')
-        return redirect(url_for('login'))
-
-    # Pass the user variable to the template context
-    return render_template('my_decks/deck_one.html', user=user)
-
+    # If it's a GET request, render the page with empty form fields
+    return render_template('my_decks/deck_one.html', question=question, answer=answer)
 
 ### Profile
 @app.route('/profile/settings', methods=['GET', 'POST'])
@@ -378,24 +423,45 @@ def register():
         # Connect to the database
         db = get_db()
 
-        # Username length limit:
-        if len((request.form["username"])) > 10:
-            flash("Your username is too long, please try again")
-            return render_template('register.html')
+        # Begin a transaction
+        db.execute('BEGIN TRANSACTION')
 
-        # Check if username is available
-        cur = db.execute("SELECT * FROM user WHERE username=?", (request.form['username'],))
-        existing_user = cur.fetchone()
-        if existing_user:
-            flash("Username '{}' already taken".format(request.form['username']), 'error')
-            return render_template('register.html')
+        try:
+            # Username length limit:
+            if len((request.form["username"])) > 10:
+                flash("Your username is too long, please try again")
+                return render_template('register.html')
 
-        # Check if the two passwords match
-        if request.form['password1'] != request.form['password2']:
-            flash("Passwords do not match, try again.", 'error')
-            return render_template('register.html')
+            # Check if username is available
+            cur = db.execute("SELECT * FROM user WHERE username=?", (request.form['username'],))
+            existing_user = cur.fetchone()
+            if existing_user:
+                flash("Username '{}' already taken".format(request.form['username']), 'error')
+                return render_template('register.html')
 
-        # Strong password check (not implemented rn)
+            # Check if the two passwords match
+            if request.form['password1'] != request.form['password2']:
+                flash("Passwords do not match, try again.", 'error')
+                return render_template('register.html')
+
+            # If all above is approved: create the user
+            hashed_password = hashlib.sha256(request.form['password1'].encode()).hexdigest()
+            db.execute("INSERT INTO user (username, password) VALUES (?, ?)",
+                       (request.form['username'], hashed_password))  # Include username in the query
+            db.commit()
+            flash("User '{}' registered, you can now log in.".format(request.form['username']), 'info')
+        
+        except Exception as e:
+            db.rollback()  # Roll back the transaction if an error occurs
+            flash("An error occurred during registration: {}".format(str(e)), 'error')
+            return render_template('register.html')
+        
+        return redirect(url_for('login'))
+
+    # If we receive no data: just show the registration form again
+    else:
+        return render_template('register.html')
+    
         '''
         def is_strong_password(password):
             # Password must be at least 8 characters long
@@ -421,20 +487,6 @@ def register():
             flash("Password is too weak, try again.", 'error')
             return render_template('register.html')
         '''
-
-        # If all above is approved: create the user
-        hashed_password = hashlib.sha256(request.form['password1'].encode()).hexdigest()
-        db=get_db()
-        db.execute("INSERT INTO user (username, password) VALUES (?,?)",
-                   (request.form['username'], hashed_password))
-        db.commit()
-        flash("User '{}' registered, you can now log in.".format(request.form['username']), 'info')
-        
-        return redirect(url_for('login'))
-
-    # If we receive no data: just show the registration form again
-    else:
-        return render_template('register.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

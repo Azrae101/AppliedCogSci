@@ -10,29 +10,41 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #ADD8E6;
         }
+
         .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 50px;
-            background-color: #fff;
-            border-radius: 25px;
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            max-width: 600px;
+            margin: 0 auto;
+            margin-bottom: 10vh;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .containertitle {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 10vh;
+            margin-bottom: 2vh;
         }
 
         h1 {
-            color: #333;
+            color: #0000FF;
         }
         #termInput {
             padding: 10px;
             font-size: 16px;
             margin-bottom: 20px;
+            border: 2px solid #0000FF;
+            background-color: #ffffff;
         }
+
         #timer {
             font-size: 24px;
             color: #f00;
@@ -45,40 +57,49 @@
             font-size: 16px;
             color: #999;
         }
+        #realAnswer {
+            font-size: 16px;
+            color: #999;
+            margin-top: 10px;
+        }
         .back-btn {
-        position: absolute;
-        bottom: 10px; 
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
+            position: absolute;
+            bottom: -25px; 
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #0000FF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .back-btn:hover {
-            background-color: #0056b3;
+            background-color: #00008B;
         }
     </style>
 <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
+<body>
     <!-- Back to Home Button -->
     <button class="back-btn" onclick="location.href='/termtime_settings'">Back to Menu</button>
-<body>
-    <div class="container">
-    <h1>TermTime</h1>
-    <p>Type as many terms as you can before time runs out!</p>
-    <input type="text" id="termInput" placeholder="Type here...">
-    <p id="elementsLeft"></p>
-
-    <p>Time left: <span id="timer">60</span> seconds</p>
-    <p>Score: <span id="score">0</span></p>
+    <div class="containertitle">
+        <h1>TermTime</h1>
+        <p>Type as many terms as you can before time runs out!</p>
     </div>
+    <div class="container"> <!-- Add an ID to the second container -->
+        <p>Deck: Cognitive Science</p>
+        <input type="text" id="termInput" placeholder="Type here...">
+        <p id="elementsLeft"></p>
+        <p>Time left: <span id="timer">60</span> seconds</p>
+        <p>Score: <span id="score">0</span></p>
+        <p id="realAnswer"></p> <!-- Added div to display real answer -->
+    </div>
+    
     <script>
-        let terms = [0, 1, 2, 3, 4, 5];
+        let terms = ["visual agnosia", "feature integration theory", "proceduralization"];
         let score = 0;
         let timeLeft = 60;
         let timerInterval;
@@ -96,6 +117,7 @@
                 document.getElementById("termInput").placeholder = "Time's up!";
                 document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
                 document.getElementById("elementsLeft").textContent = "Elements left: " + terms.join(", ");
+                document.getElementById("realAnswer").textContent = "Correct answers: " + terms.join(", ");
             } else {
                 document.getElementById("elementsLeft").textContent = "Number of elements: " + terms.length;
             }
@@ -108,23 +130,11 @@
         }
 
         function checkTerm() {
-            let term = document.getElementById("termInput").value.trim().toLowerCase();
-            if (term === "q" || term === "quit") {
-                clearInterval(timerInterval);
-                document.getElementById("timer").textContent = "0";
-                document.getElementById("termInput").disabled = true;
-                document.getElementById("termInput").placeholder = "Time's up!";
-                document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
-                if (terms.length > 0) {
-                    document.getElementById("elementsLeft").textContent = "Elements left: " + terms.length;
-                }
-                return;
-            }
-            let termAsNumber = parseInt(term);
-            if (!isNaN(termAsNumber) && terms.includes(termAsNumber)) {
+            let term = document.getElementById("termInput").value.trim();
+            if (terms.includes(term)) {
                 score++;
                 document.getElementById("score").textContent = score;
-                terms.splice(terms.indexOf(termAsNumber), 1);
+                terms.splice(terms.indexOf(term), 1);
                 if (terms.length === 0) {
                     clearInterval(timerInterval);
                     document.getElementById("termInput").disabled = true;
@@ -140,5 +150,8 @@
 
         startTimer();
     </script>
+    <audio id="bgMusic" autoplay loop>
+        <source src="static/music.mp3" type="audio/mpeg">
+    </audio>
 </body>
 </html>

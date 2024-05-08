@@ -10,28 +10,52 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #ADD8E6;
         }
+
         .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 50px;
-            background-color: #fff;
-            border-radius: 25px;
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            max-width: 600px;
+            margin: 0 auto;
+            margin-bottom: 10vh;
+            padding: 20px;
+            background-color: rgb(255, 255, 255);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .containertitle {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 10vh;
+            margin-bottom: 2vh;
+        }
+
+        .defineDashContainer {
+            position: relative; /* Add relative positioning */
+            z-index: 1; /* Set z-index to place it on top of the first container */
         }
 
         h1 {
-            color: #333;
+            color: #0000FF;
         }
+        #currentTerm {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 2px solid #0000FF;
+            background-color: #ADD8E6;
+        }
+
         #definitionInput {
             padding: 10px;
             font-size: 16px;
             margin-bottom: 20px;
+            border: 2px solid #0000FF;
+            width: 95%;
         }
         #timer {
             font-size: 24px;
@@ -52,11 +76,11 @@
         }
         .back-btn {
             position: absolute;
-            bottom: 10px; 
+            bottom: -25px; 
             left: 50%;
             transform: translateX(-50%);
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #0000FF;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -65,7 +89,20 @@
         }
 
         .back-btn:hover {
-            background-color: #0056b3;
+            background-color: #00008B;
+        }
+        #continueBtn {
+            padding: 10px 20px;
+            background-color: #0000FF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #continueBtn:hover {
+            background-color: #00008B;
         }
     </style>
 <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
@@ -74,21 +111,26 @@
 <!-- Back to Home Button -->
 <button class="back-btn" onclick="location.href='/definedash_settings'">Back to Menu</button>
 <body>
-    <div class="container">
-    <h1>DefineDash</h1>
-    <p>Define the term as precisely as you can before time runs out!</p>
-    <p id="currentTerm"></p>
-    <input type="text" id="definitionInput" placeholder="Define here...">
-    <div id="realAnswer"></div> <!-- Added div to display real answer -->
-    <p id="termsLeft"></p>
-
-    <p>Time left: <span id="timer">60</span> seconds</p>
-    <p>Score: <span id="score">0</span></p>
-    <button id="continueBtn" style="display: none;" onclick="nextTerm()">Continue</button> <!-- Added continue button -->
+    <div class="containertitle">
+        <h1>DefineDash</h1>
+        <p>Define the term as precisely as you can before time runs out!</p>
     </div>
+    <div class="container" class="defineDashContainer"> <!-- Add an ID to the second container -->
+        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 10px; margin-bottom: 10px;">
+            <h2>Term</h2>
+            <p id="currentTerm"></p>
+        </div>
+        <input type="text" id="definitionInput" placeholder="Define here...">
+        <div id="realAnswer"></div> <!-- Added div to display real answer -->
+        <p id="termsLeft"></p>
+        <p>Time left: <span id="timer">60</span> seconds</p>
+        <p>Score: <span id="score">0</span></p>
+        <button id="continueBtn" style="display: none;" onclick="nextTerm()">Continue</button> <!-- Added continue button -->
+    </div>
+    
     <script>
-        let answers = ["this is an example", "they are important", "the mitochondria is the powerhouse of the cell"];
-        let terms = ["Example", "Banana", "Mitochondria"];
+        let answers = ["A condition where an individual can perceive visual stimuli but cannot recognize or interpret them correctly.", "A theory proposing that attention is necessary to bind individual features of an object together to perceive it as a whole.", "The process by which a skill becomes automatic through practice and experience."];
+        let terms = ["Visual Agnosia", "Feature Integration Theory", "Proceduralization"];
 
         let score = 0;
         let timeLeft = 60;
@@ -178,5 +220,8 @@
 
         startTimer();
     </script>
+    <audio id="bgMusic" autoplay loop>
+        <source src="static/music.mp3" type="audio/mpeg">
+    </audio>
 </body>
 </html>

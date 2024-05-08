@@ -7,12 +7,11 @@
     .body {
         font-family: 'calibri', sans-serif;
         position: relative;
-        margin: 0;
+        margin-top: 1px;
         display: flex;
         align-items: center;
         justify-content: flex-start;
         flex-direction: column;
-        padding: 0 10px 10px 10px; /* Adjust padding */
     }
 
     .content {
@@ -20,8 +19,10 @@
         display: flex;
         align-items: center;
         justify-content: center; /* Align content at the center */
-        padding: 10px 10px 5px 10px;
+        padding: 5px 5px 5px 5px;
         width: 100%; /* Ensure the content spans the full width */
+        margin: 0;
+        margin-top: 1px; /* Adjust margin-top to make the navigation bar smaller */
     }
 
     .container {
@@ -33,13 +34,14 @@
 
     .logo {
         margin-right: 10px;
-        height: 70px; /* Reduce height of the logo */
+        margin-left: 10px;
+        height: 50px; /* Reduce height of the logo */
     }
 
     .button {
         font-family: 'calibri', sans-serif;
-        font-weight: bold;
-        font-size: larger; /* Reduce font size */
+        font-weight: 500;
+        font-size: 18px; /* Reduce font size */
         display: inline-block;
         padding: 10px 20px 10px 20px; /* Adjust padding */
         background-color: rgb(255, 255, 255);
@@ -48,6 +50,7 @@
         cursor: pointer;
         transition: color 0.3s ease;
         align-items: center;
+        margin: 0;
     }
 
     .button:hover {
@@ -94,8 +97,9 @@
     .button.login {
         background-color: rgb(240, 100, 100);
         color: #ffffff;
-        height: fit-content;
         margin-right: 5vh;
+        margin-left: 1vh;
+        margin-top: 0;
     }
 
     .button.login:hover {
