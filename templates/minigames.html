@@ -122,8 +122,8 @@
         }
 
         .minigame img {
-            height: 200px; /* Set the height as needed */
-            width: auto; /* Maintain aspect ratio */
+            width: 250px; /* Set a fixed width */
+            height: auto; /* Set a fixed height */
             cursor: pointer; /* Change cursor to pointer */
             border-radius: 5px; /* Add border radius */
             transition: transform 0.3s ease; /* Add transition effect */
@@ -205,7 +205,7 @@
 
         .button.search-button {
             padding: 5px 10px;
-            background-color: rgb(169, 169, 169)color;
+            background-color: rgb(169, 169, 169);
             color: #000000; /* White text color */            
             cursor: pointer;
             font-size: 15px;
@@ -253,7 +253,7 @@
             <span>CardChase</span>
         </div>
         <div class="minigame">
-            <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='definedash.png') }}" class="resized-img"></a>
+            <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='define.png') }}" class="resized-img"></a>
             <span>DefineDash</span>
         </div>
         <div class="minigame">
@@ -268,7 +268,7 @@
             <span>TetriCards</span>
         </div>
         <div class="minigame">
-            <a href="{{ url_for('termtime_settings') }}"><img src="{{ url_for('static', filename='termtimes.png') }}" class="resized-img"></a>
+            <a href="{{ url_for('termtime_settings') }}"><img src="{{ url_for('static', filename='term.png') }}" class="resized-img"></a>
             <span>TermTime</span>
         </div>
         <div class="minigame">
