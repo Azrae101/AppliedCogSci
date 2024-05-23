@@ -145,6 +145,26 @@
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
+
+        .button-contact {
+            font-family: 'calibri', sans-serif;
+            font-weight: bold;
+            font-size: larger; /* Reduce font size */
+            display: inline-block;
+            padding: 10px 20px 10px 20px; /* Adjust padding */
+            background-color: rgba(235, 235, 235, 0.75);
+            color: #000000;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            align-items: center;
+            border-radius: 10px;
+            border: 1px solid #00000048;
+        }
+
+        .button-contact:hover {
+            background-color: rgb(200, 200, 200); /* Set background color to white */
+        }
         
     </style>
 </head>
@@ -189,7 +209,8 @@
                 
                 <input type="submit" class="button" value="Save Changes">
             </form>
-        </div>        
+        </div> 
+        <a href="/deck_one" class="button-contact">Add new card</a>       
     </div>
     <footer>
         <p>&copy; 2024 CogCards. All rights reserved.</p>

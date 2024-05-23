@@ -13,7 +13,7 @@ app = Flask(__name__)
 CORS(app)  
 
 # Configuration
-app.config['SECRET_KEY'] = "create-your-own"
+app.config['SECRET_KEY'] = "lol"
 
 # Database setup
 def get_db():
