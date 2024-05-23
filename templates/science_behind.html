@@ -98,8 +98,40 @@
             background-color: rgb(115, 176, 214); /* Darker background color on hover */
         }
 
+        .section-content {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .text {
+            flex: 1;
+            padding-right: 20px; /* Space between text and image */
+        }
+
+        .image-container {
+            flex: 0 0 200px; /* Fixed width for the image container */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-container img {
+            max-width: 50%;
+            height: auto;
+        }
+
+        .small {
+            font-size: 0.5rem;
+            align-items: center;
+            text-align: center;
+        }
+
+        .small_ref {
+            font-size: 0.95rem;
+        }
+
     </style>
-            <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 
 </head>
 
@@ -113,50 +145,139 @@
     </header>
 
     <section id="cognitive-science">
-        <h2>Cognitive Science</h2>
-        <p>CogCards utilizes effective learning techniques like spaced repetition and mnemonics, fostering improved memory retention. Through gamification and diverse flashcard categories, it offers an engaging user experience with seamless integration across devices. However, potential overreliance may impede critical thinking, while ethical concerns such as addiction risk and reinforcement of extrinsic motivation arise.</p>
-        <p>Cognitive biases such as the illusion of explanatory depth, as noted by Moore (1988), Roeder (2016), and Fischhoff (1976), suggest a potential weakness in relying solely on flashcards. Our aim is to address this by integrating gamification and personalized learning techniques to optimize memory retention and overcome cognitive biases, ultimately improving our learning platform's effectiveness.</p>
+        <div class="section-content">
+            <div class="text">
+                <h2>Cognitive Science</h2>
+                <p>CogCards utilizes effective learning techniques like spaced repetition and mnemonics, fostering improved memory retention. Through gamification and diverse flashcard categories, it offers an engaging user experience with seamless integration across devices. However, potential overreliance may impede critical thinking, while ethical concerns such as addiction risk and reinforcement of extrinsic motivation arise.</p>
+                <p>Cognitive biases such as the illusion of explanatory depth, as noted by (Rozenblit & Keil, 2002), suggest a potential weakness in relying solely on flashcards. Our aim is to address this by integrating gamification and personalized learning techniques to optimize memory retention and overcome cognitive biases, ultimately improving our learning platform's effectiveness.</p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="static/newestbrain.jpg" alt="Cognitive Science Image">
+        </div>
+        <p class="small">https://images.spiceworks.com/wp-content/uploads/2022/10/03134832/Human-brain-representing-cerebral-or-neuronal-activity.jpg</p>
     </section>
 
     <section id="flashcard-learning">
-        <h2>Flashcard Learning</h2>
-        <p>Flashcard learning is a popular study method that involves reviewing information through flashcards. Research suggests that spaced repetition enhances flashcard effectiveness by promoting long-term memory retention. Studies also investigate the impact of flashcard design, spacing intervals, and mnemonic techniques on memory retrieval and learning efficiency.</p>
+        <div class="section-content">
+            <div class="text">
+                <h2>Flashcard Learning</h2>
+                <p>Flashcard learning is a popular study method that involves reviewing information through flashcards. Research suggests that spaced repetition enhances flashcard effectiveness by promoting long-term memory retention. Studies also investigate the impact of flashcard design, spacing intervals, and mnemonic techniques on memory retrieval and learning efficiency (Saatz & Kienle, 2013).</p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="static/home1.jpg" alt="Cognitive Science Image">
+        </div>
+        <p class="small">https://media.istockphoto.com/id/1310896133/photo/happy-smiling-afro-businessman-using-laptop-at-the-desk-in-office.jpg?s=612x612&w=0&k=20&c=QUQpwqaaPswBIJB6_lk5xU6HY_RevWNSwcqAErPZsOc=</p>
     </section>
 
     <section id="gamifying-learning">
-        <h2>Gamifying Learning</h2>
-        <p>Gamification involves incorporating game elements, such as rewards, challenges, and progression systems, into educational activities. Research on gamifying learning demonstrates its potential to increase student engagement, motivation, and learning outcomes. Studies explore the design and implementation of game-based learning systems, emphasizing adaptivity and personalized feedback to enhance learning experiences.</p>
+        <div class="section-content">
+            <div class="text">
+                <h2>Gamifying Learning</h2>
+                <p>Gamification involves incorporating game elements, such as rewards, challenges, and progression systems, into educational activities. Research on gamifying learning demonstrates its potential to increase student engagement, motivation, and learning outcomes (Subhash & Cudney, 2018). Studies explore the design and implementation of game-based learning systems, emphasizing adaptivity and personalized feedback to enhance learning experiences.</p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="static/gamer.jpg" alt="Cognitive Science Image">
+        </div>
+        <p class="small">https://www.nyit.edu/files/box/article_images/Box_20190108_FoleyOpEdESports_Hero.jpg</p>
     </section>
 
     <section id="the-leitner-system">
-        <h2>The Leitner System</h2>
-        <p>The Leitner System is a spaced repetition technique that involves organizing flashcards into progressively more challenging decks based on recall success. Research on the Leitner System and similar approaches explores their effectiveness in optimizing learning schedules and improving memory retention. Other studies investigate memory vocabulary learning strategies and the application of memory techniques in language learning contexts.</p>
+        <div class="section-content">
+            <div class="text">
+                <h2>The Leitner System</h2>
+                <p>The Leitner System is a spaced repetition technique that involves organizing flashcards into progressively more challenging decks based on recall success. Research on the Leitner System and similar approaches explores their effectiveness in optimizing learning schedules and improving memory retention (Reddy et al., 2016). Other studies investigate memory vocabulary learning strategies and the application of memory techniques in language learning contexts (Benkhenafou & Benkhenafou, 2015).</p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="static/letiner.jpg" alt="Cognitive Science Image">
+        </div>
+        <p class="small">https://www.pocketprep.com/wp-content/uploads/2023/01/0125_Letiner_Inline.jpg</p>
     </section>
 
     <section id="spaced-repetition">
-        <h2>Spaced Repetition</h2>
-        <p>Spaced repetition is a learning technique that involves reviewing information at increasing intervals over time. Research suggests that spaced repetition optimizes memory retention by capitalizing on the spacing effect, which enhances long-term memory formation. Studies on spaced repetition in educational settings highlight its efficacy in promoting efficient and effective learning across various subjects.</p>
+        <div class="section-content">
+            <div class="text">
+                <h2>Spaced Repetition</h2>
+                <p>Spaced repetition is a learning technique that involves reviewing information at increasing intervals over time. Research suggests that spaced repetition optimizes memory retention by capitalizing on the spacing effect, which enhances long-term memory formation (Kang, 2016). Studies on spaced repetition in educational settings highlight its efficacy in promoting efficient and effective learning across various subjects (Dempster, 1989).</p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="static/spaced.png" alt="Cognitive Science Image">
+        </div>
+        <p class="small">https://www.osmosis.org/_next/image?url=https%3A%2F%2Fosmose-it.s3.amazonaws.com%2F--WD2D2kRNeq4CHothPq2OhfSCqmkmn5%2F_.jpg&w=3840&q=75</p>
     </section>
 
     <section id="memory-general">
-        <h2>Memory in General</h2>
-        <p>Memory is a complex cognitive process that involves the encoding, storage, and retrieval of information. It encompasses various types of memory, including sensory memory, short-term memory, and long-term memory. Research suggests that memory formation is influenced by factors such as attention, rehearsal, and emotional arousal.</p>
+        <div class="section-content">
+            <div class="text">
+                <h2>Memory in General</h2>
+                <p>Memory is a complex cognitive process that involves the encoding, storage, and retrieval of information. It encompasses various types of memory, including sensory memory, short-term memory, and long-term memory. Research suggests that memory formation is influenced by factors such as attention, rehearsal, and emotional arousal (Haaman, 2001).</p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="static/memory.png" alt="Cognitive Science Image">
+        </div>
+        <p class="small">https://www.verywellmind.com/thmb/QlRDDcnPcIdPrFqM5o5JQqeJKF8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/great-ways-to-improve-your-memory-2795356-notext-final-ec993dd3d2cb40699d4df72547178ede.png</p>
     </section>
 
     <section id="memory-brain-processes">
-        <h2>Understanding Brain, Memory Retention, and Recall Processes</h2>
-        <p>Studies utilizing EEG and fMRI techniques have provided insights into the neural mechanisms underlying memory retention and recall. EEG measures electrical activity in the brain, revealing patterns associated with memory processes. fMRI, on the other hand, detects changes in blood flow, highlighting brain regions involved in memory tasks.</p>
-        <p>Research from Edge Hill University explores memory retention and recall processes, shedding light on factors that affect memory performance, such as encoding specificity and context-dependent retrieval.</p>
+        <div class="section-content">
+            <div class="text">
+                <h2>Understanding Brain, Memory Retention, and Recall Processes</h2>
+                <p>Studies utilizing EEG and fMRI techniques have provided insights into the neural mechanisms underlying memory retention and recall. EEG measures electrical activity in the brain, revealing patterns associated with memory processes (Bäuml & Schlichting, 2014). fMRI, on the other hand, detects changes in blood flow, highlighting brain regions involved in memory tasks.</p>
+                <p>Research from Edge Hill University explores memory retention and recall processes, shedding light on factors that affect memory performance, such as encoding specificity and context-dependent retrieval (Nowinski & Dismukes, 2005).</p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="static/eeg.jpg" alt="Cognitive Science Image">
+        </div>
+        <p class="small">https://images.ctfassets.net/mrbo2ykgx5lt/38402/2be4607aaff63e22637ea369c497b6b3/frontiers-neuroscience-mind-reading-eeg-electroencephalography-panachakel-ganesan-indian-institute-of-science.jpg?&w=1056&fm=jpg</p>
     </section>
 
     <section id="memory-recall-learning">
-        <h2>Memory Recall After "Learning by Doing" vs. "Learning by Viewing"</h2>
-        <p>Studies comparing memory recall after active participation ("learning by doing") and passive observation ("learning by viewing") have shown mixed results. While some research suggests an enactment benefit, where actively engaging with material enhances memory retention, other studies indicate that the effectiveness of enactment depends on various factors, such as task complexity and individual differences.</p>
+        <div class="section-content">
+            <div class="text">
+                <h2>Memory Recall After "Learning by Doing" vs. "Learning by Viewing"</h2>
+                <p>Studies comparing memory recall after active participation ("learning by doing") and passive observation ("learning by viewing") have shown mixed results (Steffens et al., 2015). While some research suggests an enactment benefit, where actively engaging with material enhances memory retention, other studies indicate that the effectiveness of enactment depends on various factors, such as task complexity and individual differences (Steffens, 2007).</p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="static/learn.jpg" alt="Cognitive Science Image">
+        </div>
+        <p class="small">https://www.test4u.eu/blog/wp-content/uploads/2015/10/learn_by_doing_3.jpg</p>
     </section>
 
     <section id="memory-techniques">
-        <h2>Memory Techniques</h2>
-        <p>Various memory techniques, such as mnemonics, visualization, and chunking, can enhance memory encoding and retrieval. Psychology Today discusses strategies for improving memory, emphasizing the importance of rehearsal, organization, and retrieval practice. Additionally, research explores the effectiveness of semantic memory strategies and category learning in enhancing recognition memory.</p>
+        <div class="section-content">
+            <div class="text">
+                <h2>Memory Techniques</h2>
+                <p>Various memory techniques, such as mnemonics, visualization, and chunking, can enhance memory encoding and retrieval. Psychology Today discusses strategies for improving memory, emphasizing the importance of rehearsal, organization, and retrieval practice. Additionally, research explores the effectiveness of semantic memory strategies and category learning in enhancing recognition memory (Sekuler & Kahana, 2007).</p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="static/memory1.jpg" alt="Cognitive Science Image">
+        </div>
+        <p class="small">https://classplusapp.com/growth/wp-content/uploads/2023/05/List-Of-Mnemonics-In-Studies-For-Better-Memory.jpg</p>
+    </section>
+
+    <section id="references">
+        <h2>References</h2>
+        <p class="small_ref">Bäuml, K.T., & Schlichting, A. (2014). Memory retrieval as a self-propagating process. Cognition, 132, 16-21.</p>
+        <p class="small_ref">Benkhenafou, H.H., & Benkhenafou, H.H. (2015). MEMORY STRATEGIES: BOOSTING VOCABULARY LEARNING AND LEARNER AUTONOMY.</p>
+        <p class="small_ref">Dempster, F.N. (1989). Spacing effects and their implications for theory and practice. Educational Psychology Review, 1, 309-330.</p>
+        <p class="small_ref">Hamann, S. (2001). Cognitive and neural mechanisms of emotional memory. Trends in Cognitive Sciences, 5, 394-400.</p>
+        <p class="small_ref">Kang, S.H. (2016). Spaced Repetition Promotes Efficient and Effective Learning. Policy Insights from the Behavioral and Brain Sciences, 3, 12 - 19.</p>
+        <p class="small_ref">Nowinski, J.L., & Dismukes, K. (2005). Effects of ongoing task context and target typicality on prospective memory performance: The importance of associative cueing. Memory, 13, 649 - 657.</p>
+        <p class="small_ref">Reddy, S., Labutov, I., Banerjee, S., & Joachims, T. (2016). Unbounded Human Learning: Optimal Scheduling for Spaced Repetition. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining.</p>
+        <p class="small_ref">Rozenblit, L., & Keil, F. (2002). The misunderstood limits of folk science: An illusion of explanatory depth. Cognitive Science, 26(5), 521–562. https://doi.org/10.1207/s15516709cog2605_1</p>
+        <p class="small_ref">Saatz, I., & Kienle, A. (2013). Learning with E-Flashcards – Does It Matter? In Hernández-Leo, D., Ley, T., Klamma, R., & Harrer, A. (eds) Scaling up Learning for Sustained Impact. EC-TEL 2013. Lecture Notes in Computer Science, vol 8095. Springer, Berlin, Heidelberg. https://doi.org/10.1007/978-3-642-40814-4_85</p>
+        <p class="small_ref">Sekuler, R., & Kahana, M.J. (2007). Current Directions in Psychological Science In press A stimulus-oriented approach to memory.</p>
+        <p class="small_ref">Steffens, M.C. (2007). Memory for goal-directed sequences of actions: Is doing better than seeing? Psychonomic Bulletin & Review, 14, 1194-1198.</p>
+        <p class="small_ref">Steffens, M.C., von Stülpnagel, R., & Schult, J.C. (2015). Memory Recall After “Learning by Doing” and “Learning by Viewing”: Boundary Conditions of an Enactment Benefit. Frontiers in Psychology, 6.</p>
+        <p class="small_ref">Subhash, S., & Cudney, E.A. (2018). Gamified learning in higher education: A systematic review of the literature. Comput. Hum. Behav., 87, 192-206.</p>
     </section>
 
     <footer>
