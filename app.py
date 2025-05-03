@@ -456,10 +456,10 @@ def register():
         return render_template('register.html')
 
 # for testing:
-if __name__ == '__main__':
-    app.run(debug=True)
+#if __name__ == '__main__':
+#    app.run(debug=True)
 
 # for deployment:
-#if __name__ == '__main__':
-#    port = int(os.environ.get("PORT", 10000))  # Render uses $PORT
-#    app.run(host="0.0.0.0", port=port, debug=False)  # Must bind to 0.0.0.0
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))  # Render uses $PORT
+    app.run(host="0.0.0.0", port=port, debug=False)  # Must bind to 0.0.0.0
