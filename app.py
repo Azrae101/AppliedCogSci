@@ -1,24 +1,22 @@
 # Flask app
-from flask import (
-    Flask, g, render_template, redirect, url_for, request, flash,
-    session, jsonify
-)
+from flask import (Flask, g, render_template, redirect, url_for, 
+                  request, flash, session)
 import hashlib
 import sqlite3
 import os
-import re
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)  
 
 # Configuration
-app.config['SECRET_KEY'] = "lol"
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-fallback-key')
 
 # Database setup
 def get_db():
     if 'db' not in g:
-        db_path = os.path.join('database', 'database.sqlite')
+        # db_path = os.path.join('database', 'database.sqlite') # for testing
+        db_path = os.path.join(os.path.dirname(__file__), 'instance', 'database.sqlite')
         g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row
         # Add the column if it doesn't exist
@@ -457,5 +455,10 @@ def register():
     else:
         return render_template('register.html')
 
+# for testing:
+#if __name__ == '__main__':
+#    app.run(debug=True)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))  # Render uses $PORT
+    app.run(host="0.0.0.0", port=port, debug=False)  # Must bind to 0.0.0.0
