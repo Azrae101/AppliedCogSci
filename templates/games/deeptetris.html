@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>TetriCards</title>
+    <style>
+        .game-wrapper {
+            width: 800px;
+            margin: 70px auto 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Space between game and input */
+        }
+
+        .game-container {
+            width: 800px;
+            height: 800px;
+            background: #f0f0f0;
+            border: 2px solid #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .user-input-container {
+            width: 100%;
+            text-align: center;
+            margin-top: 20px; /* Ensure space below game */
+        }
+
+        #userInput {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .block {
+            position: absolute;
+            width: 150px;
+            height: 80px;
+            padding: 10px;
+            left: 0; /* Remove manual offset */
+            transition: top 1s ease;
+        }
+
+        .game {
+            width: 100%;
+            height: 100%;
+            background: #f0f0f0;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #333;
+        }
+
+        .block {
+            transition: top 0.1s ease, opacity 0.1s ease, transform 0.1s ease;
+            position: absolute;
+            width: 150px;
+            min-height: 80px;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            transition: top 0.1s ease;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .color1 { background: #FFB3BA; }
+        .color2 { background: #BAFFC9; }
+        .color3 { background: #BAE1FF; }
+        .color4 { background: #FFFFBA; }
+        .color5 { background: #E0BAFF; }
+
+        @keyframes disintegrate {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        .block-removing {
+            transform: scale(0);
+            opacity: 0;
+            animation: disintegrate 0.5s ease forwards;
+        }
+
+        .user-input-container {
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        #userInput {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 10; /* Ensure it stays above blocks */
+        }
+    </style>
+</head>
+<body>
+    <a href="/minigames" class="back-button">← Back to Minigames</a>
+    <h1>TetriCards</h1>
+    <div id="score">Score: 0</div>
+    <div class="game-wrapper">
+        <div class="game-container">
+            <div class="game" id="game"></div>
+        </div>
+        <div class="user-input-container">
+            <input type="text" id="userInput" placeholder="Type answer and press Enter...">
+        </div>
+    </div>
+    
+    <style>
+        .user-input-container {
+            margin: 20px auto; /* Center horizontally */
+            text-align: center;
+            /* Remove position:absolute and related properties */
+        }
+    </style>
+
+<script>
+const definitions = [
+    {"definition": "Condition: Can see but not recognize visuals", "answer": "Visual Agnosia"},
+    {"definition": "Attention needed to bind features", "answer": "Feature Integration Theory"},
+    {"definition": "Skill becomes automatic through practice", "answer": "Proceduralization"},
+    {"definition": "Brain structure for fear/emotions", "answer": "Amygdala"}
+];
+
+class Block {
+    constructor(definition, answer) {
+        this.definition = definition;
+        this.answer = answer;
+        this.colorClass = `color${Math.ceil(Math.random() * 5)}`;
+        this.x = 0;
+        this.y = 0;
+        this.settled = false;
+    }
+}
+
+class Game {
+    constructor() {
+        this.isAnimating = false;
+        this.blocks = [];
+        this.activeBlocks = [];
+        this.score = 0;
+        this.gameOver = false;
+        this.setupEventListeners();
+        this.startNewRound();
+    }
+
+    setupEventListeners() {
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !this.gameOver) {
+                this.handleAnswer(e.target.value.trim());
+                e.target.value = '';
+            }
+        });
+    }
+
+    startNewRound() {
+        if (this.checkSpawnBlocked()) {
+            this.gameOver = true;
+            alert(`Game Over! Final Score: ${this.score}`);
+            return;
+        }
+
+        this.isAnimating = true;
+        this.setInputStatus(true);
+
+        const newBlocksCount = 2 + Math.floor(Math.random() * 2);
+        for (let i = 0; i < newBlocksCount; i++) {
+            const def = definitions[Math.floor(Math.random() * definitions.length)];
+            const newBlock = new Block(def.definition, def.answer);
+            newBlock.x = this.getAvailableColumn();
+            this.activeBlocks.push(newBlock);
+        }
+        
+        if (moved) {
+            setTimeout(() => this.processFall(), 1000);
+        } else {
+            this.blocks.push(...this.activeBlocks);
+            this.activeBlocks = [];
+            this.isAnimating = false;
+            this.setInputStatus(false);
+        }
+
+        this.processFall();
+    }
+
+    getAvailableColumn() {
+        const columns = [0, 1, 2, 3, 4];
+        // Check if spawn position (y=0) is blocked in each column
+        const occupied = new Set(
+            this.blocks.filter(b => b.y === 0).map(b => b.x)
+        );
+        const available = columns.filter(x => !occupied.has(x));
+        return available.length > 0 ? available[Math.floor(Math.random() * available.length)] : -1;
+    }
+
+    processFall() {
+        let moved = false;
+
+        this.activeBlocks.forEach(block => {
+            if (!this.checkCollision(block)) {
+                block.y++;
+            } else {
+                block.settled = true;
+            }
+        });
+
+        this.render();
+        
+        if (moved) {
+            setTimeout(() => this.processFall(), 1000); // Slow down falling speed
+        } else {
+            this.blocks.push(...this.activeBlocks);
+            this.activeBlocks = [];
+            this.isAnimating = false;
+            this.setInputStatus(false);
+        }
+    }
+
+    checkCollision(block) {
+        // Check bottom boundary (8 rows = 800px height)
+        if (block.y >= 7) return true;
+        // Check for blocks directly below
+        return this.blocks.some(b => 
+            b.x === block.x && 
+            b.y === block.y + 1
+        );
+    }
+
+    handleAnswer(answer) {
+        if (this.isAnimating) return; // Prevent answering during animations
+        
+        const targetBlock = this.blocks.find(b => b.answer.toLowerCase() === answer.toLowerCase());
+        
+        if (targetBlock) {
+            const removedBlocks = this.findConnectedBlocks(targetBlock);
+            this.isAnimating = true; // Start animation
+            this.setInputStatus(true); // Disable input
+            
+            this.animateRemoval(removedBlocks).then(() => {
+                this.removeBlocks(removedBlocks);
+                this.applyGravity();
+                this.score += removedBlocks.length * 100;
+                document.getElementById('score').textContent = `Score: ${this.score}`;
+            });
+        } else {
+            this.startNewRound();
+        }
+    }
+
+    // Add this new method:
+    setInputStatus(isAnimating) {
+        const input = document.getElementById('userInput');
+        if (isAnimating) {
+            input.disabled = true;
+            input.placeholder = "Wait for blocks to settle...";
+            input.value = "";
+        } else {
+            input.disabled = false;
+            input.placeholder = "Type answer and press Enter...";
+            input.focus();
+        }
+    }
+
+    animateRemoval(blocks) {
+        return new Promise(resolve => {
+            blocks.forEach(block => {
+                const element = [...document.getElementsByClassName('block')]
+                    .find(el => el.textContent === block.definition);
+                if (element) {
+                    element.classList.add('block-removing');
+                }
+            });
+            setTimeout(resolve, 500); // Match animation duration
+        });
+    }
+
+    findConnectedBlocks(startBlock) {
+        const visited = new Set();
+        const stack = [startBlock];
+        
+        while (stack.length > 0) {
+            const current = stack.pop();
+            if (visited.has(current)) continue;
+            
+            visited.add(current);
+            
+            const neighbors = this.blocks.filter(b => (Math.abs(b.x - current.x) + Math.abs(b.y - current.y)) === 1 &&  // Fixed parentheses here
+            b.colorClass === current.colorClass
+            );     
+
+            stack.push(...neighbors);
+        }
+        return Array.from(visited);
+    }
+
+    removeBlocks(blocks) {
+        this.blocks = this.blocks.filter(b => !blocks.includes(b));
+    }
+
+    applyGravity() {
+        // Find all blocks that need to fall
+        const fallingBlocks = [];
+        const columns = new Set(this.blocks.map(b => b.x));
+        
+        columns.forEach(x => {
+            // Get blocks in this column sorted from top to bottom
+            const columnBlocks = this.blocks.filter(b => b.x === x)
+                                .sort((a, b) => a.y - b.y);
+            
+            // The expected Y position if no gaps existed
+            let expectedY = 0;
+            
+            columnBlocks.forEach(block => {
+                if (block.y > expectedY) {
+                    // This block needs to fall
+                    block.targetY = expectedY;
+                    fallingBlocks.push(block);
+                }
+                expectedY = block.y + 1;
+            });
+        });
+
+        // If we have blocks to fall, animate them
+        if (fallingBlocks.length > 0) {
+            this.animateFallingBlocks(fallingBlocks);
+        }
+    }
+
+    checkSpawnBlocked() {
+        return this.blocks.some(b => b.y === 0);
+    }
+    
+    animateFallingBlocks(fallingBlocks) {
+        this.isAnimating = true;
+        this.setInputStatus(true);
+        
+        const fallInterval = setInterval(() => {
+            // ... existing falling logic ...
+            
+            if (allLanded) {
+                clearInterval(fallInterval);
+                this.activeBlocks = [];
+                this.isAnimating = false;
+                this.setInputStatus(false);
+                this.applyGravity();
+            }
+        }, 300);
+    }
+    
+    checkCollisionAt(x, y) {
+        // Check bottom boundary
+        if (y >= 8) return true;
+        
+        // Check for settled blocks at this position
+        return this.blocks.some(b => 
+            b.x === x && 
+            b.y === y && 
+            !this.activeBlocks.includes(b)
+        );
+    }
+
+    render() {
+        const game = document.getElementById('game');
+        // Clear only non-removing blocks
+        const existingBlocks = [...game.children].filter(el => !el.classList.contains('block-removing'));
+        game.innerHTML = '';
+        game.append(...existingBlocks);
+
+        [...this.blocks, ...this.activeBlocks].forEach(block => {
+            let element = [...document.getElementsByClassName('block')]
+                .find(el => el.textContent === block.definition);
+            
+            if (!element) {
+                element = document.createElement('div');
+                element.className = `block ${block.colorClass}`;
+                element.textContent = block.definition;
+                game.appendChild(element);
+            }
+            
+            // Update positions with transitions
+            element.style.left = `${block.x * 160}px`;
+            element.style.top = `${block.y * 100}px`;
+        });
+    }
+
+}
+
+new Game();
+</script>
+</body>
+</html>
