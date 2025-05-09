@@ -137,6 +137,7 @@ const definitions = [
 
 class Block {
     constructor(definition, answer) {
+        this.id = crypto.randomUUID(); // Unique ID for DOM sync
         this.definition = definition;
         this.answer = answer;
         this.colorClass = `color${Math.ceil(Math.random() * 5)}`;
@@ -148,6 +149,7 @@ class Block {
 
 class Game {
     constructor() {
+        this.firstRound = true;
         this.isAnimating = false;
         this.blocks = [];
         this.activeBlocks = [];
@@ -174,23 +176,16 @@ class Game {
         }
 
         this.isAnimating = true;
-        this.setInputStatus(true);
+        this.setInputStatus(true);        
 
-        const newBlocksCount = 2 + Math.floor(Math.random() * 2);
+        const newBlocksCount = this.firstRound ? 10 : 2 + Math.floor(Math.random() * 2);
+        this.firstRound = false;
+
         for (let i = 0; i < newBlocksCount; i++) {
             const def = definitions[Math.floor(Math.random() * definitions.length)];
             const newBlock = new Block(def.definition, def.answer);
             newBlock.x = this.getAvailableColumn();
             this.activeBlocks.push(newBlock);
-        }
-        
-        if (moved) {
-            setTimeout(() => this.processFall(), 1000);
-        } else {
-            this.blocks.push(...this.activeBlocks);
-            this.activeBlocks = [];
-            this.isAnimating = false;
-            this.setInputStatus(false);
         }
 
         this.processFall();
@@ -207,43 +202,79 @@ class Game {
     }
 
     processFall() {
-        let moved = false;
+        const fallInterval = setInterval(() => {
+            let moved = false;
 
-        this.activeBlocks.forEach(block => {
-            if (!this.checkCollision(block)) {
-                block.y++;
-            } else {
-                block.settled = true;
+            // Step 1: Determine which blocks can fall
+            const fallingStatus = this.activeBlocks.map(block => {
+                const nextY = block.y + 1;
+
+                // Bottom boundary
+                if (nextY >= 8) return { block, canFall: false };
+
+                // Settled blocks collision
+                const collisionWithSettled = this.blocks.some(b => b.x === block.x && b.y === nextY);
+
+                // Active block collision
+                const collisionWithActive = this.activeBlocks.some(
+                    other => other !== block && other.x === block.x && other.y === nextY
+                );
+
+                return { block, canFall: !(collisionWithSettled || collisionWithActive) };
+            });
+
+            // Step 2: Apply movement or settle
+            fallingStatus.forEach(({ block, canFall }) => {
+                if (canFall) {
+                    block.y++;
+                    moved = true;
+                } else {
+                    block.settled = true;
+                }
+            });
+
+            this.render();
+
+            // Step 3: End condition
+            if (!moved) {
+                clearInterval(fallInterval);
+                this.blocks.push(...this.activeBlocks);
+                this.activeBlocks = [];
+                this.isAnimating = false;
+                this.setInputStatus(false);
             }
-        });
-
-        this.render();
-        
-        if (moved) {
-            setTimeout(() => this.processFall(), 1000); // Slow down falling speed
-        } else {
-            this.blocks.push(...this.activeBlocks);
-            this.activeBlocks = [];
-            this.isAnimating = false;
-            this.setInputStatus(false);
-        }
+        }, 300); // Smooth step-by-step fall
     }
 
     checkCollision(block) {
-        // Check bottom boundary (8 rows = 800px height)
-        if (block.y >= 7) return true;
-        // Check for blocks directly below
-        return this.blocks.some(b => 
-            b.x === block.x && 
-            b.y === block.y + 1
+        const nextY = block.y + 1;
+
+        // Bottom boundary
+        if (nextY >= 8) return true;
+
+        // Settled block collision
+        const settledCollision = this.blocks.some(b => b.x === block.x && b.y === nextY);
+
+        // Predict collision with any other block *after the next step*
+        const otherActiveCollision = this.activeBlocks.some(b =>
+            b !== block &&
+            b.x === block.x &&
+            b.y === nextY
         );
+
+        return settledCollision || otherActiveCollision;
     }
+
 
     handleAnswer(answer) {
         if (this.isAnimating) return; // Prevent answering during animations
         
-        const targetBlock = this.blocks.find(b => b.answer.toLowerCase() === answer.toLowerCase());
-        
+        const targetBlock = this.blocks.find(
+            b => b.answer.toLowerCase().trim() === answer.toLowerCase().trim()
+        );
+        console.log("Submitted:", answer);
+        console.log("Matching block:", targetBlock?.answer || "None");
+
         if (targetBlock) {
             const removedBlocks = this.findConnectedBlocks(targetBlock);
             this.isAnimating = true; // Start animation
@@ -252,8 +283,12 @@ class Game {
             this.animateRemoval(removedBlocks).then(() => {
                 this.removeBlocks(removedBlocks);
                 this.applyGravity();
+                
                 this.score += removedBlocks.length * 100;
                 document.getElementById('score').textContent = `Score: ${this.score}`;
+            
+                setTimeout(() => this.startNewRound(), 500);
+            
             });
         } else {
             this.startNewRound();
@@ -278,14 +313,15 @@ class Game {
         return new Promise(resolve => {
             blocks.forEach(block => {
                 const element = [...document.getElementsByClassName('block')]
-                    .find(el => el.textContent === block.definition);
+                    .find(el => el.dataset.id === block.id);
                 if (element) {
                     element.classList.add('block-removing');
                 }
             });
-            setTimeout(resolve, 500); // Match animation duration
+            setTimeout(resolve, 500); // Match CSS animation duration
         });
     }
+
 
     findConnectedBlocks(startBlock) {
         const visited = new Set();
@@ -307,7 +343,8 @@ class Game {
     }
 
     removeBlocks(blocks) {
-        this.blocks = this.blocks.filter(b => !blocks.includes(b));
+        const idsToRemove = new Set(blocksToRemove.map(b => b.id));
+        this.blocks = this.blocks.filter(b => !idsToRemove.has(b.id));
     }
 
     applyGravity() {
@@ -340,7 +377,9 @@ class Game {
     }
 
     checkSpawnBlocked() {
-        return this.blocks.some(b => b.y === 0);
+        const blocked = this.blocks.some(b => b.y === 0);
+        console.log("Spawn blocked?", blocked);
+        return blocked;
     }
     
     animateFallingBlocks(fallingBlocks) {
@@ -374,27 +413,19 @@ class Game {
 
     render() {
         const game = document.getElementById('game');
-        // Clear only non-removing blocks
-        const existingBlocks = [...game.children].filter(el => !el.classList.contains('block-removing'));
-        game.innerHTML = '';
-        game.append(...existingBlocks);
+        game.innerHTML = ''; // Clear everything
 
         [...this.blocks, ...this.activeBlocks].forEach(block => {
-            let element = [...document.getElementsByClassName('block')]
-                .find(el => el.textContent === block.definition);
-            
-            if (!element) {
-                element = document.createElement('div');
-                element.className = `block ${block.colorClass}`;
-                element.textContent = block.definition;
-                game.appendChild(element);
-            }
-            
-            // Update positions with transitions
+            let element = document.createElement('div');
+            element.className = `block ${block.colorClass}`;
+            element.textContent = block.definition;
+            element.dataset.id = block.id; // Use ID for safe lookup
             element.style.left = `${block.x * 160}px`;
             element.style.top = `${block.y * 100}px`;
+            game.appendChild(element);
         });
     }
+
 
 }
 
