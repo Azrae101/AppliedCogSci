@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashmatch Settings</title>
+    {% include "game_settings/game_settings.html" %}
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <!-- Navbar -->
+            {% include "navbar.html" %}
+        </div>
+    </div>
+    <header>
+        <h1 class="title main-title">Flashmatch Settings</h1>
+        <h4 class="title under-title">Set up your Flashmatch game before you start playing</h4>    
+    </header>
+
+    <div class="containerlol">
+        <!-- Left Container -->
+        <div class="left-container">
+            <!-- High Scores Container -->
+            <div class="highscores-container">
+                <h2 class="highscores-title">High Scores</h2>
+                <ul class="highscores-list">
+                    <li><span class="player-name">Player 7:</span> <span class="player-score">19</span></li>
+                    <li><span class="player-name">Player 10:</span> <span class="player-score">16</span></li>
+                    <li><span class="player-name">Player 1:</span> <span class="player-score">15</span></li>
+                    <li><span class="player-name">Player 6:</span> <span class="player-score">14</span></li>
+                    <li><span class="player-name">Player 8:</span> <span class="player-score">13</span></li>
+                    <li><span class="player-name">Player 2:</span> <span class="player-score">12</span></li>
+                    <li><span class="player-name">Player 9:</span> <span class="player-score">11</span></li>
+                    <li><span class="player-name">Player 5:</span> <span class="player-score">10</span></li>
+                    <li><span class="player-name">Player 3:</span> <span class="player-score">8</span></li>
+                    <li><span class="player-name">Player 4:</span> <span class="player-score">7</span></li>
+                </ul>            
+            </div>
+        </div>
+
+        <!-- Center Container -->
+        <div class="center-container">
+            <!-- Preview of the game (gif) and "Let's Play" button -->
+            <div class="gif-container">
+                <img src="static/flashmatch.png" width="525">
+                <button class="buttonlol" onclick="startGame()">Let's Play!</button>
+            </div>
+        </div>
+
+        <!-- Right Container -->
+        <div class="right-container">
+            <!-- Settings Container -->
+            <div class="settings-container">
+                <h2>Settings</h2>
+
+                <!-- Study Deck -->
+                <h3 class="settings-title">Study Deck</h3>
+                <div class="containernew">
+                    <div class="button-containerdeck">
+                        <div class="deck-box">
+                            Cognitive Science
+                        </div>
+                        <a href="{{ url_for('deck_one') }}" class="button">View deck</a>
+                        <a href="{{ url_for('deck_one') }}" class="button">Edit deck</a>
+                    </div>
+                </div>
+
+                <!-- Options menu for Difficulty -->
+                <h3 class="settings-title">Difficulty</h3>
+                <select id="difficulty" name="difficulty" class="options-menu">
+                    <option value="" disabled selected>Select Difficulty</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+
+                <p> </p>
+
+                <!-- Toggle buttons for Modes -->
+                <h3 class="settings-title">Game Modes</h3>
+                <div class="button-containerlol">
+                    <button class="toggle-button" onclick="toggleEndlessMode()">Endless Mode: Off</button>
+                    <button class="toggle-button2" onclick="toggleTimeMode()">Time limit: Off</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Description -->
+    <div class="description-container">
+        <div class="game-description">
+            <h2>Description</h2>
+            <p>Welcome to Flashmatch - The Memory Matching Game!</p>
+            <p>Test your memory and knowledge by matching terms with their definitions.</p>
+            <p>Choose your deck, difficulty level, and modes to customize your gameplay experience.</p>
+            <p>In this game, you'll need to match terms like "Photosynthesis" with their corresponding definitions. Match all the pairs to win!</p>
+        </div>
+
+        <div class="game-instructions">
+            <h2>Instructions</h2>
+            <p>Here's how the game works:</p>
+            <ul>
+                <li>Choose your deck and difficulty level.</li>
+                <li>Click on the cards to reveal their contents (either a term or an answer).</li>
+                <li>Try to match each term with its correct definition.</li>
+                <li>If two cards match, they'll stay revealed. If not, they'll flip back over.</li>
+            </ul>
+            <p>Tips and advice:</p>
+            <ul>
+                <li>Start with an easier difficulty to practice, then increase the challenge.</li>
+                <li>Use the "Endless Mode" for an unlimited number of matches, or "Time Limit" for a race against the clock!</li>
+                <li>Don't worry if you make a mistake; keep practicing to improve your memory!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script type='text/javascript'>
+        function startGame() {
+            // Redirect to the Flashmatch game page
+            window.location.href = 'flashmatch';  
+        }
+
+        /* JavaScript for toggling modes */
+        function toggleEndlessMode() {
+            var button = document.querySelector('.toggle-button');
+            if (button.textContent === 'Endless Mode: Off') {
+                button.textContent = 'Endless Mode: On';
+                button.classList.add('on');  // Add 'on' class to highlight active mode
+            } else {
+                button.textContent = 'Endless Mode: Off';
+                button.classList.remove('on');  // Remove 'on' class when disabled
+            }
+        }
+
+        function toggleTimeMode() {
+            var button = document.querySelector('.toggle-button2');
+            if (button.textContent === 'Time limit: Off') {
+                button.textContent = 'Time limit: On';
+                button.classList.add('on');  // Add 'on' class for active time mode
+            } else {
+                button.textContent = 'Time limit: Off';
+                button.classList.remove('on');  // Remove 'on' class for disabled time mode
+            }
+        }
+    </script>
+</body>
+</html>

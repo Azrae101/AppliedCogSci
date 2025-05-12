@@ -72,6 +72,11 @@
         .color3 { background: #BAE1FF; }
         .color4 { background: #FFFFBA; }
         .color5 { background: #E0BAFF; }
+        .color6 { background: #FFD166; }
+        .color7 { background: #06D6A0; }
+        .color8 { background: #118AB2; }
+        .color9 { background: #073B4C; }
+        .color10 { background: #EF476F; }
 
         @keyframes disintegrate {
             0% { transform: scale(1); opacity: 1; }
@@ -104,6 +109,7 @@
             font-weight: bold;
             z-index: 10; /* Ensure it stays above blocks */
         }
+
     </style>
 </head>
 <body>
@@ -140,7 +146,7 @@ class Block {
         this.id = crypto.randomUUID(); // Unique ID for DOM sync
         this.definition = definition;
         this.answer = answer;
-        this.colorClass = `color${Math.ceil(Math.random() * 5)}`;
+        this.colorClass = `color${Math.ceil(Math.random() * 10)}`;
         this.x = 0;
         this.y = 0;
         this.settled = false;
@@ -155,8 +161,41 @@ class Game {
         this.activeBlocks = [];
         this.score = 0;
         this.gameOver = false;
+        this.definitions = []; // Initialize empty array
+        
         this.setupEventListeners();
+        this.initGame();
+    }
+
+    async initGame() {
+        await this.loadDefinitions();
         this.startNewRound();
+    }
+
+    async loadDefinitions() {
+        try {
+            const response = await fetch('/tetricards/get_definitions');
+            if (response.ok) {
+                this.definitions = await response.json();
+                console.log("Loaded definitions:", this.definitions); // Debug log
+            } else {
+                console.error("Failed to fetch definitions, using defaults");
+                this.useDefaultDefinitions();
+            }
+        } catch (error) {
+            console.error("Error loading definitions:", error);
+            this.useDefaultDefinitions();
+        }
+    }
+
+    useDefaultDefinitions() {
+        this.definitions = [
+            {"definition": "A", "answer": "1"},
+            {"definition": "B", "answer": "2"},
+            {"definition": "C", "answer": "3"},
+            {"definition": "D", "answer": "4"},
+            {"definition": "E", "answer": "5"}
+        ];
     }
 
     setupEventListeners() {
@@ -169,6 +208,14 @@ class Game {
     }
 
     startNewRound() {
+        if (this.gameOver) return;
+        
+        // Check if we have definitions
+        if (this.definitions.length === 0) {
+            console.error("No definitions available!");
+            return;
+        }
+
         if (this.checkSpawnBlocked()) {
             this.gameOver = true;
             alert(`Game Over! Final Score: ${this.score}`);
@@ -178,14 +225,31 @@ class Game {
         this.isAnimating = true;
         this.setInputStatus(true);        
 
-        const newBlocksCount = this.firstRound ? 10 : 2 + Math.floor(Math.random() * 2);
+        const newBlocksCount = this.firstRound ? 5 : 2 + Math.floor(Math.random() * 2);
         this.firstRound = false;
 
+        // Filter out definitions already in play
+        const availableDefs = this.definitions.filter(def => 
+            !this.blocks.some(b => b.answer === def.answer) &&
+            !this.activeBlocks.some(b => b.answer === def.answer)
+        );
+
+        // If no available definitions, use any definition
+        const sourceDefs = availableDefs.length > 0 ? availableDefs : this.definitions;
+
         for (let i = 0; i < newBlocksCount; i++) {
-            const def = definitions[Math.floor(Math.random() * definitions.length)];
+            if (sourceDefs.length === 0) break;
+            
+            const def = sourceDefs[Math.floor(Math.random() * sourceDefs.length)];
             const newBlock = new Block(def.definition, def.answer);
             newBlock.x = this.getAvailableColumn();
-            this.activeBlocks.push(newBlock);
+            
+            if (newBlock.x !== -1) {
+                this.activeBlocks.push(newBlock);
+            } else {
+                this.gameOver = true;
+                break;
+            }
         }
 
         this.processFall();
@@ -205,45 +269,45 @@ class Game {
         const fallInterval = setInterval(() => {
             let moved = false;
 
-            // Step 1: Determine which blocks can fall
-            const fallingStatus = this.activeBlocks.map(block => {
-                const nextY = block.y + 1;
-
-                // Bottom boundary
-                if (nextY >= 8) return { block, canFall: false };
-
-                // Settled blocks collision
-                const collisionWithSettled = this.blocks.some(b => b.x === block.x && b.y === nextY);
-
-                // Active block collision
-                const collisionWithActive = this.activeBlocks.some(
-                    other => other !== block && other.x === block.x && other.y === nextY
-                );
-
-                return { block, canFall: !(collisionWithSettled || collisionWithActive) };
+            // Create a grid representation of current block positions
+            const positionGrid = Array(5).fill().map(() => Array(10).fill(false));
+            
+            // Mark settled blocks
+            this.blocks.forEach(b => {
+                positionGrid[b.x][b.y] = true;
             });
 
-            // Step 2: Apply movement or settle
-            fallingStatus.forEach(({ block, canFall }) => {
-                if (canFall) {
-                    block.y++;
-                    moved = true;
-                } else {
+            // Mark active blocks that have already moved this step
+            this.activeBlocks.forEach(b => {
+                if (b.settled) positionGrid[b.x][b.y] = true;
+            });
+
+            // Process each active block
+            this.activeBlocks.forEach(block => {
+                if (block.settled) return;
+
+                const nextY = block.y + 1;
+                
+                // Check if next position is available
+                if (nextY >= 8 || positionGrid[block.x][nextY]) {
                     block.settled = true;
+                } else {
+                    block.y = nextY;
+                    moved = true;
+                    positionGrid[block.x][block.y] = true; // Mark new position
                 }
             });
 
             this.render();
 
-            // Step 3: End condition
             if (!moved) {
                 clearInterval(fallInterval);
-                this.blocks.push(...this.activeBlocks);
-                this.activeBlocks = [];
+                this.blocks.push(...this.activeBlocks.filter(b => b.settled));
+                this.activeBlocks = this.activeBlocks.filter(b => !b.settled);
                 this.isAnimating = false;
                 this.setInputStatus(false);
             }
-        }, 300); // Smooth step-by-step fall
+        }, 300);
     }
 
     checkCollision(block) {

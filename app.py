@@ -5,6 +5,7 @@ import hashlib
 import sqlite3
 import os
 from flask_cors import CORS
+import jsonify
 
 app = Flask(__name__)
 CORS(app)  
@@ -120,7 +121,41 @@ def cardchase():
 
 @app.route('/tetricards')
 def tetricards():
-    return render_template('games/tetricards.html')
+    return render_template('games/deeptetris.html') 
+
+@app.route('/tetricards/get_definitions')
+def get_tetricards_definitions():
+    db = get_db()
+    user_id = session.get('user_id')
+    print(f"Fetching definitions for user {user_id}")  # Debug print
+    
+    try:
+        cur = db.execute("""
+            SELECT question as definition, answer 
+            FROM user 
+            WHERE id=? AND question IS NOT NULL AND answer IS NOT NULL
+            ORDER BY RANDOM()
+            LIMIT 10
+        """, (user_id,))
+        
+        definitions = [dict(row) for row in cur.fetchall()]
+        print(f"Found {len(definitions)} definitions")  # Debug print
+        
+        if not definitions:
+            definitions = [
+                {"definition": "Visual perception intact but recognition impaired", "answer": "Visual Agnosia"},
+                {"definition": "Attention needed to bind features", "answer": "Feature Integration"},
+                {"definition": "A", "answer": "1"},
+                {"definition": "B", "answer": "2"},
+                {"definition": "C", "answer": "3"}
+            ]
+            print("Using fallback definitions")  # Debug print
+            
+        return jsonify(definitions)
+        
+    except Exception as e:
+        print(f"Error fetching definitions: {str(e)}")
+        return jsonify([])
 
 @app.route('/termtime')
 def termtime():
@@ -129,6 +164,10 @@ def termtime():
 @app.route('/definedash')
 def definedash():
     return render_template('games/definedash.html')
+
+@app.route('/flashmatch')
+def flashmatch():
+    return render_template('games/flashmatch.html')
 
 # Game settings
 @app.route('/cardchase_settings')
@@ -145,8 +184,7 @@ def flashcards_settings():
 
 @app.route('/tetris_settings')
 def tetris_settings():
-    #return render_template('game_settings/tetris_settings.html')
-    return render_template('games/deeptetris.html') # for testing
+    return render_template('game_settings/tetris_settings.html')
 
 @app.route('/termtime_settings')
 def termtime_settings():
@@ -155,6 +193,10 @@ def termtime_settings():
 @app.route('/quiz_settings')
 def quiz_settings():
     return render_template('game_settings/quiz_settings.html')
+
+@app.route('/flashmatch_settings')
+def flashmatch_settings():
+    return render_template('game_settings/flashmatch_settings.html')
 
 # Flashcards viewing
 @app.route('/flashcards')
@@ -461,10 +503,10 @@ def register():
         return render_template('register.html')
 
 # for testing:
-#if __name__ == '__main__':
-#    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
 
 # for deployment:
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))  # Render uses $PORT
-    app.run(host="0.0.0.0", port=port, debug=False)  # Must bind to 0.0.0.0
+#if __name__ == '__main__':
+#    port = int(os.environ.get("PORT", 10000))  # Render uses $PORT
+#    app.run(host="0.0.0.0", port=port, debug=False)  # Must bind to 0.0.0.0
