@@ -80,6 +80,10 @@ def before_request():
 def home():
     return render_template('home.html')
 
+@app.route('/ads.txt')
+def ads():
+    return render_template('ads.txt')
+
 @app.route('/about_us')
 def about_us():
     return render_template('about_us.html')
@@ -457,10 +461,10 @@ def register():
         return render_template('register.html')
 
 # for testing:
-if __name__ == '__main__':
-    app.run(debug=True)
+#if __name__ == '__main__':
+#    app.run(debug=True)
 
 # for deployment:
-#if __name__ == '__main__':
-#    port = int(os.environ.get("PORT", 10000))  # Render uses $PORT
-#    app.run(host="0.0.0.0", port=port, debug=False)  # Must bind to 0.0.0.0
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))  # Render uses $PORT
+    app.run(host="0.0.0.0", port=port, debug=False)  # Must bind to 0.0.0.0
