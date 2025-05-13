@@ -477,7 +477,35 @@ class Game {
     startNewRound() {
         if (this.gameOver) return;
 
-        // Clear any stuck blocks
+        // Clear any stuck blocks at the top
+        this.clearStuckBlocks();
+
+        // Check spawn availability
+        const canSpawn = this.checkSpawnAvailability();
+        if (!canSpawn) {
+            this.gameOver = true;
+            setTimeout(() => this.showGameOver(), 500);
+            return;
+        }
+
+        this.prepareNewRound();
+
+        // Determine how many new blocks to spawn
+        const newBlocksCount = this.firstRound ? 5 : 2 + Math.floor(Math.random() * 2);
+        this.firstRound = false;
+
+        // Spawn new blocks with duplicate prevention
+        this.spawnNewBlocks(newBlocksCount);
+
+        // Start the falling animation if game isn't over
+        if (!this.gameOver) {
+            this.processFall();
+        }
+    }
+
+    // Helper Methods for startNewRound:
+
+    clearStuckBlocks() {
         this.activeBlocks = this.activeBlocks.filter(block => {
             if (block.y === 0 && block.settled) {
                 if (!this.checkCollisionAt(block.x, 1)) {
@@ -488,82 +516,79 @@ class Game {
             }
             return true;
         });
+    }
 
-        // Check spawn availability
+    checkSpawnAvailability() {
         const availableColumns = [0,1,2,3,4].filter(x => 
             !this.blocks.some(b => b.y === 0 && b.x === x)
         );
-        
-        if (availableColumns.length < (this.firstRound ? 5 : 2)) {
-            this.gameOver = true;
-            setTimeout(() => this.showGameOver(), 500);
-            return;
-        }
+        return availableColumns.length >= (this.firstRound ? 5 : 2);
+    }
 
+    prepareNewRound() {
         this.isAnimating = true;
         this.setInputStatus(true);
+    }
 
-        const newBlocksCount = this.firstRound ? 5 : 2 + Math.floor(Math.random() * 2);
-        this.firstRound = false;
-
-        // Smart definition selection
-        const getDefinition = (excludeAnswers = new Set()) => {
-            // Stage 1: Definitions not in play at all
-            let available = this.definitions.filter(def => 
-                !this.blocks.some(b => b.answer === def.answer) &&
-                !this.activeBlocks.some(b => b.answer === def.answer) &&
-                !excludeAnswers.has(def.answer)
-            );
-            if (available.length > 0) return available;
-
-            // Stage 2: Definitions not in current falling blocks
-            available = this.definitions.filter(def => 
-                !this.activeBlocks.some(b => b.answer === def.answer) &&
-                !excludeAnswers.has(def.answer)
-            );
-            if (available.length > 0) return available;
-
-            // Stage 3: Least used definitions
-            const usageCount = {};
-            [...this.blocks, ...this.activeBlocks].forEach(b => {
-                usageCount[b.answer] = (usageCount[b.answer] || 0) + 1;
-            });
-            
-            return [...this.definitions]
-                .filter(d => !excludeAnswers.has(d.answer))
-                .sort((a, b) => (usageCount[a.answer] || 0) - (usageCount[b.answer] || 0));
-        };
-
-        // Spawn new blocks
+    spawnNewBlocks(count) {
         const spawnedBlocks = [];
-        for (let i = 0; i < newBlocksCount; i++) {
-            const x = this.getAvailableColumn();
-            if (x === -1) {
+        
+        for (let i = 0; i < count; i++) {
+            const spawnResult = this.trySpawnBlock(spawnedBlocks);
+            if (!spawnResult.success) {
                 this.gameOver = true;
                 break;
             }
+            spawnedBlocks.push(spawnResult.block);
+        }
+    }
 
-            const excludeAnswers = new Set(spawnedBlocks.map(b => b.answer));
-            const candidates = getDefinition(excludeAnswers);
-            
-            if (candidates.length === 0) {
-                console.warn("No available definitions - this shouldn't happen");
-                break;
-            }
+    trySpawnBlock(existingBlocks) {
+        const x = this.getAvailableColumn();
+        if (x === -1) return { success: false };
 
-            const def = candidates[Math.floor(Math.random() * candidates.length)];
-            const newBlock = new Block(def.definition, def.answer);
-            newBlock.x = x;
-            this.activeBlocks.push(newBlock);
-            spawnedBlocks.push(newBlock);
-            this.definitionUsage.set(def.answer, (this.definitionUsage.get(def.answer) || 0) + 1);
+        const excludeAnswers = new Set(existingBlocks.map(b => b.answer));
+        const candidates = this.getAvailableDefinitions(excludeAnswers);
+        
+        if (candidates.length === 0) {
+            console.warn("No available definitions - using fallback");
+            return { success: false };
         }
 
-        if (!this.gameOver) {
-            this.processFall();
-        } else {
-            setTimeout(() => alert(`Game Over! Final Score: ${this.score}`), 500);
-        }
+        const def = candidates[Math.floor(Math.random() * candidates.length)];
+        const newBlock = new Block(def.definition, def.answer);
+        newBlock.x = x;
+        this.activeBlocks.push(newBlock);
+        this.definitionUsage.set(def.answer, (this.definitionUsage.get(def.answer) || 0) + 1);
+        
+        return { success: true, block: newBlock };
+    }
+
+    getAvailableDefinitions(excludeAnswers) {
+        // Stage 1: Definitions not in play at all
+        let available = this.definitions.filter(def => 
+            !this.blocks.some(b => b.answer === def.answer) &&
+            !this.activeBlocks.some(b => b.answer === def.answer) &&
+            !excludeAnswers.has(def.answer)
+        );
+        if (available.length > 0) return available;
+
+        // Stage 2: Definitions not in current falling blocks
+        available = this.definitions.filter(def => 
+            !this.activeBlocks.some(b => b.answer === def.answer) &&
+            !excludeAnswers.has(def.answer)
+        );
+        if (available.length > 0) return available;
+
+        // Stage 3: Least used definitions
+        const usageCount = {};
+        [...this.blocks, ...this.activeBlocks].forEach(b => {
+            usageCount[b.answer] = (usageCount[b.answer] || 0) + 1;
+        });
+        
+        return [...this.definitions]
+            .filter(d => !excludeAnswers.has(d.answer))
+            .sort((a, b) => (usageCount[a.answer] || 0) - (usageCount[b.answer] || 0));
     }
 
     showGameOver() {
