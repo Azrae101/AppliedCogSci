@@ -1,103 +1,347 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CogCards - Flashcards</title>
-    <style>
-        /* Button styling */
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin: 5px; /* Adjust margin to control spacing between buttons */
-        }
+  <meta charset="UTF-8">
+  <title>Flashcards Game</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
 
-        button:hover {
-            background-color: #45a049;
-        }
+    .top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      box-sizing: border-box;
+      align-items: center;
+    }
 
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
+    .back-button {
+      background-color: #ccc;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 8px 16px;
+    }
 
-        /* Layout */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; /* Ensure the body takes the full viewport height */
-            margin: 0; /* Remove default margin */
-        }
+    .score {
+      font-size: 16px;
+      color: #333;
+    }
 
-        .flashcard-container {
-            border: 2px solid #ccc; /* Frame-like border */
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center; /* Center-align the text inside */
-        }
+    h1 {
+      margin: 10px 0;
+      color: #333;
+    }
 
-        #term, #answer {
-            font-size: 24px; /* Increase font size */
-        }
+    .flashcard-wrapper {
+      perspective: 1000px;
+      width: 600px;
+      max-width: 90%;
+      height: 400px;
+    }
 
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px; /* Add some spacing between flashcard and buttons */
-        }
-        
-        .back-btn {
-            position: absolute;
-            bottom: -50px; /* Adjust as needed */
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s;
+    }
 
-        .back-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
-    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
-    <script src="flashcardsa.js" defer></script>
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 22px;
+      line-height: 1.5;
+      color: #333;
+      backface-visibility: hidden;
+      overflow-y: auto;
+    }
+
+    .back {
+      transform: rotateY(180deg);
+    }
+
+    .button-container {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    .response-buttons {
+      display: none;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .response-buttons.show {
+      display: flex;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      max-width: 600px;
+      height: 12px;
+      background-color: #ddd;
+      border-radius: 8px;
+      margin-top: 25px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #4CAF50;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .end-screen {
+      text-align: center;
+      display: none;
+    }
+
+    .congrats-message {
+      font-size: 24px;
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+
+    .replay-button {
+      background-color: #2196F3;
+    }
+
+    .replay-button:hover {
+      background-color: #0b7dda;
+    }
+
+  </style>
 </head>
 <body>
-    <div class="flashcard-container">
-        <h1>Flashcards</h1>
-        <div id="flashcard">
-            <div id="term" style="display: block;">
-                <p id="term">{{ term }}</p>
-            </div>
-            <p id="answer" style="display: none;">{{ list_of_answers[current_index] }}</p>
-        </div>
-        <div class="button-container">
-            <form action="/prev">
-                <button type="submit" {% if disable_prev %}disabled{% endif %}>Previous</button>
-            </form>
-            <form id="flipForm" action="/flip" method="POST">
-                <button id="flipButton" type="submit">Flip</button>
-            </form>    
-            <form action="/next">
-                <button type="submit" {% if disable_next %}disabled{% endif %}>Next</button>
-            </form>
-        </div>
+
+  <div class="top-bar">
+    <button class="back-button" onclick="goToMenu()">← Menu</button>
+    <h1>Flashcards</h1>
+    <div class="score" id="scoreDisplay">Score: 0 / 0</div>
+  </div>
+
+  <div class="flashcard-wrapper">
+    <div class="flashcard" id="flashcard">
+      <div class="front" id="term">Loading...</div>
+      <div class="back" id="answer">Answer</div>
     </div>
-      <!-- Back to Home Button -->
-      <button class="back-btn" onclick="location.href='/flashcards_settings'">Back to Menu</button>
-      <audio id="bgMusic" autoplay loop>
-        <source src="static/music.mp3" type="audio/mpeg">
-    </audio>
-    </body>
+  </div>
+
+  <div class="button-container">
+    <button onclick="flipCard()">Flip</button>
+  </div>
+
+  <div class="response-buttons" id="responseButtons">
+    <button onclick="recordRecall(0)" style="background-color: #e74c3c;">Didn't know it</button>
+    <button onclick="recordRecall(1)" style="background-color: #f39c12;">Somewhat</button>
+    <button onclick="recordRecall(2)" style="background-color: #2ecc71;">Knew it!</button>
+  </div>
+
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="end-screen" id="endScreen">
+    <div class="congrats-message">🎉 You know all the flashcards now!</div>
+    <button class="replay-button" onclick="resetGame()">Play Again</button>
+  </div>
+
+  <script>
+    const originalTerms = [
+      "What is the binding problem in cognitive psychology?",
+      "Define neuroplasticity.",
+      "What does the Stroop effect demonstrate?",
+      "Difference between top-down and bottom-up processing?",
+      "Define episodic memory.",
+      "What is the function of the cerebellum?",
+      "Explain selective attention.",
+      "What is the role of the amygdala?",
+      "Define working memory.",
+      "What is confirmation bias?"
+    ];
+
+    const originalAnswers = [
+      "A theory proposing that attention is necessary to bind features of an object together to perceive it as a whole.",
+      "The brain's ability to reorganize itself by forming new neural connections.",
+      "It shows interference between automatic and controlled processing.",
+      "Top-down is guided by prior knowledge; bottom-up is driven by sensory input.",
+      "Memory of autobiographical events, like episodes from your life.",
+      "It coordinates movement, posture, and balance.",
+      "Focusing mental resources on specific information while ignoring others.",
+      "Involved in processing emotions, especially fear and pleasure.",
+      "A system for temporarily holding and manipulating information for reasoning and comprehension.",
+      "The tendency to search for or interpret information that confirms one's beliefs."
+    ];
+
+    let terms = [...originalTerms];
+    let answers = [...originalAnswers];
+    let masteredCards = new Array(originalTerms.length).fill(false);
+    let currentCard = 0;
+    let knownCount = 0;
+    let attemptedCount = 0;
+
+    const card = document.getElementById('flashcard');
+    const termDiv = document.getElementById('term');
+    const answerDiv = document.getElementById('answer');
+    const progressBar = document.getElementById('progressBar');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const responseButtons = document.getElementById('responseButtons');
+    const endScreen = document.getElementById('endScreen');
+    const buttonContainer = document.querySelector('.button-container');
+
+    function updateCard() {
+      if (terms.length === 0) {
+        showEndScreen();
+        return;
+      }
+      
+      termDiv.textContent = terms[currentCard];
+      answerDiv.textContent = answers[currentCard];
+      card.classList.remove('flipped');
+      responseButtons.classList.remove('show');
+      updateProgress();
+    }
+
+    function flipCard() {
+      card.classList.toggle('flipped');
+      if (card.classList.contains('flipped')) {
+        responseButtons.classList.add('show');
+      } else {
+        responseButtons.classList.remove('show');
+      }
+    }
+
+    function recordRecall(level) {
+      attemptedCount++;
+      if (level === 2) {
+        knownCount++;
+        // Mark the original card as mastered
+        const originalIndex = originalTerms.indexOf(terms[currentCard]);
+        if (originalIndex !== -1) {
+          masteredCards[originalIndex] = true;
+        }
+      }
+      
+      scoreDisplay.textContent = `Score: ${knownCount} / ${attemptedCount}`;
+      responseButtons.classList.remove('show');
+      card.classList.remove('flipped');
+      
+      // Move to next card or reload unmastered cards
+      if (currentCard < terms.length - 1) {
+        currentCard++;
+        updateCard();
+      } else {
+        reloadUnmasteredCards();
+      }
+    }
+
+    function reloadUnmasteredCards() {
+      terms = [];
+      answers = [];
+      
+      for (let i = 0; i < originalTerms.length; i++) {
+        if (!masteredCards[i]) {
+          terms.push(originalTerms[i]);
+          answers.push(originalAnswers[i]);
+        }
+      }
+      
+      if (terms.length === 0) {
+        showEndScreen();
+        return;
+      }
+      
+      currentCard = 0;
+      updateCard();
+    }
+
+    function showEndScreen() {
+      card.style.display = 'none';
+      responseButtons.style.display = 'none';
+      progressBar.style.display = 'none';
+      buttonContainer.style.display = 'none';
+      endScreen.style.display = 'block';
+    }
+
+    function resetGame() {
+      // Reset all game state
+      terms = [...originalTerms];
+      answers = [...originalAnswers];
+      masteredCards = new Array(originalTerms.length).fill(false);
+      currentCard = 0;
+      knownCount = 0;
+      attemptedCount = 0;
+      
+      // Reset UI
+      card.style.display = '';
+      responseButtons.style.display = '';
+      progressBar.style.display = '';
+      buttonContainer.style.display = '';
+      endScreen.style.display = 'none';
+      
+      // Update display
+      scoreDisplay.textContent = `Score: 0 / 0`;
+      updateCard();
+    }
+
+    function updateProgress() {
+      const percent = ((currentCard + 1) / terms.length) * 100;
+      progressBar.style.width = `${percent}%`;
+    }
+
+    function goToMenu() {
+      location.href = "flashcards_settings"; 
+    }
+
+    updateCard();
+  </script>
+
+</body>
 </html>

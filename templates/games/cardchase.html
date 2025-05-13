@@ -4,166 +4,404 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Card Chase Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Setting the border of the canvas element */
-        #gameCanvas {
-            border: 5px solid blueviolet;
-            width: 100%; 
-            height: 100%; 
-            margin: 10px auto;
-            background-color: white; /* Set background color of the game canvas to white */
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary: #f72585;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
         }
-        /* Centering the canvas */
+
         body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            min-height: 100vh;
+            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .containertitle {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .deck-info {
+            background-color: var(--accent);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            margin: 20px auto;
+        }
+
+        #gameCanvas {
+            border: 5px solid var(--primary);
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            height: 100%;
+        }
+
+        #userInput {
+            position: absolute;
+            bottom: -70px;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            border: 3px solid var(--primary);
+            border-radius: 50px;
+            background-color: var(--light);
+            color: var(--dark);
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #userInput:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        }
+
+        #userInput::placeholder {
+            color: #aaa;
+        }
+
+        .stats-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            background-color: gainsboro; /* Set background color of the body to black */
-            margin: 0; /* Remove default margin */
-            height: 100vh; /* Make body take up the full viewport height */
+            margin: 30px 0 20px 0; /* Added more top margin */
+            flex-wrap: wrap;
         }
-        #container {
-            text-align: center;
-            color: gainsboro; /* Hide the duplicate question & answer */
+
+        .stat-box {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 150px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        /* Styling for the user input */
-        #userInput {
-            display: block;
-            position: absolute; /* Position absolutely */
-            width: 820px; /* Width same as canvas width */
-            margin: 0 auto; /* Center horizontally */
-            background-color: white; /* Set input background color to transparent */
-            color: black; /* Set input text color to white */
-            border: 5px solid blueviolet; /* Set input border color to white */
-            padding: 15px; /* Add some padding */
-            box-sizing: border-box; /* Include padding in width */
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
         }
-        /* Styling for the title */
-        h1 {
-            font-family: 'Arial', sans-serif;
-            font-size: 36px;
-            color: blueviolet;
-            letter-spacing: 2px;
-            margin-top: 100px;
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
         }
+
+        #score {
+            color: var(--success);
+        }
+
         .back-btn {
             position: absolute;
-            bottom: -100px; 
+            bottom: -120px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .back-btn:hover {
-            background-color: #0056b3;
+            background-color: var(--primary-dark);
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .music-control i {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .feedback {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .correct {
+            background-color: var(--success);
+        }
+
+        .incorrect {
+            background-color: var(--danger);
+        }
+
+        @media (max-width: 850px) {
+            #gameContainer {
+                width: 95%;
+                height: 400px;
+            }
+            
+            .containertitle {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            #gameContainer {
+                height: 300px;
+            }
+            
+            .stat-box {
+                min-width: 120px;
+                padding: 10px;
+            }
+        }
+
+        /* Animation for correct answers */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.3s;
+        }
+
+        .replay-btn {
+            position: absolute;
+            bottom: -70px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 25px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .replay-btn:hover {
+            background-color: #d3166b;
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
     </style>
-<link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
-
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
 <body>
-    <!-- Container for the current question and answer -->
-    <div id="container">
-        <h1>Card Chase Game</h1>
-        <!-- Canvas element where the game will be drawn -->
-        <canvas id="gameCanvas" width="800" height="500"></canvas>
-        <!-- Input field for user's answer -->
-        <input type="text" id="userInput" placeholder="Enter your answer...">
-        <!-- Submit button to submit the user's answer (hidden) -->
-        <button id="submitButton" style="display: none;">Submit</button>
-        <!-- Container for the current question and answer -->
-        <div id="questionAnswerContainer">
-            <p id="question"></p>
-            <p id="answer"></p>
-        </div>
-        <!-- Point counter -->
-        <p id="pointCounter" style="font-size: 20px; margin-top: 20px;"></p>
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <i class="fas fa-music"></i>
     </div>
-    <!-- TODO: Add space here -->
 
-    <!-- Back to Home Button -->
-    <button class="back-btn" onclick="location.href='/cardchase_settings'">Back to Menu</button>
+    <!-- Feedback Message -->
+    <div class="feedback" id="feedback"></div>
 
-    <!-- JavaScript code -->
+    <div class="containertitle">
+        <h1>Card Chase</h1>
+        <p class="subtitle">Type the correct answer before the question disappears!</p>
+        <div class="deck-info">
+            <i class="fas fa-layer-group"></i> Deck: Cognitive Science
+        </div>
+    </div>
+
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
+        <input type="text" id="userInput" placeholder="Type the answer and press Enter...">
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-box">
+            <div class="stat-label">Score</div>
+            <div class="stat-value" id="score">0</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Questions Left</div>
+            <div class="stat-value" id="questionsLeft">4</div>
+        </div>
+    </div>
+
+    <button class="back-btn" onclick="location.href='/cardchase_settings'">
+        <i class="fas fa-arrow-left"></i> Back to Menu
+    </button>
+
+    <button class="replay-btn" id="replayButton" style="display: none;">
+        <i class="fas fa-redo"></i> Play Again
+    </button>
+
+    <audio id="bgMusic" autoplay loop>
+        <source src="/static/music.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        // Define your questions directly in JavaScript
+        // Game data
         let questions = [
             {"question": "A condition where an individual can perceive visual stimuli but cannot recognize or interpret them correctly.", "answer": "Visual Agnosia"},
             {"question": "A theory proposing that attention is necessary to bind individual features of an object together to perceive it as a whole.", "answer": "Feature Integration Theory"},
             {"question": "The process by which a skill becomes automatic through practice and experience.", "answer": "Proceduralization"},
             {"question": "A brain structure involved in processing emotions, particularly fear and aggression.", "answer": "Amygdala"}
         ];
-
+        
         let currentQuestionIndex = 0;
-        let points = 0; // Initialize points variable
+        let score = 0;
+        let movementSpeed = 1;
+        let gameRunning = true;
+        let bgMusic = document.getElementById("bgMusic");
+        let musicPlaying = true;
 
-        // Function to update the point counter
-        function updatePointCounter() {
-            document.getElementById('pointCounter').innerText = `Questions Answered Correctly: ${points}`;
+        // DOM elements
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const userInput = document.getElementById('userInput');
+        const scoreElement = document.getElementById('score');
+        const questionsLeftElement = document.getElementById('questionsLeft');
+        const feedbackElement = document.getElementById('feedback');
+        const musicControl = document.getElementById('musicControl');
+        const replayButton = document.getElementById('replayButton');
+
+        // Initialize game
+        function initGame() {
+            shuffleQuestions();
+            updateQuestionsLeft();
+            userInput.focus();
+            
+            // Set up event listeners
+            userInput.addEventListener('keypress', handleKeyPress);
+            musicControl.addEventListener('click', toggleMusic);
+            
+            // Start game loop
+            animate();
         }
 
-        // Function to animate the game
+        // Animation loop
         function animate() {
-            const canvas = document.getElementById('gameCanvas');
-            const ctx = canvas.getContext('2d');
-            // Clear the canvas
+            if (!gameRunning) return;
+            
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Draw the current question on the canvas
-            ctx.font = '24px Arial';
+            
+            // Draw question
+            ctx.font = '24px Poppins';
+            ctx.fillStyle = '#212529'; // Using dark color for text
             const questionText = questions[currentQuestionIndex].question;
             const questionParts = getQuestionParts(questionText, ctx, canvas.width);
-            const x = (canvas.width - ctx.measureText(questionParts[0]).width) / 2;
+            
+            // Calculate total height of all text lines
+            const totalTextHeight = questionParts.length * 30;
             let y = movementSpeed;
-            for (const part of questionParts) {
-                ctx.fillText(part, x, y);
-                y += 30; // Adjust line spacing
-            }
-            // Increment the movement speed
-            movementSpeed += 0.5;
-            // Check if the text hits the bottom of the canvas
-            if (movementSpeed > canvas.height - 20) {
-                // Replace the question with "Game Over"
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.font = '36px Arial'; // Larger font size
-                ctx.fillStyle = 'red'; // Red color
-                const gameOverText = "Game Over";
-                const gameOverTextWidth = ctx.measureText(gameOverText).width;
-                const gameOverTextX = (canvas.width - gameOverTextWidth) / 2; // Center the text horizontally
-                ctx.fillText(gameOverText, gameOverTextX, canvas.height / 2);
-                // Display point counter
-                ctx.font = '20px Arial'; // Larger font size
-                ctx.fillStyle = 'black'; // black color
-                const pointCounter = `Questions Answered: ${points}`;
-                const pointCounterWidth = ctx.measureText(pointCounter).width;
-                const pointCounterX = (canvas.width - pointCounterWidth) / 2; // Center the text horizontally
-                ctx.fillText(pointCounter, pointCounterX, (canvas.height / 2) + 40); // Position under "Game Over" text
-                // Delete user input
-                document.getElementById('userInput').style.display = 'none';
-                return; // Stop the animation loop
+            
+            // Only draw text if it hasn't completely fallen off screen
+            if (y - totalTextHeight < canvas.height) {
+                for (const part of questionParts) {
+                    const x = (canvas.width - ctx.measureText(part).width) / 2;
+                    // Only draw if line is within canvas bounds
+                    if (y > 0) {
+                        ctx.fillText(part, x, y);
+                    }
+                    y += 30; // Line height
+                }
             }
             
-            document.getElementById('pointCounter').style.display = 'none';
-            // Update point counter
-            updatePointCounter();
-            // Request the next frame for animation
+            // Increase speed
+            movementSpeed += 0.5;
+            
+            // Check if all text has fallen below canvas
+            if (movementSpeed - totalTextHeight > canvas.height) {
+                gameOver();
+                return;
+            }
+            
             requestAnimationFrame(animate);
         }
 
-        // Function to split the question into smaller parts to fit within the canvas width
-        function getQuestionParts(questionText, ctx, maxWidth) {
-            const words = questionText.split(' ');
+        // Split question into lines that fit canvas width
+        function getQuestionParts(text, ctx, maxWidth) {
+            const words = text.split(' ');
             const lines = [];
             let currentLine = words[0];
+            
             for (let i = 1; i < words.length; i++) {
                 const word = words[i];
                 const width = ctx.measureText(currentLine + ' ' + word).width;
-                if (width < maxWidth - 40) { // Adjust 40 for padding
+                if (width < maxWidth - 40) {
                     currentLine += ' ' + word;
                 } else {
                     lines.push(currentLine);
@@ -174,22 +412,96 @@
             return lines;
         }
 
-
-        // Function to fetch the next question from the server and update the game
-        function fetchNextQuestion() {
-            points++;
-            currentQuestionIndex++;
-            if (currentQuestionIndex >= questions.length) {
-                currentQuestionIndex = 0; // Reset index if all questions have been answered
-                shuffleQuestions(); // Shuffle questions when all have been answered
+        // Handle keyboard input
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
             }
-            // Set the current question and update the game
-            updateQuestion();
-            // Reset movement speed for the new question
-            movementSpeed = 1;
         }
 
-        // Function to shuffle the questions array
+        // Check user's answer
+        function checkAnswer() {
+            const userAnswer = userInput.value.trim().toLowerCase();
+            const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
+            
+            if (userAnswer === correctAnswer) {
+                // Correct answer
+                score++;
+                scoreElement.textContent = score;
+                scoreElement.classList.add('pulse');
+                setTimeout(() => scoreElement.classList.remove('pulse'), 300);
+                
+                showFeedback('Correct!', 'correct');
+                nextQuestion();
+            } else {
+                // Incorrect answer
+                showFeedback('Try again!', 'incorrect');
+            }
+            
+            userInput.value = '';
+        }
+
+        // Move to next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            movementSpeed = 1;
+            
+            if (currentQuestionIndex >= questions.length) {
+                currentQuestionIndex = 0;
+                shuffleQuestions();
+            }
+            
+            updateQuestionsLeft();
+        }
+
+        // Game over state
+        function gameOver() {
+            gameRunning = false;
+            
+            // Get CSS variable values
+            const styles = getComputedStyle(document.documentElement);
+            const dangerColor = styles.getPropertyValue('--danger').trim();
+            const darkColor = styles.getPropertyValue('--dark').trim();
+            
+            // Clear canvas and draw game over message
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '36px Poppins';
+            ctx.fillStyle = dangerColor;
+            ctx.fillText('Game Over', (canvas.width - ctx.measureText('Game Over').width)/2, canvas.height/2 - 30);
+            
+            // Draw score
+            ctx.font = '24px Poppins';
+            ctx.fillStyle = darkColor;
+            ctx.fillText(`Score: ${score}`, (canvas.width - ctx.measureText(`Score: ${score}`).width)/2, canvas.height/2 + 20);
+            
+            // Disable input and show replay button
+            userInput.disabled = true;
+            userInput.placeholder = 'Game Over!';
+            replayButton.style.display = 'block';
+        }
+
+        // Add replay game function
+        function replayGame() {
+            // Reset game state
+            currentQuestionIndex = 0;
+            score = 0;
+            movementSpeed = 1;
+            gameRunning = true;
+            
+            // Update UI
+            scoreElement.textContent = '0';
+            updateQuestionsLeft();
+            userInput.disabled = false;
+            userInput.placeholder = 'Type the answer and press Enter...';
+            userInput.value = '';
+            replayButton.style.display = 'none';
+            
+            // Shuffle questions and restart animation
+            shuffleQuestions();
+            animate();
+        }
+
+        // Shuffle questions
         function shuffleQuestions() {
             for (let i = questions.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -197,41 +509,39 @@
             }
         }
 
-        // Function to update the current question on the page
-        function updateQuestion() {
-            document.getElementById('question').innerText = questions[currentQuestionIndex].question;
-            document.getElementById('answer').innerText = questions[currentQuestionIndex].answer;
+        // Update questions left counter
+        function updateQuestionsLeft() {
+            const left = questions.length - currentQuestionIndex;
+            questionsLeftElement.textContent = left;
         }
 
-        // Function to submit the user's answer
-        function submitAnswer() {
-            const userAnswer = document.getElementById('userInput').value.toLowerCase();
-            const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
-            // Check if the user's answer matches the current answer
-            if (userAnswer === correctAnswer) {
-                // Fetch the next question if the answer is correct
-                fetchNextQuestion();
-            }
-            // Clear the input field
-            document.getElementById('userInput').value = '';
+        // Show feedback message
+        function showFeedback(message, type) {
+            feedbackElement.textContent = message;
+            feedbackElement.className = `feedback ${type}`;
+            feedbackElement.style.opacity = 1;
+            
+            setTimeout(() => {
+                feedbackElement.style.opacity = 0;
+            }, 1000);
         }
 
-        // Fetch the first question and start the game
-        updateQuestion();
-        // Initialize the movement speed
-        let movementSpeed = 1;
-        // Start the animation loop
-        animate();
-
-        // Add an event listener to the user input for submitting the answer when Enter is pressed
-        document.getElementById('userInput').addEventListener('keypress', function(event) {
-            if (event.keyCode === 13) {
-                submitAnswer();
+        // Music control
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                bgMusic.play();
+                musicControl.innerHTML = '<i class="fas fa-music"></i>';
             }
-        });
+            musicPlaying = !musicPlaying;
+        }
+
+        // Start the game
+        initGame();
+        replayButton.addEventListener('click', replayGame);
+
     </script>
-    <audio id="bgMusic" autoplay loop>
-        <source src="static/music.mp3" type="audio/mpeg">
-    </audio>
 </body>
 </html>

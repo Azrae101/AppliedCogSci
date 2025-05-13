@@ -15,7 +15,6 @@
             width: 800px;
             height: 800px;
             background: #f0f0f0;
-            border: 2px solid #333;
             overflow: hidden;
             position: relative;
         }
@@ -32,22 +31,15 @@
             font-size: 16px;
         }
 
-        .block {
-            position: absolute;
-            width: 150px;
-            height: 80px;
-            padding: 10px;
-            left: 0; /* Remove manual offset */
-            transition: top 1s ease;
-        }
-
         .game {
             width: 100%;
             height: 100%;
             background: #f0f0f0;
             position: relative;
             overflow: hidden;
-            border: 2px solid #333;
+            border: none;
+            transform: translateZ(0); /* Hardware acceleration */
+            perspective: 1000px; /* Enable GPU acceleration */
         }
 
         .block {
@@ -65,18 +57,21 @@
             font-size: 12px;
             transition: top 0.1s ease;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            will-change: transform, opacity; /* Optimize for animations */
+            backface-visibility: hidden; /* Prevent flickering */
+            transform: translateZ(0);
         }
 
-        .color1 { background: #FFB3BA; }
-        .color2 { background: #BAFFC9; }
-        .color3 { background: #BAE1FF; }
-        .color4 { background: #FFFFBA; }
-        .color5 { background: #E0BAFF; }
-        .color6 { background: #FFD166; }
-        .color7 { background: #06D6A0; }
-        .color8 { background: #118AB2; }
-        .color9 { background: #073B4C; }
-        .color10 { background: #EF476F; }
+        .color1 { background: #A1EAFB; }  /* pastel sky blue */
+        .color2 { background: #FFDAC1; }  /* soft peach */
+        .color3 { background: #C3FBD8; }  /* minty green */
+        .color4 { background: #FBE8A6; }  /* soft pastel yellow-orange */
+        .color5 { background: #FDCBFA; }  /* light orchid pink */
+        .color6 { background: #B5EAD7; }  /* cool mint */
+        .color7 { background: #FFB7CE; }  /* pastel pink */
+        .color8 { background: #B0D0D3; }  /* muted aqua-grey */
+        .color9 { background: #E4C1F9; }  /* lavender pastel */
+        .color10 { background: #C2F9BB; }  /* spring green */
 
         @keyframes disintegrate {
             0% { transform: scale(1); opacity: 1; }
@@ -84,9 +79,9 @@
         }
 
         .block-removing {
-            transform: scale(0);
-            opacity: 0;
             animation: disintegrate 0.5s ease forwards;
+            transform: scale(0.9);
+            opacity: 0.7;
         }
 
         .user-input-container {
@@ -101,37 +96,260 @@
             font-size: 16px;
         }
 
+        .score-update {
+            transform: scale(1.2);
+            color: #4CAF50;
+        }
+        
+        .block.falling {
+            transition: top 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .block.matching {
+            box-shadow: 0 0 10px 5px rgba(255, 255, 0, 0.7);
+            z-index: 5;
+            transition: box-shadow 0.3s ease;
+        }
+        /* Improved Back Button */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #5d7de8, #9666d8);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        /* Improved Score Display */
         #score {
             position: absolute;
             top: 20px;
             right: 20px;
             font-size: 24px;
             font-weight: bold;
-            z-index: 10; /* Ensure it stays above blocks */
+            z-index: 10;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(245, 245, 245, 0.9));
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .score-update {
+            transform: scale(1.1);
+            color: #2e7d32;
+            background: linear-gradient(135deg, rgba(200, 255, 200, 0.9), rgba(180, 240, 180, 0.9));
+            animation: pulse-glow 0.5s ease;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px rgba(46, 125, 50, 0); }
+            50% { box-shadow: 0 0 15px rgba(46, 125, 50, 0.4); }
+            100% { box-shadow: 0 0 5px rgba(46, 125, 50, 0); }
+        }
+
+        /* Improved Game Title */
+        h1 {
+            text-align: center;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+            color: #3a3a3a;
+            margin-top: 40px;
+            font-size: 2.8em;
+            letter-spacing: -0.5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(75, 108, 183, 0.2);
+        }
+
+        /* Improved Input Field */
+        #userInput {
+            width: 350px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            outline: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        #userInput:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 2px 10px rgba(110, 142, 251, 0.2);
+        }
+
+        #userInput::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* Improved Blocks */
+        .block {
+            /* ... existing block styles ... */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        /* Game Container Improvements */
+        .game-container {
+            /* ... existing styles ... */
+            border-radius: 10px;
+            box-shadow: 2px 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Body Styling */
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Add these to your existing CSS */
+        .block {
+            /* ... existing styles ... */
+            transform-style: preserve-3d;
+            transition: 
+                top 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 0.3s ease, 
+                opacity 0.3s ease;
+        }
+
+        .block.falling {
+            z-index: 2; /* Ensure falling blocks appear above settled ones */
+        }
+
+        .block-removing {
+            animation: disintegrate 0.5s ease forwards;
+            pointer-events: none; /* Prevent interaction during removal */
+        }
+
+        .game {
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        /* Add to your existing CSS */
+        .game-over-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            color: white;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .game-over-text {
+            font-size: 4em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            color: #ff4d4d;
+        }
+
+        .final-score {
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+
+        .restart-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .restart-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #5d7de8, #9666d8);
+        }
+
+        .restart-button:active {
+            transform: translateY(0);
         }
 
     </style>
 </head>
 <body>
-    <a href="/minigames" class="back-button">← Back to Minigames</a>
-    <h1>TetriCards</h1>
-    <div id="score">Score: 0</div>
     <div class="game-wrapper">
+        <a href="/minigames" class="back-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Minigames
+        </a>
+        
+        <h1>TetriCards</h1>
+        
+        <div id="score">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+                <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+            </svg>
+            Score: <span id="score-value">0</span>
+        </div>
+        
         <div class="game-container">
             <div class="game" id="game"></div>
         </div>
+        
         <div class="user-input-container">
-            <input type="text" id="userInput" placeholder="Type answer and press Enter...">
+            <input type="text" id="userInput" placeholder="Type the term and press Enter...">
         </div>
     </div>
-    
-    <style>
-        .user-input-container {
-            margin: 20px auto; /* Center horizontally */
-            text-align: center;
-            /* Remove position:absolute and related properties */
-        }
-    </style>
 
 <script>
 const definitions = [
@@ -165,6 +383,11 @@ class Game {
         
         this.setupEventListeners();
         this.initGame();
+
+        this.definitionUsage = new Map(); 
+        this.definitions.forEach(def => {
+            this.definitionUsage.set(def.answer, 0);
+        });
     }
 
     async initGame() {
@@ -190,11 +413,26 @@ class Game {
 
     useDefaultDefinitions() {
         this.definitions = [
-            {"definition": "A", "answer": "1"},
-            {"definition": "B", "answer": "2"},
-            {"definition": "C", "answer": "3"},
-            {"definition": "D", "answer": "4"},
-            {"definition": "E", "answer": "5"}
+            {"definition": "Condition: Can see but not recognize visuals", "answer": "Visual Agnosia"},
+            {"definition": "Attention needed to bind features", "answer": "Feature Integration Theory"},
+            {"definition": "Skill becomes automatic through practice", "answer": "Proceduralization"},
+            {"definition": "Brain structure for fear/emotions", "answer": "Amygdala"},
+            {"definition": "Memory for skills and procedures", "answer": "Procedural Memory"},
+            {"definition": "Memory for facts and events", "answer": "Declarative Memory"},
+            {"definition": "Tendency to remember first items in list", "answer": "Primacy Effect"},
+            {"definition": "Tendency to remember last items in list", "answer": "Recency Effect"},
+            {"definition": "Mental framework for organizing information", "answer": "Schema"},
+            {"definition": "Mental shortcuts for problem solving", "answer": "Heuristics"},
+            {"definition": "Inability to form new memories", "answer": "Anterograde Amnesia"},
+            {"definition": "Loss of past memories", "answer": "Retrograde Amnesia"},
+            {"definition": "Brain area for forming new memories", "answer": "Hippocampus"},
+            {"definition": "Mental representation of physical space", "answer": "Cognitive Map"},
+            {"definition": "Learning through consequences", "answer": "Operant Conditioning"},
+            {"definition": "Learning through association", "answer": "Classical Conditioning"},
+            {"definition": "Decreasing response to repeated stimulus", "answer": "Habituation"},
+            {"definition": "Mental processes of thinking/knowing", "answer": "Cognition"},
+            {"definition": "Mental categories for grouping things", "answer": "Concepts"},
+            {"definition": "Simple thinking strategy for problem solving", "answer": "Algorithm"}
         ];
     }
 
@@ -207,99 +445,266 @@ class Game {
         });
     }
 
+    getLeastUsedDefinition() {
+        if (this.blocks.length === 0) {
+            return this.definitions[Math.floor(Math.random() * this.definitions.length)];
+        }
+        
+        // Count usage of each definition
+        const usageCount = {};
+        this.definitions.forEach(def => {
+            usageCount[def.answer] = this.blocks.filter(b => b.answer === def.answer).length;
+        });
+        
+        // Find definitions with minimum usage
+        const minUsage = Math.min(...Object.values(usageCount));
+        const leastUsed = this.definitions.filter(def => 
+            usageCount[def.answer] === minUsage
+        );
+        
+        return leastUsed[Math.floor(Math.random() * leastUsed.length)];
+    }
+
+    getDefinitionNotInActiveBlocks() {
+        const available = this.definitions.filter(def => 
+            !this.activeBlocks.some(b => b.answer === def.answer)
+        );
+        return available.length > 0 
+            ? available[Math.floor(Math.random() * available.length)]
+            : this.getLeastUsedDefinition();
+    }
+
     startNewRound() {
         if (this.gameOver) return;
-        
-        // Check if we have definitions
-        if (this.definitions.length === 0) {
-            console.error("No definitions available!");
-            return;
-        }
 
-        if (this.checkSpawnBlocked()) {
+        // Clear any stuck blocks
+        this.activeBlocks = this.activeBlocks.filter(block => {
+            if (block.y === 0 && block.settled) {
+                if (!this.checkCollisionAt(block.x, 1)) {
+                    block.y = 1;
+                    block.settled = false;
+                    return true;
+                }
+            }
+            return true;
+        });
+
+        // Check spawn availability
+        const availableColumns = [0,1,2,3,4].filter(x => 
+            !this.blocks.some(b => b.y === 0 && b.x === x)
+        );
+        
+        if (availableColumns.length < (this.firstRound ? 5 : 2)) {
             this.gameOver = true;
-            alert(`Game Over! Final Score: ${this.score}`);
+            setTimeout(() => this.showGameOver(), 500);
             return;
         }
 
         this.isAnimating = true;
-        this.setInputStatus(true);        
+        this.setInputStatus(true);
 
         const newBlocksCount = this.firstRound ? 5 : 2 + Math.floor(Math.random() * 2);
         this.firstRound = false;
 
-        // Filter out definitions already in play
-        const availableDefs = this.definitions.filter(def => 
-            !this.blocks.some(b => b.answer === def.answer) &&
-            !this.activeBlocks.some(b => b.answer === def.answer)
-        );
+        // Smart definition selection
+        const getDefinition = (excludeAnswers = new Set()) => {
+            // Stage 1: Definitions not in play at all
+            let available = this.definitions.filter(def => 
+                !this.blocks.some(b => b.answer === def.answer) &&
+                !this.activeBlocks.some(b => b.answer === def.answer) &&
+                !excludeAnswers.has(def.answer)
+            );
+            if (available.length > 0) return available;
 
-        // If no available definitions, use any definition
-        const sourceDefs = availableDefs.length > 0 ? availableDefs : this.definitions;
+            // Stage 2: Definitions not in current falling blocks
+            available = this.definitions.filter(def => 
+                !this.activeBlocks.some(b => b.answer === def.answer) &&
+                !excludeAnswers.has(def.answer)
+            );
+            if (available.length > 0) return available;
 
+            // Stage 3: Least used definitions
+            const usageCount = {};
+            [...this.blocks, ...this.activeBlocks].forEach(b => {
+                usageCount[b.answer] = (usageCount[b.answer] || 0) + 1;
+            });
+            
+            return [...this.definitions]
+                .filter(d => !excludeAnswers.has(d.answer))
+                .sort((a, b) => (usageCount[a.answer] || 0) - (usageCount[b.answer] || 0));
+        };
+
+        // Spawn new blocks
+        const spawnedBlocks = [];
         for (let i = 0; i < newBlocksCount; i++) {
-            if (sourceDefs.length === 0) break;
-            
-            const def = sourceDefs[Math.floor(Math.random() * sourceDefs.length)];
-            const newBlock = new Block(def.definition, def.answer);
-            newBlock.x = this.getAvailableColumn();
-            
-            if (newBlock.x !== -1) {
-                this.activeBlocks.push(newBlock);
-            } else {
+            const x = this.getAvailableColumn();
+            if (x === -1) {
                 this.gameOver = true;
                 break;
             }
+
+            const excludeAnswers = new Set(spawnedBlocks.map(b => b.answer));
+            const candidates = getDefinition(excludeAnswers);
+            
+            if (candidates.length === 0) {
+                console.warn("No available definitions - this shouldn't happen");
+                break;
+            }
+
+            const def = candidates[Math.floor(Math.random() * candidates.length)];
+            const newBlock = new Block(def.definition, def.answer);
+            newBlock.x = x;
+            this.activeBlocks.push(newBlock);
+            spawnedBlocks.push(newBlock);
+            this.definitionUsage.set(def.answer, (this.definitionUsage.get(def.answer) || 0) + 1);
         }
 
-        this.processFall();
+        if (!this.gameOver) {
+            this.processFall();
+        } else {
+            setTimeout(() => alert(`Game Over! Final Score: ${this.score}`), 500);
+        }
+    }
+
+    showGameOver() {
+        // Clear all blocks
+        this.blocks = [];
+        this.activeBlocks = [];
+        this.render();
+        
+        // Create game over overlay
+        const game = document.getElementById('game');
+        const overlay = document.createElement('div');
+        overlay.className = 'game-over-overlay';
+        
+        const gameOverText = document.createElement('div');
+        gameOverText.className = 'game-over-text';
+        gameOverText.textContent = 'GAME OVER';
+        
+        const finalScore = document.createElement('div');
+        finalScore.className = 'final-score';
+        finalScore.textContent = `Final Score: ${this.score}`;
+        
+        const restartButton = document.createElement('button');
+        restartButton.className = 'restart-button';
+        restartButton.textContent = 'Play Again';
+        restartButton.onclick = () => this.restartGame();
+        
+        overlay.appendChild(gameOverText);
+        overlay.appendChild(finalScore);
+        overlay.appendChild(restartButton);
+        game.appendChild(overlay);
+    }
+
+    restartGame() {
+        // Remove game over overlay
+        const overlay = document.querySelector('.game-over-overlay');
+        if (overlay) overlay.remove();
+        
+        // Reset game state
+        this.blocks = [];
+        this.activeBlocks = [];
+        this.score = 0;
+        document.getElementById('score-value').textContent = '0';
+        this.gameOver = false;
+        this.firstRound = true;
+        this.isAnimating = false;
+        
+        // Start new game
+        this.setInputStatus(false);
+        this.startNewRound();
+    }
+
+    render() {
+        const game = document.getElementById('game');
+        
+        // Create a document fragment for smoother rendering
+        const fragment = document.createDocumentFragment();
+        
+        // Count answer frequencies
+        const answerCounts = {};
+        const allBlocks = [...this.blocks, ...this.activeBlocks];
+        allBlocks.forEach(block => {
+            answerCounts[block.answer] = (answerCounts[block.answer] || 0) + 1;
+        });
+
+        // Create all block elements first
+        const elements = allBlocks.map(block => {
+            const element = document.createElement('div');
+            element.className = `block ${block.colorClass} ${block.isFalling ? 'falling' : ''}`;
+            
+            // Highlight duplicates if absolutely necessary
+            if (answerCounts[block.answer] > 1) {
+                element.classList.add('duplicate-warning');
+                element.textContent = `${block.definition}`;
+            } else {
+                element.textContent = block.definition;
+            }
+            
+            element.dataset.id = block.id;
+            element.style.left = `${block.x * 160}px`;
+            element.style.top = `${block.y * 100}px`;
+            return element;
+        });
+
+        // Add all elements to fragment
+        elements.forEach(el => fragment.appendChild(el));
+        
+        // Clear and repaint in one operation
+        game.innerHTML = '';
+        game.appendChild(fragment);
     }
 
     getAvailableColumn() {
         const columns = [0, 1, 2, 3, 4];
-        // Check if spawn position (y=0) is blocked in each column
         const occupied = new Set(
-            this.blocks.filter(b => b.y === 0).map(b => b.x)
+            [...this.blocks, ...this.activeBlocks]
+                .filter(b => b.y === 0) // Check only the top row
+                .map(b => b.x)
         );
-        const available = columns.filter(x => !occupied.has(x));
-        return available.length > 0 ? available[Math.floor(Math.random() * available.length)] : -1;
+        
+        // Shuffle columns to randomize spawn positions
+        const shuffled = columns.sort(() => Math.random() - 0.5);
+        const available = shuffled.filter(x => !occupied.has(x));
+        
+        return available.length > 0 ? available[0] : -1;
     }
 
     processFall() {
         const fallInterval = setInterval(() => {
             let moved = false;
-
-            // Create a grid representation of current block positions
             const positionGrid = Array(5).fill().map(() => Array(10).fill(false));
             
-            // Mark settled blocks
-            this.blocks.forEach(b => {
-                positionGrid[b.x][b.y] = true;
-            });
-
-            // Mark active blocks that have already moved this step
-            this.activeBlocks.forEach(b => {
-                if (b.settled) positionGrid[b.x][b.y] = true;
-            });
-
-            // Process each active block
+            // Mark all settled blocks
+            this.blocks.forEach(b => positionGrid[b.x][b.y] = true);
+            
+            // First pass: mark all active blocks that will settle
             this.activeBlocks.forEach(block => {
-                if (block.settled) return;
-
-                const nextY = block.y + 1;
+                if (block.settled) {
+                    positionGrid[block.x][block.y] = true;
+                    return;
+                }
                 
-                // Check if next position is available
+                const nextY = block.y + 1;
                 if (nextY >= 8 || positionGrid[block.x][nextY]) {
                     block.settled = true;
-                } else {
-                    block.y = nextY;
-                    moved = true;
-                    positionGrid[block.x][block.y] = true; // Mark new position
+                    positionGrid[block.x][block.y] = true;
                 }
             });
-
+            
+            // Second pass: move blocks that can fall
+            this.activeBlocks.forEach(block => {
+                if (!block.settled) {
+                    const nextY = block.y + 1;
+                    if (!positionGrid[block.x][nextY]) {
+                        block.y = nextY;
+                        moved = true;
+                    }
+                }
+            });
+            
             this.render();
-
+            
             if (!moved) {
                 clearInterval(fallInterval);
                 this.blocks.push(...this.activeBlocks.filter(b => b.settled));
@@ -329,30 +734,40 @@ class Game {
         return settledCollision || otherActiveCollision;
     }
 
-
     handleAnswer(answer) {
-        if (this.isAnimating) return; // Prevent answering during animations
+        if (this.isAnimating || !answer) return;
         
-        const targetBlock = this.blocks.find(
+        // Find ALL blocks that match the answer (not just one)
+        const matchingBlocks = this.blocks.filter(
             b => b.answer.toLowerCase().trim() === answer.toLowerCase().trim()
         );
-        console.log("Submitted:", answer);
-        console.log("Matching block:", targetBlock?.answer || "None");
 
-        if (targetBlock) {
-            const removedBlocks = this.findConnectedBlocks(targetBlock);
-            this.isAnimating = true; // Start animation
-            this.setInputStatus(true); // Disable input
+        if (matchingBlocks.length > 0) {
+            // Combine all connected blocks from all matching blocks
+            let removedBlocks = new Set();
+            matchingBlocks.forEach(block => {
+                const connected = this.findConnectedBlocks(block);
+                connected.forEach(b => removedBlocks.add(b));
+            });
+            
+            removedBlocks = Array.from(removedBlocks);
+            this.isAnimating = true;
+            this.setInputStatus(true);
             
             this.animateRemoval(removedBlocks).then(() => {
                 this.removeBlocks(removedBlocks);
-                this.applyGravity();
                 
+                // Update score
                 this.score += removedBlocks.length * 100;
-                document.getElementById('score').textContent = `Score: ${this.score}`;
-            
-                setTimeout(() => this.startNewRound(), 500);
-            
+                const scoreElement = document.getElementById('score');
+                const scoreValueElement = document.getElementById('score-value');
+                scoreElement.textContent = `Score: ${this.score}`;
+                scoreValueElement.textContent = this.score;
+                scoreElement.classList.add('score-update');
+                setTimeout(() => scoreElement.classList.remove('score-update'), 300);
+                
+                // Apply gravity to remaining blocks
+                this.applyGravity();
             });
         } else {
             this.startNewRound();
@@ -407,43 +822,67 @@ class Game {
     }
 
     removeBlocks(blocks) {
-        const idsToRemove = new Set(blocksToRemove.map(b => b.id));
+        const idsToRemove = new Set(blocks.map(b => b.id)); // Changed from blocksToRemove to blocks
         this.blocks = this.blocks.filter(b => !idsToRemove.has(b.id));
     }
 
     applyGravity() {
+        // Create a grid to track all current block positions
+        const positionGrid = Array(5).fill().map(() => Array(10).fill(false));
+        
+        // Mark all settled blocks
+        this.blocks.forEach(b => {
+            positionGrid[b.x][b.y] = true;
+        });
+
         // Find all blocks that need to fall
         const fallingBlocks = [];
         const columns = new Set(this.blocks.map(b => b.x));
         
         columns.forEach(x => {
-            // Get blocks in this column sorted from top to bottom
+            // Get blocks in this column sorted from bottom to top
             const columnBlocks = this.blocks.filter(b => b.x === x)
-                                .sort((a, b) => a.y - b.y);
+                                .sort((a, b) => b.y - a.y); // Sort descending
             
-            // The expected Y position if no gaps existed
-            let expectedY = 0;
+            // Track the lowest available position
+            let lowestAvailableY = 7; // Bottom of the game area
             
             columnBlocks.forEach(block => {
-                if (block.y > expectedY) {
-                    // This block needs to fall
-                    block.targetY = expectedY;
-                    fallingBlocks.push(block);
+                if (block.y < lowestAvailableY) {
+                    // Block is above where it should be - needs to fall
+                    const targetY = lowestAvailableY;
+                    
+                    // Find the first empty position below the block
+                    for (let y = block.y + 1; y <= lowestAvailableY; y++) {
+                        if (!positionGrid[x][y]) {
+                            block.targetY = y;
+                            fallingBlocks.push(block);
+                            positionGrid[x][block.y] = false; // Clear old position
+                            positionGrid[x][y] = true; // Mark new position
+                            break;
+                        }
+                    }
                 }
-                expectedY = block.y + 1;
+                
+                // Update lowest available position (current block's position - 1)
+                lowestAvailableY = block.y - 1;
             });
         });
 
         // If we have blocks to fall, animate them
         if (fallingBlocks.length > 0) {
             this.animateFallingBlocks(fallingBlocks);
+        } else {
+            // No blocks need to fall - start new round immediately
+            this.startNewRound();
         }
     }
 
     checkSpawnBlocked() {
-        const blocked = this.blocks.some(b => b.y === 0);
-        console.log("Spawn blocked?", blocked);
-        return blocked;
+        // Game is blocked if any spawn position (top row) is occupied
+        return [0,1,2,3,4].some(x => 
+            this.blocks.some(b => b.y === 0 && b.x === x)
+        );
     }
     
     animateFallingBlocks(fallingBlocks) {
@@ -451,18 +890,38 @@ class Game {
         this.setInputStatus(true);
         
         const fallInterval = setInterval(() => {
-            // ... existing falling logic ...
+            let allLanded = true;
+            
+            // First mark all blocks that will land
+            fallingBlocks.forEach(block => {
+                if (block.y >= block.targetY || this.checkCollisionAt(block.x, block.y + 1)) {
+                    block.targetY = block.y; // Mark as landed
+                }
+            });
+            
+            // Then move blocks that can fall
+            fallingBlocks.forEach(block => {
+                if (block.y < block.targetY && !this.checkCollisionAt(block.x, block.y + 1)) {
+                    block.y++;
+                    allLanded = false;
+                }
+            });
+            
+            this.render();
             
             if (allLanded) {
                 clearInterval(fallInterval);
-                this.activeBlocks = [];
                 this.isAnimating = false;
                 this.setInputStatus(false);
-                this.applyGravity();
+                
+                // Check if we need to apply gravity again
+                setTimeout(() => {
+                    this.applyGravity();
+                }, 100);
             }
-        }, 300);
+        }, 100);
     }
-    
+
     checkCollisionAt(x, y) {
         // Check bottom boundary
         if (y >= 8) return true;
@@ -477,17 +936,36 @@ class Game {
 
     render() {
         const game = document.getElementById('game');
-        game.innerHTML = ''; // Clear everything
+        
+        // Don't clear if game over overlay is present
+        if (!document.querySelector('.game-over-overlay')) {
+            game.innerHTML = '';
+            
+            // Count answer frequencies
+            const answerCounts = {};
+            const allBlocks = [...this.blocks, ...this.activeBlocks];
+            allBlocks.forEach(block => {
+                answerCounts[block.answer] = (answerCounts[block.answer] || 0) + 1;
+            });
 
-        [...this.blocks, ...this.activeBlocks].forEach(block => {
-            let element = document.createElement('div');
-            element.className = `block ${block.colorClass}`;
-            element.textContent = block.definition;
-            element.dataset.id = block.id; // Use ID for safe lookup
-            element.style.left = `${block.x * 160}px`;
-            element.style.top = `${block.y * 100}px`;
-            game.appendChild(element);
-        });
+            // Create and append blocks
+            allBlocks.forEach(block => {
+                let element = document.createElement('div');
+                element.className = `block ${block.colorClass} ${block.isFalling ? 'falling' : ''}`;
+                
+                if (answerCounts[block.answer] > 1) {
+                    element.classList.add('duplicate-warning');
+                    element.textContent = `${block.definition}`;
+                } else {
+                    element.textContent = block.definition;
+                }
+                
+                element.dataset.id = block.id;
+                element.style.left = `${block.x * 160}px`;
+                element.style.top = `${block.y * 100}px`;
+                game.appendChild(element);
+            });
+        }
     }
 
 

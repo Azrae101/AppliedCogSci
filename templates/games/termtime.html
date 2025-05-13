@@ -4,154 +4,743 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TermTime Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary: #f72585;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
             margin: 0;
             padding: 0;
-            background-color: #ADD8E6;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            min-height: 100vh;
+            color: var(--dark);
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            margin-bottom: 10vh;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 5vh;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .containertitle {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 10vh;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 5vh;
             margin-bottom: 2vh;
         }
 
         h1 {
-            color: #0000FF;
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
         }
-        #termInput {
-            padding: 10px;
-            font-size: 16px;
+
+        .subtitle {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .deck-info {
+            background-color: var(--accent);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
             margin-bottom: 20px;
-            border: 2px solid #0000FF;
-            background-color: #ffffff;
+            font-weight: 600;
+        }
+
+        #termInput {
+            padding: 12px 20px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border: 3px solid var(--primary);
+            border-radius: 50px;
+            background-color: var(--light);
+            width: 70%;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        #termInput:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        }
+
+        #termInput::placeholder {
+            color: #aaa;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 150px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
         #timer {
-            font-size: 24px;
-            color: #f00;
+            color: var(--secondary);
         }
+
         #score {
-            font-size: 24px;
-            color: #0c0;
+            color: var(--success);
         }
+
+        #accuracy {
+            color: var(--primary);
+        }
+
         #elementsLeft {
-            font-size: 16px;
-            color: #999;
-        }
-        #realAnswer {
-            font-size: 16px;
-            color: #999;
+            font-size: 1rem;
+            color: #666;
             margin-top: 10px;
         }
+
+        #realAnswer {
+            font-size: 1rem;
+            color: #666;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: var(--light);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        #progressBar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 100%;
+            transition: width 0.5s;
+        }
+
         .back-btn {
             position: absolute;
-            bottom: -25px; 
+            bottom: -125px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: #0000FF;
-            color: #fff;
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .back-btn:hover {
-            background-color: #00008B;
+            background-color: var(--primary-dark);
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
+
+        .feedback {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .correct {
+            background-color: var(--success);
+        }
+
+        .incorrect {
+            background-color: var(--danger);
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .music-control i {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .container, .containertitle {
+                width: 90%;
+                padding: 15px;
+            }
+
+            #termInput {
+                width: 90%;
+            }
+
+            .stat-box {
+                min-width: 120px;
+                padding: 10px;
+            }
+        }
+
+        /* Animation for correct answers */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.3s;
+        }
+                /* Add this to your existing styles */
+        .hint-container {
+            margin: 20px 0;
+        }
+        
+        #hintButton {
+            padding: 8px 16px;
+            background-color: var(--warning);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        #hintButton:hover {
+            background-color: #e68a00;
+            transform: translateY(-2px);
+        }
+        
+        #hintButton:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #hintText {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            text-align: left;
+            line-height: 1.5;
+        }
+        
+        .hints-remaining {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .hint-term {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .replay-btn {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 25px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .replay-btn:hover {
+            background-color: #d3166b;
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
     </style>
-<link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
 <body>
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <i class="fas fa-music"></i>
+    </div>
+
+    <!-- Feedback Message -->
+    <div class="feedback" id="feedback"></div>
+
     <!-- Back to Home Button -->
-    <button class="back-btn" onclick="location.href='/termtime_settings'">Back to Menu</button>
+    <button class="back-btn" onclick="location.href='/termtime_settings'">
+        <i class="fas fa-arrow-left"></i> Back to Menu
+    </button>
+
+    <button class="replay-btn" id="replayButton" style="display: none;">
+        <i class="fas fa-redo"></i> Play Again
+    </button>
+
     <div class="containertitle">
         <h1>TermTime</h1>
-        <p>Type as many terms as you can before time runs out!</p>
+        <p class="subtitle">Type as many terms as you can before time runs out!</p>
     </div>
-    <div class="container"> <!-- Add an ID to the second container -->
-        <p>Deck: Cognitive Science</p>
-        <input type="text" id="termInput" placeholder="Type here...">
-        <p id="elementsLeft"></p>
-        <p>Time left: <span id="timer">60</span> seconds</p>
-        <p>Score: <span id="score">0</span></p>
-        <p id="realAnswer"></p> <!-- Added div to display real answer -->
+
+    <div class="container">
+        <div class="deck-info">
+            <i class="fas fa-layer-group"></i> Deck: Cognitive Science
+        </div>
+
+        <input type="text" id="termInput" placeholder="Type the term and press Enter...">
+        
+        <div class="progress-container">
+            <div id="progressBar"></div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">Time Left</div>
+                <div class="stat-value" id="timer">60</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Accuracy</div>
+                <div class="stat-value" id="accuracy">100%</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Terms Left</div>
+                <div class="stat-value" id="termsLeft">3</div>
+            </div>
+        </div>
+
+        <div class="hint-container">
+            <button id="hintButton">Get Hint</button>
+            <div class="hints-remaining">Hints remaining: <span id="hintsLeft">5</span></div>
+            <div id="hintText"></div>
+        </div>
+
+        <p id="realAnswer">
+        <audio id="bgMusic" autoplay loop>
+            <source src="/static/music.mp3" type="audio/mpeg">
+        </audio>
     </div>
     
     <script>
-        let terms = ["visual agnosia", "feature integration theory", "proceduralization"];
+        const termDefinitions = {
+            "visual agnosia": "The inability to recognize or interpret visual information despite intact vision.",
+            "feature integration theory": "A theory proposing that visual perception occurs in two stages: preattentive parallel processing followed by focused attention.",
+            "proceduralization": "The process by which cognitive skills become automatic through practice.",
+            "cognitive load": "The total amount of mental effort being used in working memory.",
+            "working memory": "A cognitive system responsible for temporarily holding and manipulating information.",
+            "chunking": "A strategy for making more efficient use of working memory by grouping information.",
+            "priming": "The implicit memory effect where exposure to a stimulus influences response to a later stimulus.",
+            "semantic network": "A model of how memory concepts are organized and interconnected in the mind.",
+            "mental model": "An internal representation of external reality that people use to interact with the world.",
+            "heuristic": "A mental shortcut that allows people to solve problems and make judgments quickly."
+        };
+        
+        let hintsRemaining = 5;
+        let currentHintTerm = "";
+
+        // Add to initGame function
+        document.getElementById('hintButton').addEventListener('click', showHint);
+
+        // Modified showHint function
+        function showHint() {
+            if (hintsRemaining <= 0 || terms.length === 0) return;
+            
+            // Get a random term from remaining terms
+            const randomIndex = Math.floor(Math.random() * terms.length);
+            currentHintTerm = terms[randomIndex];
+            const definition = termDefinitions[currentHintTerm] || "No definition available.";
+            
+            // Only show the definition, not the term
+            document.getElementById('hintText').textContent = `Hint: ${definition}`;
+            document.getElementById('hintText').style.display = 'block';
+            
+            hintsRemaining--;
+            document.getElementById('hintsLeft').textContent = hintsRemaining;
+            
+            if (hintsRemaining <= 0) {
+                document.getElementById('hintButton').disabled = true;
+            }
+        }
+
+        // Modified checkTerm function
+        function checkTerm() {
+            let term = termInput.value.trim().toLowerCase();
+            
+            if (term === "") return;
+            
+            attempts++;
+            
+            // First check if the term exists in our dictionary at all
+            if (!termDefinitions.hasOwnProperty(term)) {
+                showFeedback("Try again!", "incorrect");
+                updateAccuracy();
+                termInput.value = "";
+                return;
+            }
+            
+            // Then check if it's already been found (not in remaining terms)
+            if (!terms.includes(term)) {
+                showFeedback("This has already been written", "incorrect");
+                updateAccuracy();
+                termInput.value = "";
+                return;
+            }
+            
+            // If we get here, it's a correct and new answer
+            score++;
+            scoreElement.textContent = score;
+            terms.splice(terms.indexOf(term), 1);
+            updateTermsLeft();
+            updateProgressBar();
+            updateAccuracy();
+            
+            // Hide hint if it was for this term
+            if (term === currentHintTerm) {
+                document.getElementById('hintText').style.display = 'none';
+                currentHintTerm = "";
+            }
+            
+            showFeedback("Correct!", "correct");
+            scoreElement.classList.add("pulse");
+            setTimeout(() => scoreElement.classList.remove("pulse"), 300);
+            
+            if (terms.length === 0) {
+                endGame(true);
+            }
+            
+            termInput.value = "";
+        }
+
+        // Modified endGame function
+        function endGame(victory) {
+            clearInterval(timerInterval);
+            termInput.disabled = true;
+            document.getElementById('hintButton').disabled = true;
+            document.getElementById('hintText').style.display = 'none';
+            termInput.placeholder = victory ? "You won! 🎉" : "Time's up! ⏰";
+            termInput.removeEventListener("keypress", handleKeyPress);
+            
+            if (terms.length > 0) {
+                realAnswerElement.style.display = "block";
+                realAnswerElement.innerHTML = `<strong>Remaining terms:</strong> ${terms.join(", ")}`;
+            }
+            
+            saveScore(score);
+        }
+
+        // Game data
+        let terms = ["visual agnosia", "feature integration theory", "proceduralization", "cognitive load", "working memory", "chunking", "priming", "semantic network", "mental model", "heuristic"];
         let score = 0;
+        let attempts = 0;
         let timeLeft = 60;
         let timerInterval;
+        let totalTerms = terms.length;
+        let bgMusic = document.getElementById("bgMusic");
+        let musicPlaying = true;
 
+        // DOM elements
+        const termInput = document.getElementById("termInput");
+        const timerElement = document.getElementById("timer");
+        const scoreElement = document.getElementById("score");
+        const accuracyElement = document.getElementById("accuracy");
+        const termsLeftElement = document.getElementById("termsLeft");
+        const realAnswerElement = document.getElementById("realAnswer");
+        const progressBar = document.getElementById("progressBar");
+        const feedbackElement = document.getElementById("feedback");
+        const musicControl = document.getElementById("musicControl");
+        const replayButton = document.getElementById('replayButton');
+
+        // Initialize game
+        function initGame() {
+            // Shuffle terms for variety
+            terms = shuffleArray(terms);
+            totalTerms = terms.length;
+            updateTermsLeft();
+            
+            // Set progress bar
+            updateProgressBar();
+            
+            // Start timer
+            startTimer();
+            
+            // Focus input field
+            termInput.focus();
+            
+            // Add event listeners
+            termInput.addEventListener("keypress", handleKeyPress);
+            musicControl.addEventListener("click", toggleMusic);
+        }
+
+        // Shuffle array function
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Timer functions
         function startTimer() {
             timerInterval = setInterval(updateTimer, 1000);
         }
 
         function updateTimer() {
             timeLeft--;
-            document.getElementById("timer").textContent = timeLeft;
+            timerElement.textContent = timeLeft;
+            
+            // Change color when time is running low
+            if (timeLeft <= 10) {
+                timerElement.style.color = "var(--danger)";
+                timerElement.classList.add("pulse");
+                setTimeout(() => timerElement.classList.remove("pulse"), 300);
+            }
+            
             if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                document.getElementById("termInput").disabled = true;
-                document.getElementById("termInput").placeholder = "Time's up!";
-                document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
-                document.getElementById("elementsLeft").textContent = "Elements left: " + terms.join(", ");
-                document.getElementById("realAnswer").textContent = "Correct answers: " + terms.join(", ");
-            } else {
-                document.getElementById("elementsLeft").textContent = "Number of elements: " + terms.length;
+                endGame(false);
             }
         }
 
+        // Handle keyboard input
         function handleKeyPress(event) {
             if (event.key === "Enter") {
                 checkTerm();
             }
         }
 
+        // Check if term is correct
         function checkTerm() {
-            let term = document.getElementById("termInput").value.trim();
+            let term = termInput.value.trim().toLowerCase();
+            attempts++;
+            
+            if (term === "") return;
+            
             if (terms.includes(term)) {
+                // Correct answer
                 score++;
-                document.getElementById("score").textContent = score;
+                scoreElement.textContent = score;
                 terms.splice(terms.indexOf(term), 1);
+                updateTermsLeft();
+                updateProgressBar();
+                updateAccuracy();
+                
+                // Show feedback
+                showFeedback("Correct!", "correct");
+                
+                // Pulse score animation
+                scoreElement.classList.add("pulse");
+                setTimeout(() => scoreElement.classList.remove("pulse"), 300);
+                
+                // Check if all terms are found
                 if (terms.length === 0) {
-                    clearInterval(timerInterval);
-                    document.getElementById("termInput").disabled = true;
-                    document.getElementById("termInput").placeholder = "You won!";
-                    document.getElementById("termInput").removeEventListener("keypress", handleKeyPress);
+                    endGame(true);
                 }
+            } else {
+                // Incorrect answer
+                showFeedback("Try again!", "incorrect");
+                updateAccuracy();
             }
-            document.getElementById("termInput").value = "";
-            document.getElementById("elementsLeft").textContent = "Number of elements: " + terms.length;
+            
+            termInput.value = "";
         }
 
-        document.getElementById("termInput").addEventListener("keypress", handleKeyPress);
+        // Update terms left display
+        function updateTermsLeft() {
+            termsLeftElement.textContent = terms.length;
+        }
 
-        startTimer();
+        // Update accuracy percentage
+        function updateAccuracy() {
+            const accuracy = Math.round((score / attempts) * 100) || 0;
+            accuracyElement.textContent = `${accuracy}%`;
+            
+            // Color coding for accuracy
+            if (accuracy >= 80) {
+                accuracyElement.style.color = "var(--success)";
+            } else if (accuracy >= 50) {
+                accuracyElement.style.color = "var(--warning)";
+            } else {
+                accuracyElement.style.color = "var(--danger)";
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = ((totalTerms - terms.length) / totalTerms) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Show feedback message
+        function showFeedback(message, type) {
+            feedbackElement.textContent = message;
+            feedbackElement.className = `feedback ${type}`;
+            feedbackElement.style.opacity = 1;
+            
+            setTimeout(() => {
+                feedbackElement.style.opacity = 0;
+            }, 1000);
+        }
+
+        // End game
+        function endGame(victory) {
+            clearInterval(timerInterval);
+            termInput.disabled = true;
+            document.getElementById('hintButton').disabled = true;
+            document.getElementById('hintText').style.display = 'none';
+            termInput.placeholder = victory ? "You won! 🎉" : "Time's up! ⏰";
+            termInput.removeEventListener("keypress", handleKeyPress);
+            
+            if (terms.length > 0) {
+                realAnswerElement.style.display = "block";
+                realAnswerElement.innerHTML = `<strong>Remaining terms:</strong> ${terms.join(", ")}`;
+            }
+            
+            saveScore(score);
+            replayButton.style.display = 'block'; // Show replay button
+        }
+
+        function replayGame() {
+            // Reset game state
+            terms = ["visual agnosia", "feature integration theory", "proceduralization", 
+                    "cognitive load", "working memory", "chunking", "priming", 
+                    "semantic network", "mental model", "heuristic"];
+            score = 0;
+            attempts = 0;
+            timeLeft = 60;
+            hintsRemaining = 5;
+            currentHintTerm = "";
+            gameRunning = true;
+            
+            // Update UI
+            scoreElement.textContent = '0';
+            accuracyElement.textContent = '100%';
+            termsLeftElement.textContent = terms.length;
+            timerElement.textContent = '60';
+            timerElement.style.color = "var(--secondary)";
+            realAnswerElement.style.display = "none";
+            replayButton.style.display = 'none';
+            document.getElementById('hintsLeft').textContent = hintsRemaining;
+            document.getElementById('hintButton').disabled = false;
+            document.getElementById('hintText').style.display = 'none';
+            
+            // Reset input
+            termInput.disabled = false;
+            termInput.placeholder = "Type the term and press Enter...";
+            termInput.value = '';
+            termInput.focus();
+            
+            // Shuffle terms and restart game
+            shuffleArray(terms);
+            totalTerms = terms.length;
+            updateProgressBar();
+            startTimer();
+            termInput.addEventListener("keypress", handleKeyPress);
+        }
+
+        replayButton.addEventListener('click', replayGame);
+
+        // Save score (for potential leaderboard)
+        function saveScore(score) {
+            const scores = JSON.parse(localStorage.getItem('termTimeScores')) || [];
+            scores.push({
+                score: score,
+                date: new Date().toLocaleString(),
+                deck: "Cognitive Science"
+            });
+            localStorage.setItem('termTimeScores', JSON.stringify(scores));
+        }
+
+        // Music control function
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                bgMusic.play();
+                musicControl.innerHTML = '<i class="fas fa-music"></i>';
+            }
+            musicPlaying = !musicPlaying;
+        }
+
+        // Start the game
+        initGame();
     </script>
-    <audio id="bgMusic" autoplay loop>
-        <source src="static/music.mp3" type="audio/mpeg">
-    </audio>
 </body>
 </html>

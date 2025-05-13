@@ -4,87 +4,421 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CogCards - Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary: #f72585;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            min-height: 100vh;
+            color: var(--dark);
         }
+
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 5vh;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             position: relative;
         }
+
+        .containertitle {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 5vh;
+            margin-bottom: 2vh;
+        }
+
         h1 {
-            text-align: center;
-            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
         }
+
+        .subtitle {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .deck-info {
+            background-color: var(--accent);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
         .question {
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 30px 0;
+            color: var(--dark);
+            line-height: 1.4;
         }
-        form {
-            text-align: center;
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
         }
-        input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        input[type="submit"] {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
+
+        .options button {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            background-color: var(--primary);
+            color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
+
+        .options button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
+
+        .options button.correct {
+            background-color: var(--success);
+            transform: scale(1.02);
+        }
+
+        .options button.wrong {
+            background-color: var(--danger);
+        }
+
+        .options button:disabled {
+            opacity: 0.9;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
         .back-btn {
             position: absolute;
-            bottom: -50px; /* Adjust as needed */
+            bottom: -125px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .back-btn:hover {
-            background-color: #0056b3;
+            background-color: var(--primary-dark);
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
-    </style>
-<link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .music-control i {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 150px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .container, .containertitle {
+                width: 90%;
+                padding: 15px;
+            }
+
+            .options button {
+                width: 90%;
+            }
+        }
+
+        /* Animation for correct answers */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.3s;
+        }
+        .replay-btn {
+          position: absolute;
+          bottom: -70px;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 12px 25px;
+          background-color: var(--secondary);
+          color: white;
+          border: none;
+          border-radius: 50px;
+          cursor: pointer;
+          transition: all 0.3s;
+          font-weight: 600;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 10;
+      }
+
+      .replay-btn:hover {
+          background-color: #d3166b;
+          transform: translateX(-50%) translateY(-2px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .end-screen {
+        text-align: center;
+        display: none;
+      }
+
+      .congrats-message {
+        font-size: 24px;
+        color: #4CAF50;
+        margin-bottom: 20px;
+      }
+
+    </style>
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Flashcards Quiz</h1>
-        <p class="question">{{ question }}</p>
-        <form method="post" action="/answer">
-            <input type="text" name="answer" placeholder="Enter your answer">
-            <input type="submit" value="Submit">
-        </form>
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <i class="fas fa-music"></i>
     </div>
-    <button class="back-btn" onclick="location.href='/quiz_settings'">Back to Menu</button>
+
+    <div class="containertitle">
+        <h1>CogCards Quiz</h1>
+        <p class="subtitle">Test your knowledge of cognitive science terms!</p>
+        <div class="deck-info">
+            <i class="fas fa-layer-group"></i> Deck: Cognitive Science
+        </div>
+    </div>
+
+    <div class="container">
+        <p id="question" class="question"></p>
+        <div id="options" class="options"></div>
+        
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">Questions</div>
+                <div class="stat-value" id="progress">0/4</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+        </div>
+        
+        <button class="back-btn" onclick="location.href='/quiz_settings'">
+            <i class="fas fa-arrow-left"></i> Back to Menu
+        </button>
+
+        <button class="replay-btn" id="replayButton" style="display: none;">
+            <i class="fas fa-redo"></i> Play Again
+        </button>
+    </div>
+
     <audio id="bgMusic" autoplay loop>
-        <source src="static/music.mp3" type="audio/mpeg">
+        <source src="/static/music.mp3" type="audio/mpeg">
     </audio>
+    <script>
+        const quizData = [
+            {
+                question: "A condition where an individual can perceive visual stimuli but cannot recognize or interpret them correctly.",
+                correct: "Visual Agnosia",
+                options: ["Visual Agnosia", "Blindsight", "Prosopagnosia", "Neglect"]
+            },
+            {
+                question: "A theory proposing that attention is necessary to bind individual features of an object together to perceive it as a whole.",
+                correct: "Feature Integration Theory",
+                options: ["Gestalt Theory", "Load Theory", "Feature Integration Theory", "Selective Attention Model"]
+            },
+            {
+                question: "The process by which a skill becomes automatic through practice and experience.",
+                correct: "Proceduralization",
+                options: ["Chunking", "Proceduralization", "Automation", "Habituation"]
+            },
+            {
+                question: "A brain structure involved in processing emotions, particularly fear and aggression.",
+                correct: "Amygdala",
+                options: ["Thalamus", "Hippocampus", "Amygdala", "Cerebellum"]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const scoreElement = document.getElementById("score");
+        const progressElement = document.getElementById("progress");
+        const musicControl = document.getElementById("musicControl");
+        const replayButton = document.getElementById('replayButton');
+
+        let musicPlaying = true;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadQuestion() {
+            const current = quizData[currentQuestionIndex];
+            document.getElementById("question").textContent = current.question;
+
+            const shuffledOptions = [...current.options];
+            shuffle(shuffledOptions);
+
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+
+            shuffledOptions.forEach(option => {
+                const btn = document.createElement("button");
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(btn, option, current.correct);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Update progress
+            progressElement.textContent = `${currentQuestionIndex + 1}/${quizData.length}`;
+        }
+
+        function checkAnswer(button, selected, correct) {
+          const buttons = document.querySelectorAll(".options button");
+          buttons.forEach(btn => {
+              btn.disabled = true;
+              if (btn.textContent === correct) {
+                  btn.classList.add("correct");
+              }
+              if (btn.textContent === selected && selected !== correct) {
+                  btn.classList.add("wrong");
+              }
+          });
+
+          if (selected === correct) {
+              score++;
+              scoreElement.textContent = score;
+              scoreElement.classList.add("pulse");
+              setTimeout(() => scoreElement.classList.remove("pulse"), 300);
+          }
+
+          setTimeout(() => {
+              currentQuestionIndex++;
+              if (currentQuestionIndex < quizData.length) {
+                  loadQuestion();
+              } else {
+                  document.getElementById("question").textContent = "Quiz completed! 🎉";
+                  document.getElementById("options").innerHTML = "";
+                  progressElement.textContent = `Score: ${score}/${quizData.length}`;
+                  replayButton.style.display = 'block'; // Show replay button
+              }
+          }, 1200);
+        }
+
+        function replayGame() {
+          // Reset game state
+          currentQuestionIndex = 0;
+          score = 0;
+          
+          // Update UI
+          scoreElement.textContent = '0';
+          replayButton.style.display = 'none';
+          
+          // Shuffle questions and restart quiz
+          quizData.forEach(q => shuffle(q.options));
+          loadQuestion();
+        }
+
+        replayButton.addEventListener('click', replayGame);
+
+        // Music control
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                bgMusic.play();
+                musicControl.innerHTML = '<i class="fas fa-music"></i>';
+            }
+            musicPlaying = !musicPlaying;
+        }
+
+        musicControl.addEventListener("click", toggleMusic);
+        window.onload = loadQuestion;
+
+    </script>
 </body>
 </html>
