@@ -3,87 +3,105 @@
 <head>
     <title>TetriCards</title>
     <style>
+        /* === Base Styling === */
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* === Layout Containers === */
         .game-wrapper {
-            width: 800px;
+            width: 810px;
             margin: 70px auto 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Space between game and input */
+            gap: 20px;
         }
 
         .game-container {
-            width: 800px;
+            width: 810px;
             height: 800px;
             background: #f0f0f0;
-            overflow: hidden;
             position: relative;
-        }
-
-        .user-input-container {
-            width: 100%;
-            text-align: center;
-            margin-top: 20px; /* Ensure space below game */
-        }
-
-        #userInput {
-            width: 300px;
-            padding: 10px;
-            font-size: 16px;
+            overflow: hidden;
+            padding: 5px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            box-shadow: 2px 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .game {
             width: 100%;
             height: 100%;
-            background: #f0f0f0;
             position: relative;
             overflow: hidden;
+            background: #f0f0f0;
             border: none;
-            transform: translateZ(0); /* Hardware acceleration */
-            perspective: 1000px; /* Enable GPU acceleration */
+            transform: translateZ(0);
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
+        /* === Blocks === */
         .block {
-            transition: top 0.1s ease, opacity 0.1s ease, transform 0.1s ease;
             position: absolute;
-            width: 150px;
-            min-height: 80px;
+            width: 140px;
+            height: 80px;
+            /* margin: 5px; */
             padding: 10px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            transition: top 0.1s ease;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-            will-change: transform, opacity; /* Optimize for animations */
-            backface-visibility: hidden; /* Prevent flickering */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+            background: #fff;
+            transition: 
+                top 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 0.3s ease, 
+                opacity 0.3s ease;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
             transform: translateZ(0);
+            box-shadow: 0 0 0 1px rgba(116, 116, 114, 0.7);
+            transform-style: preserve-3d;
         }
 
-        .color1 { background: #A1EAFB; }  /* pastel sky blue */
-        .color2 { background: #FFDAC1; }  /* soft peach */
-        .color3 { background: #C3FBD8; }  /* minty green */
-        .color4 { background: #FBE8A6; }  /* soft pastel yellow-orange */
-        .color5 { background: #FDCBFA; }  /* light orchid pink */
-        .color6 { background: #B5EAD7; }  /* cool mint */
-        .color7 { background: #FFB7CE; }  /* pastel pink */
-        .color8 { background: #B0D0D3; }  /* muted aqua-grey */
-        .color9 { background: #E4C1F9; }  /* lavender pastel */
-        .color10 { background: #C2F9BB; }  /* spring green */
+        .block.falling {
+            z-index: 2;
+        }
 
-        @keyframes disintegrate {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0); opacity: 0; }
+        .block.matching {
+            box-shadow: 0 0 10px 5px rgba(255, 255, 0, 0.7);
+            z-index: 5;
         }
 
         .block-removing {
             animation: disintegrate 0.5s ease forwards;
             transform: scale(0.9);
             opacity: 0.7;
+            pointer-events: none;
         }
 
+        /* === Block Colors === */
+        .color1  { background: #A1EAFB; }
+        .color2  { background: #FFDAC1; }
+        .color3  { background: #C3FBD8; }
+        .color4  { background: #FBE8A6; }
+        .color5  { background: #FDCBFA; }
+        .color6  { background: #B5EAD7; }
+        .color7  { background: #FFB7CE; }
+        .color8  { background: #B0D0D3; }
+        .color9  { background: #E4C1F9; }
+        .color10 { background: #C2F9BB; }
+
+        /* === Input === */
         .user-input-container {
             width: 100%;
             text-align: center;
@@ -91,26 +109,53 @@
         }
 
         #userInput {
-            width: 300px;
-            padding: 10px;
+            width: 350px;
+            padding: 12px 20px;
             font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #userInput:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 2px 10px rgba(110, 142, 251, 0.2);
+        }
+
+        #userInput::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* === Score Display === */
+        #score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 10;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(245, 245, 245, 0.9));
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #333;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
         .score-update {
-            transform: scale(1.2);
-            color: #4CAF50;
-        }
-        
-        .block.falling {
-            transition: top 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transform: scale(1.1);
+            color: #2e7d32;
+            background: linear-gradient(135deg, rgba(200, 255, 200, 0.9), rgba(180, 240, 180, 0.9));
+            animation: pulse-glow 0.5s ease;
         }
 
-        .block.matching {
-            box-shadow: 0 0 10px 5px rgba(255, 255, 0, 0.7);
-            z-index: 5;
-            transition: box-shadow 0.3s ease;
-        }
-        /* Improved Back Button */
+        /* === Buttons === */
         .back-button {
             position: absolute;
             top: 20px;
@@ -140,166 +185,6 @@
             transform: translateY(0);
         }
 
-        /* Improved Score Display */
-        #score {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            z-index: 10;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(245, 245, 245, 0.9));
-            padding: 10px 20px;
-            border-radius: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .score-update {
-            transform: scale(1.1);
-            color: #2e7d32;
-            background: linear-gradient(135deg, rgba(200, 255, 200, 0.9), rgba(180, 240, 180, 0.9));
-            animation: pulse-glow 0.5s ease;
-        }
-
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 5px rgba(46, 125, 50, 0); }
-            50% { box-shadow: 0 0 15px rgba(46, 125, 50, 0.4); }
-            100% { box-shadow: 0 0 5px rgba(46, 125, 50, 0); }
-        }
-
-        /* Improved Game Title */
-        h1 {
-            text-align: center;
-            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
-            color: #3a3a3a;
-            margin-top: 40px;
-            font-size: 2.8em;
-            letter-spacing: -0.5px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(to right, #4b6cb7, #182848);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(75, 108, 183, 0.2);
-        }
-
-        /* Improved Input Field */
-        #userInput {
-            width: 350px;
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 30px;
-            outline: none;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        #userInput:focus {
-            border-color: #6e8efb;
-            box-shadow: 0 2px 10px rgba(110, 142, 251, 0.2);
-        }
-
-        #userInput::placeholder {
-            color: #aaa;
-            font-style: italic;
-        }
-
-        /* Improved Blocks */
-        .block {
-            /* ... existing block styles ... */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 500;
-            font-size: 14px;
-            color: #333;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        /* Game Container Improvements */
-        .game-container {
-            /* ... existing styles ... */
-            border-radius: 10px;
-            box-shadow: 2px 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Body Styling */
-        body {
-            background-color: #f9f9f9;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-
-        /* Add these to your existing CSS */
-        .block {
-            /* ... existing styles ... */
-            transform-style: preserve-3d;
-            transition: 
-                top 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), 
-                transform 0.3s ease, 
-                opacity 0.3s ease;
-        }
-
-        .block.falling {
-            z-index: 2; /* Ensure falling blocks appear above settled ones */
-        }
-
-        .block-removing {
-            animation: disintegrate 0.5s ease forwards;
-            pointer-events: none; /* Prevent interaction during removal */
-        }
-
-        .game {
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        /* Add to your existing CSS */
-        .game-over-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            color: white;
-            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .game-over-text {
-            font-size: 4em;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            color: #ff4d4d;
-        }
-
-        .final-score {
-            font-size: 2em;
-            margin-bottom: 30px;
-        }
-
         .restart-button {
             padding: 12px 30px;
             background: linear-gradient(135deg, #6e8efb, #a777e3);
@@ -321,6 +206,71 @@
         .restart-button:active {
             transform: translateY(0);
         }
+
+        /* === Game Over Overlay === */
+        .game-over-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            color: white;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .game-over-text {
+            font-size: 4em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            color: #ff4d4d;
+        }
+
+        .final-score {
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+
+        /* === Typography === */
+        h1 {
+            text-align: center;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+            font-size: 2.8em;
+            margin-top: 40px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(75, 108, 183, 0.2);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* === Animations === */
+        @keyframes disintegrate {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @keyframes pulse-glow {
+            0%   { box-shadow: 0 0 5px rgba(46, 125, 50, 0); }
+            50%  { box-shadow: 0 0 15px rgba(46, 125, 50, 0.4); }
+            100% { box-shadow: 0 0 5px rgba(46, 125, 50, 0); }
+        }
+
 
     </style>
 </head>
@@ -664,8 +614,10 @@ class Game {
             }
             
             element.dataset.id = block.id;
-            element.style.left = `${block.x * 160}px`;
-            element.style.top = `${block.y * 100}px`;
+            const horizontalGap = 10; // Instead of using margin
+            element.style.left = `${block.x * (140 + horizontalGap)}px`; // = 150px
+            //element.style.left = `${block.x * 150}px`;
+            element.style.top = `${block.y * 95}px`;
             return element;
         });
 
@@ -983,8 +935,10 @@ class Game {
                 }
                 
                 element.dataset.id = block.id;
-                element.style.left = `${block.x * 160}px`;
-                element.style.top = `${block.y * 100}px`;
+                const horizontalGap = 10; // Instead of using margin
+                element.style.left = `${block.x * (150 + horizontalGap)}px`; // = 150px
+                //element.style.left = `${block.x * 150}px`;
+                element.style.top = `${block.y * 97.5}px`;
                 game.appendChild(element);
             });
         }
