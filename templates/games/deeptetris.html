@@ -512,29 +512,34 @@ class Game {
     }
 
     getAvailableDefinitions(excludeAnswers) {
-        // Stage 1: Definitions not in play at all
-        let available = this.definitions.filter(def => 
-            !this.blocks.some(b => b.answer === def.answer) &&
+        // Build a set of answers currently visible in play
+        const answersInPlay = new Set([
+            ...this.blocks.map(b => b.answer),
+            ...this.activeBlocks.map(b => b.answer)
+        ]);
+
+        // Stage 1: Definitions not currently visible and not excluded
+        let available = this.definitions.filter(def =>
+            !answersInPlay.has(def.answer) &&
+            !excludeAnswers.has(def.answer)
+        );
+        if (available.length > 0) return available;
+
+        // Stage 2: Definitions not in falling (active) blocks
+        available = this.definitions.filter(def =>
             !this.activeBlocks.some(b => b.answer === def.answer) &&
             !excludeAnswers.has(def.answer)
         );
         if (available.length > 0) return available;
 
-        // Stage 2: Definitions not in current falling blocks
-        available = this.definitions.filter(def => 
-            !this.activeBlocks.some(b => b.answer === def.answer) &&
-            !excludeAnswers.has(def.answer)
-        );
-        if (available.length > 0) return available;
-
-        // Stage 3: Least used definitions
+        // Stage 3: Fallback to least used definitions
         const usageCount = {};
-        [...this.blocks, ...this.activeBlocks].forEach(b => {
-            usageCount[b.answer] = (usageCount[b.answer] || 0) + 1;
+        this.definitions.forEach(def => {
+            usageCount[def.answer] = this.blocks.filter(b => b.answer === def.answer).length;
         });
-        
-        return [...this.definitions]
-            .filter(d => !excludeAnswers.has(d.answer))
+
+        return this.definitions
+            .filter(def => !excludeAnswers.has(def.answer))
             .sort((a, b) => (usageCount[a.answer] || 0) - (usageCount[b.answer] || 0));
     }
 
