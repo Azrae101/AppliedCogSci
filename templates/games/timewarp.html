@@ -234,6 +234,27 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.22);
         }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 18px;
+            padding: 10px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(67,97,238,0.13);
+            transition: all 0.3s;
+        }
+        .back-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67,97,238,0.18);
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -242,6 +263,7 @@
     <div class="combo-counter" id="comboCounter">Combo: x1</div>
     <div class="container">
         <h1>Endless Cognitive Challenge</h1>
+        
         <div id="definitionDisplay"></div>
         
         <input type="text" id="termInput" placeholder="Type the correct term...">
@@ -271,7 +293,12 @@
         <div class="progress-container">
             <div id="progressBar"></div>
         </div>
+
+        
     </div>
+    <button class="back-btn" onclick="location.href='/timewarp_settings'">
+            <i class="fas fa-arrow-left"></i> Back to Menu
+        </button>
 
     <script>
         const allTerms = [
@@ -334,6 +361,8 @@
             termInput.disabled = false;
             termInput.focus();
             updateComboDisplay();
+            timeLeft = 60; // Ensure timer resets
+            updateProgressBar();
         }
 
         function loadNewDefinition() {
@@ -368,10 +397,16 @@
         function updateTimer() {
             timeLeft = Math.max(0, timeLeft - (0.1 * timeSpeed));
             timerElement.textContent = Math.ceil(timeLeft);
-            
+            updateProgressBar();
+
             if (timeLeft <= 0) {
                 endGame();
             }
+        }
+
+        function updateProgressBar() {
+            const percent = Math.max(0, Math.min(100, (timeLeft / 60) * 100));
+            document.getElementById('progressBar').style.width = percent + "%";
         }
 
         function checkAnswer() {
@@ -542,16 +577,14 @@
             if (!currentDefinition) return;
             definitionDisplay.innerHTML = `<span style="color:var(--danger);font-weight:bold;">Answer: ${currentDefinition.term}</span>`;
             document.getElementById('hintText').style.display = 'none';
-            // Penalize: increase timeSpeed and decrease time
-            timeSpeed = Math.min(3.5, timeSpeed + 0.5);
+            // Penalize: increase timeSpeed (no upper limit) and decrease time
+            timeSpeed = timeSpeed + 0.5;
             timeLeft = Math.max(5, timeLeft - 3);
             speedElement.textContent = `${timeSpeed.toFixed(1)}x`;
-            setTimeout(() => {
-                // Move the skipped term to skippedTerms
-                skippedTerms.push(currentDefinition);
-                currentTerms = currentTerms.filter(t => t.term !== currentDefinition.term);
-                loadNewDefinition();
-            }, 1200);
+            // Move the skipped term to skippedTerms
+            skippedTerms.push(currentDefinition);
+            currentTerms = currentTerms.filter(t => t.term !== currentDefinition.term);
+            loadNewDefinition();
         }
 
         // Event Listeners
@@ -564,4 +597,3 @@
     </script>
 </body>
 </html>
-``` 

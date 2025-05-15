@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Grid Settings</title>
+    {% include "game_settings/game_settings.html" %}
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <!-- Navbar -->
+            {% include "navbar.html" %}
+        </div>
+    </div>
+    <header>
+        <h1 class="title main-title">Memory Grid</h1>
+        <h4 class="title under-title">Match each term to its correct definition!</h4>    
+    </header>
+    <div class="containerlol">
+        <!-- Left Container -->
+        <div class="left-container">
+            <!-- High Scores Container -->
+            <div class="highscores-container">
+                <h2 class="highscores-title">High Scores</h2>
+                <ul class="highscores-list">
+                    <li><span class="player-name">Player 1:</span> <span class="player-score">18</span></li>
+                    <li><span class="player-name">Player 2:</span> <span class="player-score">16</span></li>
+                    <li><span class="player-name">Player 3:</span> <span class="player-score">15</span></li>
+                    <li><span class="player-name">Player 4:</span> <span class="player-score">13</span></li>
+                    <li><span class="player-name">Player 5:</span> <span class="player-score">12</span></li>
+                    <li><span class="player-name">Player 6:</span> <span class="player-score">10</span></li>
+                    <li><span class="player-name">Player 7:</span> <span class="player-score">9</span></li>
+                    <li><span class="player-name">Player 8:</span> <span class="player-score">8</span></li>
+                    <li><span class="player-name">Player 9:</span> <span class="player-score">7</span></li>
+                    <li><span class="player-name">Player 10:</span> <span class="player-score">6</span></li>
+                </ul>            
+            </div>
+        </div>
+
+        <!-- Center Container -->
+        <div class="center-container">
+            <!-- Preview of the game (gif) and "Let's study" button -->
+            <div class="gif-container">
+                <img src="static/memorygrid.gif" width="505" alt="Memory Grid Preview">
+                <button class="buttonlol" onclick="startGame()">Let's Study!</button>
+            </div>
+        </div>
+
+        <!-- Right Container -->
+        <div class="right-container">      
+            <!-- Settings Container -->
+            <div class="settings-container">
+                <h2>Settings</h2>
+                <!-- Study deck -->
+                <h3 class="settings-title">Study Deck</h3>
+                <div class="containernew">
+                    <div class="button-containerdeck">
+                        <div class="deck-box">
+                            Cognitive Science
+                        </div>
+                        <a href="{{ url_for('deck_one') }}" class="button">View deck</a>
+                        <a href="{{ url_for('deck_one') }}" class="button">Edit deck</a>
+                    </div>
+                </div>  
+                <!-- Options menu -->
+                <h3 class="settings-title">Difficulty</h3>
+                <select id="options" name="options" class="options-menu">
+                    <option value="" disabled selected>Select Difficulty</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <p> </p>
+                <!-- Toggle buttons -->
+                <h3 class="settings-title">Modes</h3>
+                <div class="button-containerlol">
+                    <button class="toggle-button" onclick="toggleEndlessMode()">Endless Mode: Off</button>
+                    <button class="toggle-button2" onclick="toggleTimeMode()">Time limit: Off</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Description -->
+    <div class="description-container">
+        <div class="game-description">
+            <h2>Description</h2>
+            <p>Memory Grid is a matching game where you must pair terms with their correct definitions. Test your memory and concentration as you progress through increasingly challenging levels!</p>
+            <p>Perfect for users who want to improve their recall and cognitive flexibility.</p>
+        </div>
+        <div class="game-instructions">
+            <h2>Instructions</h2>
+            <p>Here's how it works:</p>
+            <ul>
+                <li>Click on cards to flip them and reveal their content.</li>
+                <li>Match each term with its correct definition.</li>
+                <li>Matched pairs remain visible but grayed out.</li>
+                <li>Try to complete all matches with as few flips as possible!</li>
+                <li>Advance to higher levels for more challenge.</li>
+            </ul>
+            <p>Tips and advice</p>
+            <ul>
+                <li>Pay attention to card positions and try to remember them.</li>
+                <li>Take your time on harder levels—accuracy is key!</li>
+                <li>Replay to improve your score and memory skills!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script type='text/javascript'>
+        function startGame() {
+            // Redirect to memorygrid.html
+            window.location.href = 'memorygrid';
+        }
+
+        function toggleEndlessMode() {
+            var button = document.querySelector('.toggle-button');
+            if (button.textContent === 'Endless Mode: Off') {
+                button.textContent = 'Endless Mode: On';
+                button.classList.add('on');
+            } else {
+                button.textContent = 'Endless Mode: Off';
+                button.classList.remove('on');
+            }
+        }
+
+        function toggleTimeMode() {
+            var button = document.querySelector('.toggle-button2');
+            if (button.textContent === 'Time limit: Off') {
+                button.textContent = 'Time limit: On';
+                button.classList.add('on');
+            } else {
+                button.textContent = 'Time limit: Off';
+                button.classList.remove('on');
+            }
+        }
+    </script>
+</body>
+</html>

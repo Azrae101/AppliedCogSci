@@ -173,6 +173,10 @@ def flashmatch():
 def timewarp():
     return render_template('games/timewarp.html')
 
+@app.route('/memorygrid')
+def memorygrid():
+    return render_template('games/memorygrid.html')
+
 # Game settings
 @app.route('/cardchase_settings')
 def cardchase_settings():
@@ -201,6 +205,14 @@ def quiz_settings():
 @app.route('/flashmatch_settings')
 def flashmatch_settings():
     return render_template('game_settings/flashmatch_settings.html')
+
+@app.route('/timewarp_settings')
+def timewarp_settings():
+    return render_template('game_settings/timewarp_settings.html')
+
+@app.route('/memorygrid_settings')
+def memorygrid_settings():
+    return render_template('game_settings/memorygrid_settings.html')
 
 # Flashcards viewing
 @app.route('/flashcards')

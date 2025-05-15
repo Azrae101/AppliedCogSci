@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Grid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary: #f72585;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            min-height: 100vh;
+            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto 0 auto;
+            padding: 30px;
+            background: rgba(255,255,255,0.97);
+            border-radius: 20px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.22);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .stats {
+            background: var(--light);
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+        }
+
+        .grid {
+            display: grid;
+            gap: 36px;
+            margin: 32px 0 40px 0;
+            padding: 32px;
+            background: rgba(240,245,255,0.4);
+            border-radius: 16px;
+            justify-content: center;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Fixed min card size */
+        }
+
+        .card {
+            width: 180px;      /* Fixed width */
+            height: 180px;     /* Fixed height */
+            aspect-ratio: unset; /* Remove aspect-ratio so width/height take effect */
+            background: var(--primary);
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(.4,2,.6,1), box-shadow 0.3s, opacity 0.4s;
+            box-shadow: 0 6px 24px rgba(67,97,238,0.18), 0 1.5px 4px rgba(0,0,0,0.10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card.matched .card-front {
+            visibility: hidden;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box; /* Add this */
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            text-align: center;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: background 0.3s;
+            border: 3px solid var(--primary); /* Add this so both sides have the same border */
+        }
+
+        .card-front {
+            background: var(--primary);
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .card-back {
+            background: white;
+            color: var(--dark);
+            transform: rotateY(180deg);
+            font-size: 0.9rem;
+        }
+
+        .matched {
+            opacity: 0.35; /* Lower opacity for matched cards */
+            cursor: not-allowed;
+            box-shadow: 0 0 0 3px var(--success) inset;
+            pointer-events: none; /* Prevent interaction */
+            filter: grayscale(0.7); /* Optional: gray out matched cards */
+            transition: opacity 0.4s, box-shadow 0.4s, filter 0.4s;
+        }
+
+        .level-up {
+            animation: celebrate 1s ease;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .replay-btn {
+            margin-top: 32px;
+            padding: 14px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(67,97,238,0.18);
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .replay-btn:hover, .replay-btn:focus {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            transform: scale(1.06);
+        }
+        .replay-btn i {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <div class="stats">Level: <span id="level">1</span></div>
+            <div class="stats">Flips Left: <span id="flips">10</span></div>
+            <div class="stats">Matches Found: <span id="matches">0</span></div>
+        </div>
+        <div id="grid" class="grid"></div>
+    </div>
+    <button onclick="resetGame()" class="replay-btn">
+        <i class="fas fa-sync-alt"></i>
+        New Game
+    </button>
+    <!-- Back to Menu Button -->
+    <a href="memorygrid_settings" class="replay-btn" style="margin-top:16px; text-decoration:none; justify-content:center;">
+        <i class="fas fa-arrow-left"></i>
+        Back to Menu
+    </a>
+    <script>
+        const terms = [
+            { term: "Visual Agnosia", definition: "Condition where a person can see but cannot recognize visuals" },
+            { term: "Feature Integration Theory", definition: "Suggests that attention is needed to bind features together" },
+            { term: "Proceduralization", definition: "Process where a skill becomes automatic through practice" },
+            { term: "Amygdala", definition: "Brain structure involved in fear and emotions" },
+            { term: "Procedural Memory", definition: "Memory system for skills and procedures" },
+            { term: "Declarative Memory", definition: "Memory system for facts and events" },
+            { term: "Primacy Effect", definition: "Tendency to remember the first items in a list" },
+            { term: "Recency Effect", definition: "Tendency to remember the last items in a list" }
+        ];
+
+        let level = 1;
+        let flipsLeft = 10;
+        let matchesFound = 0;
+        let flippedCards = [];
+        let gameActive = true;
+        let lockBoard = false;
+
+        const maxLevel = terms.length;
+
+        function startGame() {
+            gameActive = true;
+            lockBoard = false;
+            matchesFound = 0;
+            flippedCards = [];
+            if (level > maxLevel) level = maxLevel;
+            flipsLeft = 10 + (level * 2);
+            document.getElementById('level').textContent = level;
+            document.getElementById('flips').textContent = flipsLeft;
+            document.getElementById('matches').textContent = matchesFound;
+            createGrid();
+        }
+
+        function resetGame() {
+            level = 1;
+            startGame();
+        }
+
+        function createGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            flippedCards = [];
+            const pairsNeeded = Math.min(level + 1, maxLevel);
+            const selectedTerms = shuffleArray([...terms]).slice(0, pairsNeeded);
+
+            const cards = [];
+            selectedTerms.forEach(item => {
+                cards.push({
+                    type: 'term',
+                    content: item.term,
+                    pairId: item.term
+                });
+                cards.push({
+                    type: 'definition',
+                    content: item.definition,
+                    pairId: item.term
+                });
+            });
+
+            shuffleArray(cards).forEach(cardData => {
+                grid.appendChild(createCard(cardData));
+            });
+
+            const gridSize = Math.ceil(Math.sqrt(cards.length));
+            grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+        }
+
+        function createCard(cardData) {
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const front = document.createElement('div');
+            front.className = 'card-front';
+            front.textContent = '?';
+
+            const back = document.createElement('div');
+            back.className = 'card-back';
+            back.textContent = cardData.content;
+            back.dataset.pairId = cardData.pairId;
+
+            card.appendChild(front);
+            card.appendChild(back);
+
+            card.addEventListener('click', () => handleCardClick(card, cardData));
+            return card;
+        }
+
+        function handleCardClick(card, cardData) {
+            if (!gameActive || lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+            flipCard(card);
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                lockBoard = true;
+                updateFlips(-1);
+                setTimeout(checkMatch, 1000);
+            }
+        }
+
+        function flipCard(card) {
+            card.classList.add('flipped');
+        }
+
+        function unflipCards() {
+            flippedCards.forEach(card => card.classList.remove('flipped'));
+            flippedCards = [];
+            lockBoard = false;
+        }
+
+        function checkMatch() {
+            if (flippedCards.length !== 2) {
+                lockBoard = false;
+                return;
+            }
+            const [card1, card2] = flippedCards;
+            const pairId1 = card1.querySelector('.card-back').dataset.pairId;
+            const pairId2 = card2.querySelector('.card-back').dataset.pairId;
+
+            const type1 = card1.querySelector('.card-back').textContent;
+            const type2 = card2.querySelector('.card-back').textContent;
+
+            if (pairId1 === pairId2 && card1 !== card2) {
+                handleMatch();
+            } else {
+                setTimeout(unflipCards, 1000);
+            }
+        }
+
+        function handleMatch() {
+            matchesFound++;
+            document.getElementById('matches').textContent = matchesFound;
+            flippedCards.forEach(c => c.classList.add('matched'));
+            flippedCards = [];
+            lockBoard = false;
+            if (matchesFound === Math.min(level + 1, maxLevel)) {
+                setTimeout(levelUp, 800);
+            }
+        }
+
+        function updateFlips(change) {
+            flipsLeft += change;
+            document.getElementById('flips').textContent = flipsLeft;
+            if (flipsLeft <= 0 && gameActive) {
+                gameActive = false;
+                lockBoard = true;
+                setTimeout(() => alert('Game Over! Try again.'), 500);
+            }
+        }
+
+        function levelUp() {
+            if (level < maxLevel) {
+                level++;
+                document.getElementById('level').textContent = level;
+                document.querySelector('.container').classList.add('level-up');
+                setTimeout(() => {
+                    document.querySelector('.container').classList.remove('level-up');
+                    startGame();
+                }, 1500);
+            } else {
+                alert('Congratulations! You completed all levels!');
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        startGame();
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeWarp Settings</title>
+    {% include "game_settings/game_settings.html" %}
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <!-- Navbar -->
+            {% include "navbar.html" %}
+        </div>
+    </div>
+    <header>
+        <h1 class="title main-title">TimeWarp</h1>
+        <h4 class="title under-title">Type the correct term to the definition as fast as you can!</h4>    
+    </header>
+    <div class="containerlol">
+        <!-- Left Container -->
+        <div class="left-container">
+            <!-- High Scores Container -->
+            <div class="highscores-container">
+                <h2 class="highscores-title">High Scores</h2>
+                <ul class="highscores-list">
+                    <li><span class="player-name">Player 2:</span> <span class="player-score">22</span></li>
+                    <li><span class="player-name">Player 5:</span> <span class="player-score">20</span></li>
+                    <li><span class="player-name">Player 1:</span> <span class="player-score">18</span></li>
+                    <li><span class="player-name">Player 3:</span> <span class="player-score">17</span></li>
+                    <li><span class="player-name">Player 4:</span> <span class="player-score">15</span></li>
+                    <li><span class="player-name">Player 6:</span> <span class="player-score">13</span></li>
+                    <li><span class="player-name">Player 7:</span> <span class="player-score">12</span></li>
+                    <li><span class="player-name">Player 8:</span> <span class="player-score">10</span></li>
+                    <li><span class="player-name">Player 9:</span> <span class="player-score">8</span></li>
+                    <li><span class="player-name">Player 10:</span> <span class="player-score">7</span></li>
+                </ul>            
+            </div>
+        </div>
+
+        <!-- Center Container -->
+        <div class="center-container">
+            <!-- Preview of the game (gif) and "Let's study" button -->
+            <div class="gif-container">
+                <img src="static/timewarp.gif" width="505">
+                <button class="buttonlol" onclick="startGame()">Let's Warp!</button>
+            </div>
+        </div>
+
+    <!-- Right Container -->
+    <div class="right-container">      
+        <!-- Settings Container -->
+        <div class="settings-container">
+            <h2>Settings</h2>
+            <!-- Study deck -->
+            <h3 class="settings-title">Study Deck</h3>
+            <div class="containernew">
+                <div class="button-containerdeck">
+                    <div class="deck-box">
+                        Cognitive Science
+                    </div>
+                    <a href="{{ url_for('deck_one') }}" class="button">View deck</a>
+                    <a href="{{ url_for('deck_one') }}" class="button">Edit deck</a>
+                </div>
+            </div>  
+            <!-- Options menu -->
+            <h3 class="settings-title">Difficulty</h3>
+            <select id="options" name="options" class="options-menu">
+                <option value="" disabled selected>Select Difficulty</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <p> </p>
+            <!-- Toggle buttons -->
+            <h3 class="settings-title">Modes</h3>
+            <div class="button-containerlol">
+                <button class="toggle-button" onclick="toggleEndlessMode()">Endless Mode: Off</button>
+                <button class="toggle-button2" onclick="toggleTimeMode()">Time limit: Off</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Game Description -->
+<div class="description-container">
+    <div class="game-description">
+        <h2>Description</h2>
+        <p>TimeWarp is a fast-paced challenge where you must match terms to their definitions as quickly as possible. The game speeds up as you get answers right, testing your recall and reaction time!</p>
+        <p>Perfect for users who want to push their cognitive speed and accuracy to the limit.</p>
+    </div>
+    <div class="game-instructions">
+        <h2>Instructions</h2>
+        <p>Here's how it works:</p>
+        <ul>
+            <li>Type the correct term for each definition shown on the screen.</li>
+            <li>Press "Enter" to submit your answer. If correct, you score points and the game speeds up!</li>
+            <li>Use the "Hint" button if you get stuck, but hints are limited.</li>
+            <li>You can skip a word, but it will come back later and you lose some time.</li>
+            <li>The game ends when time runs out. Try to get the highest score possible!</li>
+        </ul>
+        <p>Tips and advice</p>
+        <ul>
+            <li>Stay focused and type quickly to keep up with the increasing speed.</li>
+            <li>Use hints and skips wisely—they are limited!</li>
+            <li>Practice makes perfect. Replay to improve your score!</li>
+        </ul>
+    </div>
+</div>
+
+    <script type='text/javascript'>
+        function startGame() {
+            // Redirect to timewarp.html
+            window.location.href = 'timewarp';
+        }
+
+        function toggleEndlessMode() {
+            var button = document.querySelector('.toggle-button');
+            if (button.textContent === 'Endless Mode: Off') {
+                button.textContent = 'Endless Mode: On';
+                button.classList.add('on');
+            } else {
+                button.textContent = 'Endless Mode: Off';
+                button.classList.remove('on');
+            }
+        }
+
+        function toggleTimeMode() {
+            var button = document.querySelector('.toggle-button2');
+            if (button.textContent === 'Time limit: Off') {
+                button.textContent = 'Time limit: On';
+                button.classList.add('on');
+            } else {
+                button.textContent = 'Time limit: Off';
+                button.classList.remove('on');
+            }
+        }
+    </script>
+</body>
+</html>
