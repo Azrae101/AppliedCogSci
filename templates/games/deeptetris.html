@@ -649,48 +649,6 @@ class Game {
         this.startNewRound();
     }
 
-    render() {
-        const game = document.getElementById('game');
-        
-        // Create a document fragment for smoother rendering
-        const fragment = document.createDocumentFragment();
-        
-        // Count answer frequencies
-        const answerCounts = {};
-        const allBlocks = [...this.blocks, ...this.activeBlocks];
-        allBlocks.forEach(block => {
-            answerCounts[block.answer] = (answerCounts[block.answer] || 0) + 1;
-        });
-
-        // Create all block elements first
-        const elements = allBlocks.map(block => {
-            const element = document.createElement('div');
-            element.className = `block ${block.colorClass} ${block.isFalling ? 'falling' : ''}`;
-            
-            // Highlight duplicates if absolutely necessary
-            if (answerCounts[block.answer] > 1) {
-                element.classList.add('duplicate-warning');
-                element.textContent = `${block.definition}`;
-            } else {
-                element.textContent = block.definition;
-            }
-            
-            element.dataset.id = block.id;
-            const horizontalGap = 10; // Instead of using margin
-            element.style.left = `${block.x * (140 + horizontalGap)}px`; // = 150px
-            //element.style.left = `${block.x * 150}px`;
-            element.style.top = `${block.y * 95}px`;
-            return element;
-        });
-
-        // Add all elements to fragment
-        elements.forEach(el => fragment.appendChild(el));
-        
-        // Clear and repaint in one operation
-        game.innerHTML = '';
-        game.appendChild(fragment);
-    }
-
     getAvailableColumn() {
         const columns = [0, 1, 2, 3, 4];
         const occupied = new Set(
@@ -1066,39 +1024,39 @@ class Game {
     render() {
         const game = document.getElementById('game');
         
-        // Don't clear if game over overlay is present
-        if (!document.querySelector('.game-over-overlay')) {
-            game.innerHTML = '';
-            
-            // Count answer frequencies
-            const answerCounts = {};
-            const allBlocks = [...this.blocks, ...this.activeBlocks];
-            allBlocks.forEach(block => {
-                answerCounts[block.answer] = (answerCounts[block.answer] || 0) + 1;
-            });
-
-            // Create and append blocks
-            allBlocks.forEach(block => {
-                let element = document.createElement('div');
-                element.className = `block ${block.colorClass} ${block.isFalling ? 'falling' : ''}`;
-                
-                if (answerCounts[block.answer] > 1) {
-                    element.classList.add('duplicate-warning');
-                    element.textContent = `${block.definition}`;
-                } else {
-                    element.textContent = block.definition;
-                }
-                
-                element.dataset.id = block.id;
-                const horizontalGap = 10; // Instead of using margin
-                element.style.left = `${block.x * (150 + horizontalGap)}px`; // = 150px
-                //element.style.left = `${block.x * 150}px`;
-                element.style.top = `${block.y * 97.5}px`;
-                game.appendChild(element);
-            });
+        // Don't clear or re-render if game over overlay is present
+        if (document.querySelector('.game-over-overlay')) {
+            return;
         }
-    }
+        
+        game.innerHTML = '';
+        
+        // Count answer frequencies
+        const answerCounts = {};
+        const allBlocks = [...this.blocks, ...this.activeBlocks];
+        allBlocks.forEach(block => {
+            answerCounts[block.answer] = (answerCounts[block.answer] || 0) + 1;
+        });
 
+        // Create and append blocks
+        allBlocks.forEach(block => {
+            let element = document.createElement('div');
+            element.className = `block ${block.colorClass} ${block.isFalling ? 'falling' : ''}`;
+            
+            if (answerCounts[block.answer] > 1) {
+                element.classList.add('duplicate-warning');
+                element.textContent = `${block.definition}`;
+            } else {
+                element.textContent = block.definition;
+            }
+            
+            element.dataset.id = block.id;
+            const horizontalGap = 10; // Instead of using margin
+            element.style.left = `${block.x * (150 + horizontalGap)}px`; // = 150px
+            element.style.top = `${block.y * 97.5}px`;
+            game.appendChild(element);
+        });
+    }
 
 }
 
