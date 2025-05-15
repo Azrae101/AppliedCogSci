@@ -169,6 +169,10 @@ def definedash():
 def flashmatch():
     return render_template('games/flashmatch.html')
 
+@app.route('/timewarp')
+def timewarp():
+    return render_template('games/timewarp.html')
+
 # Game settings
 @app.route('/cardchase_settings')
 def cardchase_settings():

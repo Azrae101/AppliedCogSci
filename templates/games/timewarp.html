@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeWarp Typing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary: #f72585;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 30px 30px 30px;
+            background: rgba(255,255,255,0.97);
+            border-radius: 20px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.22);
+            margin-top: 5vh;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.08);
+        }
+
+        #definitionDisplay {
+            font-size: 1.35rem;
+            margin: 25px 0 20px 0;
+            min-height: 60px;
+            padding: 18px 20px;
+            background: linear-gradient(90deg, #e3f0fc 60%, #f3e8fd 100%);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(76,201,240,0.08);
+        }
+
+        #termInput {
+            padding: 18px 28px;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            border: 3px solid var(--primary);
+            border-radius: 50px;
+            background-color: var(--light);
+            width: 80%;
+            max-width: 500px;
+            transition: all 0.3s;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(67,97,238,0.08);
+        }
+        #termInput:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(76,201,240,0.18);
+        }
+        #termInput::placeholder {
+            color: #aaa;
+        }
+
+        .hint-container {
+            margin: 18px 0 10px 0;
+        }
+        #hintButton, #skipButton {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-bottom: 8px;
+        }
+        #hintButton {
+            background-color: var(--warning);
+            color: white;
+        }
+        #hintButton:hover {
+            background-color: #e68a00;
+            transform: translateY(-2px);
+        }
+        #hintButton:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #skipButton {
+            background-color: var(--danger);
+            color: white;
+            margin-left: 10px;
+            box-shadow: 0 2px 8px rgba(244,67,54,0.13);
+        }
+        #skipButton:hover {
+            background-color: #b71c1c;
+            transform: translateY(-2px);
+        }
+        #skipButton:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #hintText {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: rgba(76, 201, 240, 0.13);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            text-align: left;
+            line-height: 1.5;
+        }
+        .hints-remaining {
+            font-size: 0.95rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .score-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--success);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(76,201,240,0.08);
+        }
+
+        .combo-counter {
+            position: absolute;
+            top: 65px;
+            left: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: none;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(247,37,133,0.08);
+        }
+
+        .stage-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--warning);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(255,152,0,0.08);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0 10px 0;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 18px 0;
+            min-width: 150px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+        }
+        .stat-label {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        #timer { color: var(--secondary); }
+        #speed { color: var(--primary); }
+        #combo { color: var(--success); }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        #progressBar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 100%;
+            transition: width 0.5s;
+        }
+
+        .replay-btn {
+            margin-top: 25px;
+            padding: 14px 30px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+        }
+        .replay-btn:hover {
+            background-color: #d3166b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.22);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="score-indicator" id="scoreIndicator">Score: 0</div>
+    <div class="combo-counter" id="comboCounter">Combo: x1</div>
+    <div class="container">
+        <h1>Endless Cognitive Challenge</h1>
+        <div id="definitionDisplay"></div>
+        
+        <input type="text" id="termInput" placeholder="Type the correct term...">
+
+        <div class="hint-container">
+            <button id="hintButton">Get Hint</button>
+            <button id="skipButton" style="margin-left:10px;background-color:var(--danger);">Skip</button>
+            <div class="hints-remaining">Hints remaining: <span id="hintsLeft">5</span></div>
+            <div id="hintText"></div>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">Time Left</div>
+                <div class="stat-value" id="timer">60</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Speed</div>
+                <div class="stat-value" id="speed">1.0x</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Combo</div>
+                <div class="stat-value" id="combo">x1</div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div id="progressBar"></div>
+        </div>
+    </div>
+
+    <script>
+        const allTerms = [
+            { term: "Visual Agnosia", definition: "Condition where a person can see but cannot recognize visuals" },
+            { term: "Feature Integration Theory", definition: "Suggests that attention is needed to bind features together" },
+            { term: "Proceduralization", definition: "Process where a skill becomes automatic through practice" },
+            { term: "Amygdala", definition: "Brain structure involved in fear and emotions" },
+            { term: "Procedural Memory", definition: "Memory system for skills and procedures" },
+            { term: "Declarative Memory", definition: "Memory system for facts and events" },
+            { term: "Primacy Effect", definition: "Tendency to remember the first items in a list" },
+            { term: "Recency Effect", definition: "Tendency to remember the last items in a list" },
+            { term: "Schema", definition: "Mental framework for organizing information" },
+            { term: "Heuristics", definition: "Mental shortcuts used for problem solving" },
+            { term: "Anterograde Amnesia", definition: "Inability to form new memories" },
+            { term: "Retrograde Amnesia", definition: "Loss of past memories" },
+            { term: "Hippocampus", definition: "Brain area important for forming new memories" },
+            { term: "Cognitive Map", definition: "Mental representation of physical space" },
+            { term: "Operant Conditioning", definition: "Learning that occurs through consequences" },
+            { term: "Classical Conditioning", definition: "Learning through association between stimuli" },
+            { term: "Habituation", definition: "Decreased response to a repeated stimulus" },
+            { term: "Cognition", definition: "The mental processes involved in thinking and knowing" },
+            { term: "Concepts", definition: "Mental categories used to group similar objects or ideas" },
+            { term: "Algorithm", definition: "A simple, step-by-step strategy for problem solving" }
+        ];
+
+        let currentTerms = [];
+        let skippedTerms = [];
+        let currentDefinition = null;
+        let timeLeft = 60;
+        let timeSpeed = 1.0;
+        let timerInterval;
+        let score = 0;
+        let combo = 1;
+        let comboTimeout;
+        let hintsRemaining = 5; // Start with 5 hints
+        let currentHintTerm = null;
+
+        // Add a dictionary for hints (term: definition)
+        const termDefinitions = {};
+        allTerms.forEach(t => {
+            termDefinitions[t.term.toLowerCase()] = t.definition;
+        });
+
+        // DOM Elements
+        const definitionDisplay = document.getElementById('definitionDisplay');
+        const termInput = document.getElementById('termInput');
+        const timerElement = document.getElementById('timer');
+        const speedElement = document.getElementById('speed');
+        const scoreIndicator = document.getElementById('scoreIndicator');
+        const comboElement = document.getElementById('combo');
+        const comboCounter = document.getElementById('comboCounter');
+
+        document.getElementById('hintsLeft').textContent = hintsRemaining; // Set initial hint count
+
+        function initGame() {
+            currentTerms = shuffleArray([...allTerms]);
+            skippedTerms = [];
+            loadNewDefinition();
+            startTimer();
+            termInput.disabled = false;
+            termInput.focus();
+            updateComboDisplay();
+        }
+
+        function loadNewDefinition() {
+            if (currentTerms.length === 0) {
+                if (skippedTerms.length > 0) {
+                    // Replay skipped terms
+                    currentTerms = shuffleArray([...skippedTerms]);
+                    skippedTerms = [];
+                    showFeedback("Retrying skipped terms!", "warning");
+                } else {
+                    // No more terms left, end game
+                    endGame();
+                    return;
+                }
+            }
+            const randomIndex = Math.floor(Math.random() * currentTerms.length);
+            currentDefinition = currentTerms[randomIndex];
+            definitionDisplay.textContent = currentDefinition.definition;
+            document.getElementById('hintText').style.display = 'none';
+            // Enable hint button for new definition if hints remain
+            if (hintsRemaining > 0) {
+                document.getElementById('hintButton').disabled = false;
+            }
+            // Track if hint was used for this definition
+            currentHintTerm = currentDefinition.term;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(updateTimer, 100);
+        }
+
+        function updateTimer() {
+            timeLeft = Math.max(0, timeLeft - (0.1 * timeSpeed));
+            timerElement.textContent = Math.ceil(timeLeft);
+            
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = termInput.value.trim().toLowerCase();
+            const correctTerm = currentDefinition.term.toLowerCase();
+            
+            if (userAnswer === correctTerm) {
+                handleCorrectAnswer();
+            } else {
+                handleIncorrectAnswer(); // <-- Penalize on wrong answer
+                showFeedback("Incorrect! Try again or use Skip.", "danger");
+            }
+
+            termInput.value = "";
+            speedElement.textContent = `${timeSpeed.toFixed(1)}x`;
+        }
+
+        function handleCorrectAnswer() {
+            // Update game state
+            score += combo;
+            timeSpeed = Math.max(0.4, timeSpeed - (0.1 * combo));
+            combo++;
+            timeLeft += (1 * combo); // Time bonus based on combo
+            
+            // Remove used term
+            currentTerms = currentTerms.filter(t => t.term !== currentDefinition.term);
+            
+            // Update displays
+            scoreIndicator.textContent = `Score: ${score}`;
+            showFeedback(`+${combo} Combo!`, "correct");
+            updateComboDisplay();
+            
+            // Load new definition
+            loadNewDefinition();
+        }
+
+        function handleIncorrectAnswer() {
+            combo = 1;
+            timeSpeed = timeSpeed + 0.5; // No upper limit
+            timeLeft = Math.max(5, timeLeft - 3);
+            speedElement.textContent = `${timeSpeed.toFixed(1)}x`;
+            showFeedback("Combo broken!", "danger");
+            updateComboDisplay();
+        }
+
+        function updateComboDisplay() {
+            comboElement.textContent = `x${combo}`;
+            comboCounter.textContent = `Combo: x${combo}`;
+            comboCounter.style.display = combo > 1 ? "block" : "none";
+            
+            // Reset combo after 5 seconds
+            clearTimeout(comboTimeout);
+            if (combo > 1) {
+                comboTimeout = setTimeout(() => {
+                    combo = 1;
+                    updateComboDisplay();
+                    showFeedback("Combo expired!", "warning");
+                }, 5000);
+            }
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            termInput.disabled = true;
+            // Disable hint and skip buttons
+            document.getElementById('hintButton').disabled = true;
+            document.getElementById('skipButton').disabled = true;
+
+            // Check if there were any skipped terms (if so, user didn't answer all correctly)
+            const allAnswered = skippedTerms.length === 0 && currentTerms.length === 0;
+
+            definitionDisplay.innerHTML = `
+                <h3 style="color:var(--primary);font-size:1.7rem;margin-bottom:0.7rem;">
+                    ${allAnswered ? "Congratulations! You answered all questions" : "Game Over!"}
+                </h3>
+                <div style="
+                    display:inline-block;
+                    background:var(--primary);
+                    color:white;
+                    font-size:1.3rem;
+                    font-weight:600;
+                    padding:10px 28px;
+                    border-radius: 12px;
+                    margin-bottom: 1.2rem;
+                    box-shadow:0 2px 8px rgba(67,97,238,0.10);
+                    ">
+                    Final Score: <span style="font-size:1.6rem;">${score}</span>
+                </div>
+                <br>
+                <button onclick="location.reload()" class="replay-btn" style="margin-top:18px;">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+            `;
+        }
+
+        function showFeedback(message, type) {
+            // Simple feedback popup near the input
+            let feedback = document.createElement('div');
+            feedback.textContent = message;
+            feedback.style.position = 'fixed';
+            feedback.style.bottom = '30px';
+            feedback.style.left = '50%';
+            feedback.style.transform = 'translateX(-50%)';
+            feedback.style.padding = '12px 24px';
+            feedback.style.borderRadius = '20px';
+            feedback.style.fontWeight = '600';
+            feedback.style.zIndex = 1000;
+            feedback.style.fontSize = '1.1rem';
+            feedback.style.background = (
+                type === "success" ? "var(--success)" :
+                type === "correct" ? "var(--success)" :
+                type === "danger" ? "var(--danger)" :
+                type === "warning" ? "var(--warning)" :
+                "var(--primary)"
+            );
+            feedback.style.color = 'white';
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 1500);
+        }
+
+        function shuffleArray(array) {
+            // Fisher-Yates shuffle
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Hints logic
+        document.getElementById('hintButton').addEventListener('click', showHint);
+
+        function showHint() {
+            if (hintsRemaining <= 0 || !currentDefinition) return;
+            // Only allow one hint per definition
+            document.getElementById('hintButton').disabled = true;
+
+            const answer = currentDefinition.term;
+            // Improved: Show first and last letter of each word, underscores for the rest
+            let hint = answer
+                .split(' ')
+                .map(word => {
+                    if (word.length === 1) return word; // single letter word
+                    let chars = word.split('');
+                    return chars.map((ch, idx) => {
+                        if (idx === 0 || idx === word.length - 1) return ch;
+                        else return '_';
+                    }).join('');
+                })
+                .join(' ');
+
+            // Add spaces between letters for clarity
+            hint = hint.split('').join(' ');
+
+            document.getElementById('hintText').textContent = `Hint: ${hint}`;
+            document.getElementById('hintText').style.display = 'block';
+            hintsRemaining--;
+            document.getElementById('hintsLeft').textContent = hintsRemaining;
+            if (hintsRemaining <= 0) {
+                document.getElementById('hintButton').disabled = true;
+            }
+        }
+
+        // Skip logic
+        document.getElementById('skipButton').addEventListener('click', skipWord);
+
+        function skipWord() {
+            if (!currentDefinition) return;
+            definitionDisplay.innerHTML = `<span style="color:var(--danger);font-weight:bold;">Answer: ${currentDefinition.term}</span>`;
+            document.getElementById('hintText').style.display = 'none';
+            // Penalize: increase timeSpeed and decrease time
+            timeSpeed = Math.min(3.5, timeSpeed + 0.5);
+            timeLeft = Math.max(5, timeLeft - 3);
+            speedElement.textContent = `${timeSpeed.toFixed(1)}x`;
+            setTimeout(() => {
+                // Move the skipped term to skippedTerms
+                skippedTerms.push(currentDefinition);
+                currentTerms = currentTerms.filter(t => t.term !== currentDefinition.term);
+                loadNewDefinition();
+            }, 1200);
+        }
+
+        // Event Listeners
+        termInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkAnswer();
+        });
+
+        // Initialize game
+        initGame();
+    </script>
+</body>
+</html>
+``` 

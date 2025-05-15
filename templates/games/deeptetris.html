@@ -375,6 +375,10 @@ class Game {
     }
 
     async initGame() {
+        // Remove any lingering game over overlay before starting the game
+        const existingOverlay = document.querySelector('.game-over-overlay');
+        if (existingOverlay) existingOverlay.remove();
+
         await this.loadDefinitions();
         this.startNewRound();
     }
@@ -475,6 +479,11 @@ class Game {
             this.gameOver = true;
             this.showGameOver(); // Show the game over screen immediately
             return;
+        }
+
+        const existingOverlay = document.querySelector('.game-over-overlay');
+        if (existingOverlay) {
+            existingOverlay.remove();
         }
 
         this.prepareNewRound();
@@ -624,30 +633,9 @@ class Game {
     }
 
     restartGame() {
-        // Remove game over overlay
-        const overlay = document.querySelector('.game-over-overlay');
-        if (overlay) overlay.remove();
-        
-        // Reset game state
-        this.blocks = [];
-        this.activeBlocks = [];
-        this.score = 0;
-        document.getElementById('score-value').textContent = '0';
-        this.gameOver = false;
-        this.firstRound = true;
-        this.isAnimating = false;
-        
-        // Reset definition usage counts
-        this.definitionUsage.clear();
-        this.definitions.forEach(def => {
-            this.definitionUsage.set(def.answer, 0);
-        });
-        
-        // Enable input and start new game
-        document.getElementById('userInput').disabled = false;
-        document.getElementById('userInput').focus();
-        this.startNewRound();
+        window.location.reload();
     }
+        
 
     getAvailableColumn() {
         const columns = [0, 1, 2, 3, 4];
@@ -1023,14 +1011,12 @@ class Game {
     
     render() {
         const game = document.getElementById('game');
-        
-        // Don't clear or re-render if game over overlay is present
+        // If game over overlay is present, don't re-render blocks
         if (document.querySelector('.game-over-overlay')) {
             return;
         }
-        
         game.innerHTML = '';
-        
+
         // Count answer frequencies
         const answerCounts = {};
         const allBlocks = [...this.blocks, ...this.activeBlocks];
@@ -1056,8 +1042,9 @@ class Game {
             element.style.top = `${block.y * 97.5}px`;
             game.appendChild(element);
         });
-    }
 
+    }
+    
 }
 
 new Game();
