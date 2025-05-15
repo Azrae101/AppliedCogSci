@@ -214,7 +214,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -231,6 +231,38 @@
             margin-bottom: 20px;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             color: #ff4d4d;
+        }
+
+        .final-score {
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+
+        .restart-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .restart-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #5d7de8, #9666d8);
+        }
+
+        .restart-button:active {
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
         }
 
         .final-score {
@@ -326,10 +358,15 @@ class Game {
         this.activeBlocks = [];
         this.score = 0;
         this.gameOver = false;
-        this.definitions = []; // Initialize empty array
+        this.definitions = []; 
+
+        this.definitionUsage = new Map();
         
         this.setupEventListeners();
         this.initGame();
+
+        this.grid = Array.from({length: 10}, () => Array(5).fill(false)); // 10 rows, 5 columns
+        this.cellSize = { width: 160, height: 100 }; // Match your block dimensions
 
         this.definitionUsage = new Map(); 
         this.definitions.forEach(def => {
@@ -381,6 +418,11 @@ class Game {
             {"definition": "Mental categories for grouping things", "answer": "Concepts"},
             {"definition": "Simple thinking strategy for problem solving", "answer": "Algorithm"}
         ];
+
+        // Initialize usage counts
+        this.definitions.forEach(def => {
+            this.definitionUsage.set(def.answer, 0);
+        });
     }
 
     setupEventListeners() {
@@ -427,11 +469,11 @@ class Game {
         // Clear any stuck blocks at the top
         this.clearStuckBlocks();
 
-        // Check spawn availability
+        // Check spawn availability BEFORE spawning any new blocks
         const canSpawn = this.checkSpawnAvailability();
         if (!canSpawn) {
             this.gameOver = true;
-            setTimeout(() => this.showGameOver(), 500);
+            this.showGameOver(); // Show the game over screen immediately
             return;
         }
 
@@ -449,7 +491,7 @@ class Game {
             this.processFall();
         }
     }
-
+    
     // Helper Methods for startNewRound:
 
     clearStuckBlocks() {
@@ -498,8 +540,16 @@ class Game {
         const candidates = this.getAvailableDefinitions(excludeAnswers);
         
         if (candidates.length === 0) {
-            console.warn("No available definitions - using fallback");
-            return { success: false };
+            // Fallback: use least used definition (even if duplicate)
+            const leastUsed = [...this.definitionUsage.entries()]
+                .sort((a, b) => a[1] - b[1])[0];
+            const def = this.definitions.find(d => d.answer === leastUsed[0]);
+            
+            const newBlock = new Block(def.definition, def.answer);
+            newBlock.x = x;
+            this.activeBlocks.push(newBlock);
+            this.definitionUsage.set(def.answer, leastUsed[1] + 1);
+            return { success: true, block: newBlock };
         }
 
         const def = candidates[Math.floor(Math.random() * candidates.length)];
@@ -512,35 +562,32 @@ class Game {
     }
 
     getAvailableDefinitions(excludeAnswers) {
-        // Build a set of answers currently visible in play
+        // Get all answers currently in play (both settled and falling)
         const answersInPlay = new Set([
             ...this.blocks.map(b => b.answer),
             ...this.activeBlocks.map(b => b.answer)
         ]);
 
-        // Stage 1: Definitions not currently visible and not excluded
+        // Stage 1: Definitions not currently in play and not excluded
         let available = this.definitions.filter(def =>
             !answersInPlay.has(def.answer) &&
             !excludeAnswers.has(def.answer)
         );
+        
         if (available.length > 0) return available;
 
-        // Stage 2: Definitions not in falling (active) blocks
-        available = this.definitions.filter(def =>
-            !this.activeBlocks.some(b => b.answer === def.answer) &&
-            !excludeAnswers.has(def.answer)
-        );
-        if (available.length > 0) return available;
-
-        // Stage 3: Fallback to least used definitions
+        // Stage 2: Definitions that have been used the least overall
         const usageCount = {};
         this.definitions.forEach(def => {
-            usageCount[def.answer] = this.blocks.filter(b => b.answer === def.answer).length;
+            usageCount[def.answer] = this.definitionUsage.get(def.answer) || 0;
         });
 
-        return this.definitions
+        // Filter out excluded answers and sort by usage count
+        available = this.definitions
             .filter(def => !excludeAnswers.has(def.answer))
             .sort((a, b) => (usageCount[a.answer] || 0) - (usageCount[b.answer] || 0));
+        
+        return available;
     }
 
     showGameOver() {
@@ -571,6 +618,9 @@ class Game {
         overlay.appendChild(finalScore);
         overlay.appendChild(restartButton);
         game.appendChild(overlay);
+        
+        // Disable input
+        document.getElementById('userInput').disabled = true;
     }
 
     restartGame() {
@@ -587,8 +637,15 @@ class Game {
         this.firstRound = true;
         this.isAnimating = false;
         
-        // Start new game
-        this.setInputStatus(false);
+        // Reset definition usage counts
+        this.definitionUsage.clear();
+        this.definitions.forEach(def => {
+            this.definitionUsage.set(def.answer, 0);
+        });
+        
+        // Enable input and start new game
+        document.getElementById('userInput').disabled = false;
+        document.getElementById('userInput').focus();
         this.startNewRound();
     }
 
@@ -716,13 +773,11 @@ class Game {
     handleAnswer(answer) {
         if (this.isAnimating || !answer) return;
         
-        // Find ALL blocks that match the answer (not just one)
         const matchingBlocks = this.blocks.filter(
             b => b.answer.toLowerCase().trim() === answer.toLowerCase().trim()
         );
 
         if (matchingBlocks.length > 0) {
-            // Combine all connected blocks from all matching blocks
             let removedBlocks = new Set();
             matchingBlocks.forEach(block => {
                 const connected = this.findConnectedBlocks(block);
@@ -738,19 +793,27 @@ class Game {
                 
                 // Update score
                 this.score += removedBlocks.length * 100;
-                const scoreElement = document.getElementById('score');
-                const scoreValueElement = document.getElementById('score-value');
-                scoreElement.textContent = `Score: ${this.score}`;
-                scoreValueElement.textContent = this.score;
-                scoreElement.classList.add('score-update');
-                setTimeout(() => scoreElement.classList.remove('score-update'), 300);
+                document.getElementById('score-value').textContent = this.score;
+                document.getElementById('score').classList.add('score-update');
+                setTimeout(() => document.getElementById('score').classList.remove('score-update'), 300);
                 
                 // Apply gravity to remaining blocks
                 this.applyGravity();
+                
             });
         } else {
             this.startNewRound();
         }
+    }
+
+    checkGameOverCondition() {
+        // Game is over if no spawn positions are available
+        const availableColumns = [0,1,2,3,4].filter(x => 
+            !this.blocks.some(b => b.y === 0 && b.x === x)
+        );
+        
+        // Need at least 2 available columns to spawn new blocks
+        return availableColumns.length < 2;
     }
 
     // Add this new method:
@@ -806,55 +869,135 @@ class Game {
     }
 
     applyGravity() {
-        // Create a grid to track all current block positions
-        const positionGrid = Array(5).fill().map(() => Array(10).fill(false));
-        
-        // Mark all settled blocks
-        this.blocks.forEach(b => {
-            positionGrid[b.x][b.y] = true;
-        });
+        const processGravity = () => {
+            let anyBlockFell = false;
+            // For each column
+            for (let x = 0; x < 5; x++) {
+                // Get all blocks in this column, sorted from bottom to top
+                const columnBlocks = this.blocks
+                    .filter(b => b.x === x)
+                    .sort((a, b) => a.y - b.y);
 
-        // Find all blocks that need to fall
-        const fallingBlocks = [];
-        const columns = new Set(this.blocks.map(b => b.x));
-        
-        columns.forEach(x => {
-            // Get blocks in this column sorted from bottom to top
-            const columnBlocks = this.blocks.filter(b => b.x === x)
-                                .sort((a, b) => b.y - a.y); // Sort descending
-            
-            // Track the lowest available position
-            let lowestAvailableY = 7; // Bottom of the game area
-            
-            columnBlocks.forEach(block => {
-                if (block.y < lowestAvailableY) {
-                    // Block is above where it should be - needs to fall
-                    const targetY = lowestAvailableY;
-                    
-                    // Find the first empty position below the block
-                    for (let y = block.y + 1; y <= lowestAvailableY; y++) {
-                        if (!positionGrid[x][y]) {
-                            block.targetY = y;
-                            fallingBlocks.push(block);
-                            positionGrid[x][block.y] = false; // Clear old position
-                            positionGrid[x][y] = true; // Mark new position
-                            break;
-                        }
+                for (let i = 0; i < columnBlocks.length; i++) {
+                    const block = columnBlocks[i];
+                    let targetY = block.y;
+                    // Move down as far as possible
+                    while (
+                        targetY + 1 < 8 &&
+                        !this.blocks.some(b => b.x === x && b.y === targetY + 1)
+                    ) {
+                        targetY++;
+                    }
+                    if (targetY !== block.y) {
+                        block.y = targetY;
+                        anyBlockFell = true;
                     }
                 }
-                
-                // Update lowest available position (current block's position - 1)
-                lowestAvailableY = block.y - 1;
-            });
-        });
+            }
+            this.render();
 
-        // If we have blocks to fall, animate them
-        if (fallingBlocks.length > 0) {
-            this.animateFallingBlocks(fallingBlocks);
-        } else {
-            // No blocks need to fall - start new round immediately
-            this.startNewRound();
+            if (anyBlockFell) {
+                // If any block moved, repeat after a short delay for animation
+                setTimeout(processGravity, 120);
+            } else {
+                // All blocks settled, continue game
+                setTimeout(() => {
+                    if (this.checkGameOverCondition()) {
+                        this.gameOver = true;
+                        this.showGameOver();
+                    } else {
+                        this.isAnimating = false;
+                        this.setInputStatus(false);
+                        this.startNewRound();
+                    }
+                }, 100);
+            }
+        };
+
+        // Start gravity processing
+        processGravity();
+    }
+
+    // Modify handleBlockRemoval method
+    async handleBlockRemoval(removedBlocks) {
+    // 1. Clear removed blocks from grid
+    removedBlocks.forEach(b => {
+        const gridPos = this.getGridPosition(b);
+        this.grid[gridPos.row][gridPos.col] = false;
+    });
+
+    // 2. Process each column bottom-to-top
+    for (let col = 0; col < 5; col++) {
+        let writeRow = 9; // Start at bottom row
+        for (let readRow = 9; readRow >= 0; readRow--) {
+        if (this.grid[readRow][col]) {
+            // Move block down if needed
+            if (writeRow !== readRow) {
+            const block = this.blocks.find(b => 
+                this.getGridPosition(b).row === readRow && 
+                this.getGridPosition(b).col === col
+            );
+            
+            this.grid[writeRow][col] = true;
+            this.grid[readRow][col] = false;
+            
+            // Animate block to new position
+            await this.animateBlockFall(block, writeRow);
+            }
+            writeRow--;
         }
+        }
+    }
+
+    // 3. Spawn new blocks
+    this.startNewRound();
+    }
+
+    // Add helper method to get grid position
+    getGridPosition(block) {
+    return {
+        col: Math.floor(block.x / this.cellSize.width),
+        row: Math.floor(block.y / this.cellSize.height)
+    };
+    }
+
+    // Add animation method
+    async animateBlockFall(block, targetRow) {
+    return new Promise(resolve => {
+        const targetY = targetRow * this.cellSize.height;
+        block.element.style.transition = 'top 0.3s ease';
+        block.element.style.top = `${targetY}px`;
+        
+        block.y = targetY;
+        setTimeout(resolve, 300);
+    });
+    }
+
+    async animateFallingBlocks(fallingBlocks) {
+        return new Promise(resolve => {
+            const animate = () => {
+                let allLanded = true;
+                
+                fallingBlocks.forEach(block => {
+                    if (block.y < block.targetY) {
+                        if (!this.checkCollisionAt(block.x, block.y + 1)) {
+                            block.y++;
+                            allLanded = false;
+                        }
+                    }
+                });
+                
+                this.render();
+
+                if (!allLanded) {
+                    requestAnimationFrame(animate);
+                } else {
+                    resolve();
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        });
     }
 
     checkSpawnBlocked() {
@@ -871,18 +1014,20 @@ class Game {
         const fallInterval = setInterval(() => {
             let allLanded = true;
             
-            // First mark all blocks that will land
             fallingBlocks.forEach(block => {
                 if (block.y >= block.targetY || this.checkCollisionAt(block.x, block.y + 1)) {
-                    block.targetY = block.y; // Mark as landed
+                    block.targetY = block.y;
                 }
             });
             
-            // Then move blocks that can fall
             fallingBlocks.forEach(block => {
-                if (block.y < block.targetY && !this.checkCollisionAt(block.x, block.y + 1)) {
-                    block.y++;
-                    allLanded = false;
+                if (block.y < block.targetY) {
+                    if (!this.checkCollisionAt(block.x, block.y + 1)) {
+                        block.y++;
+                        allLanded = false;
+                    } else {
+                        block.targetY = block.y;
+                    }
                 }
             });
             
@@ -890,12 +1035,17 @@ class Game {
             
             if (allLanded) {
                 clearInterval(fallInterval);
-                this.isAnimating = false;
-                this.setInputStatus(false);
+                fallingBlocks.forEach(block => delete block.targetY);
                 
-                // Check if we need to apply gravity again
                 setTimeout(() => {
-                    this.applyGravity();
+                    if (this.checkGameOverCondition()) {
+                        this.gameOver = true;
+                        this.showGameOver();
+                    } else {
+                        this.isAnimating = false;
+                        this.setInputStatus(false);
+                        this.startNewRound();
+                    }
                 }, 100);
             }
         }, 100);
@@ -912,7 +1062,7 @@ class Game {
             !this.activeBlocks.includes(b)
         );
     }
-
+    
     render() {
         const game = document.getElementById('game');
         
