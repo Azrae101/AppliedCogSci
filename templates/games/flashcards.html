@@ -303,6 +303,11 @@
     }
 
     function showEndScreen() {
+      if (settings.endless) {
+        // Restart the game automatically
+        resetGame();
+        return;
+      }
       card.style.display = 'none';
       responseButtons.style.display = 'none';
       progressBar.style.display = 'none';
@@ -339,6 +344,21 @@
     function goToMenu() {
       location.href = "flashcards_settings"; 
     }
+
+    // --- SETTINGS INTEGRATION ---
+    function getSettingsFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        endless: params.has('endless'),
+        timelimit: params.has('timelimit')
+      };
+    }
+    const settings = getSettingsFromURL();
+
+    // Example: Use settings to adjust game
+    // You can use settings.endless and settings.timelimit in your logic
+    // For demonstration, let's log them:
+    console.log('Settings:', settings);
 
     updateCard();
   </script>

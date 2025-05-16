@@ -5,6 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcards</title>
     {% include "game_settings/game_settings.html" %}
+    <style>
+    /* Settings Container Styling */
+    .settings-container {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+        padding: 32px 28px;
+        margin: 24px 0;
+        min-width: 270px;
+        max-width: 340px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .settings-title {
+        margin-top: 18px;
+        margin-bottom: 8px;
+        font-size: 1.15em;
+        color: #2196F3;
+        font-weight: 600;
+    }
+
+    .deck-box {
+        background: #e3f2fd;
+        border-radius: 8px;
+        padding: 12px 18px;
+        margin-bottom: 10px;
+        font-weight: 500;
+        color: #1565c0;
+        box-shadow: 0 2px 8px rgba(33,150,243,0.07);
+    }
+
+    .button-containerdeck .button {
+        margin-right: 8px;
+        margin-bottom: 6px;
+        background: #2196F3;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 7px 16px;
+        font-size: 0.98em;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .button-containerdeck .button:hover {
+        background: #1565c0;
+    }
+
+    .options-menu {
+        width: 100%;
+        padding: 7px 10px;
+        border-radius: 6px;
+        border: 1px solid #bdbdbd;
+        font-size: 1em;
+        background: #f5f5f5;
+        margin-bottom: 10px;
+    }
+
+    .button-containerlol {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .toggle-button, .toggle-button2 {
+        background: #e0e0e0;
+        color: #333;
+        border: none;
+        border-radius: 6px;
+        padding: 7px 18px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .toggle-button.on, .toggle-button2.on {
+        background: #4CAF50;
+        color: #fff;
+    }
+    .toggle-button:hover, .toggle-button2:hover {
+        background: #bdbdbd;
+    }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -47,73 +130,35 @@
             </div>
         </div>
 
-    <!-- Right Container -->
-    <div class="right-container">      
-        <!-- Settings Container -->
-        <div class="settings-container">
-            <h2>Settings</h2>
-            <!-- Study deck -->
-            <h3 class="settings-title">Study Deck</h3>
-            <div class="containernew">
-                <div class="button-containerdeck">
-                    <div class="deck-box">
-                        Cognitive Science
-                    </div>
-                    <a href="{{ url_for('deck_one') }}" class="button">View deck</a>
-                    <a href="{{ url_for('deck_one') }}" class="button">Edit deck</a>
-                </div>
-            </div>  
-            <!-- Options menu -->
-            <h3 class="settings-title">Difficulty</h3>
-            <select id="options" name="options" class="options-menu">
-                <option value="" disabled selected>Select Difficulty</option>
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-            </select>
-            <p> </p>
-            <!-- Toggle buttons -->
-            <h3 class="settings-title">Modes</h3>
-            <div class="button-containerlol">
-                <button class="toggle-button" onclick="toggleEndlessMode()">Endless Mode: Off</button>
-                <button class="toggle-button2" onclick="toggleTimeMode()">Time limit: Off</button>
+        <!-- Right Container -->
+        <div class="right-container">
+            <!-- Move instructions here -->
+            <div class="game-instructions" style="margin-top: 0;">
+                <h2>Instructions</h2>
+                <p>Here's how it works:</p>
+                <ul>
+                    <li>View the Flashcard: The term to be defined is displayed on the front of the flashcard. Take a moment to read it carefully.</li>
+                    <li>Flip the Card: Press the "Flip" button to reveal the answer to the term. See if your memory serves you well!</li>
+                    <li>Navigate Through Cards: Use the "Previous" and "Next" buttons to move between flashcards. Test your knowledge on a variety of terms.</li>
+                </ul>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Game Description -->
-<div class="description-container">
-    <div class="game-description">
-        <h2>Description</h2>
-        <p>Welcome to CogCards - Flashcards!</p>
-        <p>Prepare to sharpen your memory and knowledge with our interactive flashcard game.</p>
-        <p>Test yourself with a variety of terms and see how well you can recall their meanings.</p>
-        <p>The classic flashcard mode allows users to flip through virtual flashcards at their own pace, reviewing both term and definition to reinforce learning through repetition. Users can easily navigate between cards, marking their progress and focusing on areas that require more practice. This mode is particularly effective for consolidating information and improving memory retention.</p>
+    <!-- Game Description -->
+    <div class="description-container" style="max-width: 1100px; margin: 32px auto 0 auto;">
+        <div class="game-description">
+            <h2>Description</h2>
+            <p>Welcome to CogCards - Flashcards!</p>
+            <p>Prepare to sharpen your memory and knowledge with our interactive flashcard game.</p>
+            <p>Test yourself with a variety of terms and see how well you can recall their meanings.</p>
+            <p>The classic flashcard mode allows users to flip through virtual flashcards at their own pace, reviewing both term and definition to reinforce learning through repetition. Users can easily navigate between cards, marking their progress and focusing on areas that require more practice. This mode is particularly effective for consolidating information and improving memory retention.</p>
+        </div>
     </div>
-    <div class="game-instructions">
-        <h2>Instructions</h2>
-        <p>Here's how it works:</p>
-        <ul>
-            <li>View the Flashcard: The term to be defined is displayed on the front of the flashcard. Take a moment to read it carefully.</li>
-            <li>Flip the Card: Press the "Flip" button to reveal the answer to the term. See if your memory serves you well!</li>
-            <li>Navigate Through Cards: Use the "Previous" and "Next" buttons to move between flashcards. Test your knowledge on a variety of terms.</li>
-        </ul>
-        <p>Tips and advice:</p>
-        <ul>
-            <li>Take your time to think about each term before revealing the answer.
-            </li>
-            <li>Try to recall the answer before flipping the card to test your memory.
-            </li>
-            <li>Don't worry if you're unsure about a term; use the "Next" button to move forward and come back to it later.
-            </li>
-        </ul>
-    </div>
-</div>
 
     <script type='text/javascript'>
         function startGame() {
-            // Redirect to cardchase.html
+            // Redirect to flashcards game
             window.location.href = 'flashcards';
         }
 

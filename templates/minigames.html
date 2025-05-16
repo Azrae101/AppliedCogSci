@@ -5,219 +5,388 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study & Play</title>
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Arial', sans-serif;    
-            background-color: white;    
-            position: relative;
-            height: 100vh;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(120deg, #e3f0fc 0%, #b6d0f7 100%);
+            min-height: 100vh;
             margin: 0;
             display: flex;
-            align-items: center;
-            justify-content: flex-start; 
             flex-direction: column;
+            align-items: stretch;
+            width: 100vw;
+            overflow-x: hidden;
         }
 
         header {
-            background-color: #5689a2d7; /* Change the background color */
-            color: #f9f9f9;
-            padding: 20px;
+            background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+            color: #fff;
+            padding: 32px 0 18px 0;
             text-align: center;
-            width: 100%;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for a more visible effect */
+            width: 100vw;
+            box-shadow: 0px 4px 24px rgba(33,150,243,0.13);
+            border-radius: 0 0 28px 28px;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0;
+            letter-spacing: 1.5px;
+            font-family: 'Segoe UI Semibold', 'Segoe UI', Arial, sans-serif;
+        }
+        h4 {
+            font-size: 1.15rem;
+            font-weight: 400;
+            margin-top: 10px;
+            margin-bottom: 0;
+            opacity: 0.97;
+            text-shadow: 0 1px 0 #e3f2fd;
+        }
+
+        .main-content-wrapper {
+            width: 100vw;
+            max-width: 100vw;
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center; /* Center everything horizontally */
+            gap: 40px;
+            flex: 1 0 auto;
+            min-height: 0;
+            margin-bottom: 0;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        .minigames-section {
+            flex: 0 1 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center minigames grid */
+            min-width: 0;
+            margin: 0;
+            width: auto;
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+        }
+
+        .settings-container.deck-settings-global {
+            position: fixed;
+            top: 120px;
+            right: 0;
+            align-self: flex-start;
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: 0;
+            min-width: 180px;
+            max-width: 260px;
+            background: linear-gradient(120deg, #e3f2fd 60%, #bbdefb 100%);
+            box-shadow: 0 4px 18px rgba(33,150,243,0.10);
+            border-radius: 18px 0 0 18px;
+            padding: 18px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+            font-size: 0.98em;
+        }
+        .deck-settings-global h2 {
+            margin-bottom: 12px;
+            color: #1976d2;
+            font-size: 1.1em;
+            letter-spacing: 1.2px;
+            font-family: 'Segoe UI Semibold', 'Segoe UI', Arial, sans-serif;
+            text-shadow: 0 1px 0 #bbdefb;
+        }
+        .deck-settings-global .containernew {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .deck-settings-global .deck-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-weight: 600;
+            color: #1976d2;
+            font-size: 1em;
+            box-shadow: 0 1px 8px rgba(33,150,243,0.10);
+            border: 1.5px solid #90caf9;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .deck-settings-global .deck-box:hover {
+            box-shadow: 0 2px 12px rgba(33,150,243,0.18);
+            border-color: #1976d2;
+        }
+        .deck-settings-global .button-containerdeck {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .deck-settings-global .deck-action-btn {
+            background: #2196F3;
+            color: #fff;
+            border-radius: 5px;
+            padding: 7px 16px;
+            font-size: 0.98em;
+            font-weight: 500;
+            border: none;
+            box-shadow: 0 1px 6px rgba(33,150,243,0.07);
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            margin-bottom: 2px;
+            text-align: center;
+            text-decoration: none;
+        }
+        .deck-settings-global .deck-action-btn:hover {
+            background: #1565c0 !important;
+            color: #fff !important;
+            border-color: #1565c0 !important;
+        }
+        .deck-settings-global .deck-action-btn:last-child {
+            background: #fff;
+            color: #1976d2;
+            border: 1.5px solid #90caf9;
+        }
+        .deck-settings-global .deck-action-btn:last-child:hover {
+            background: #e3f2fd !important;
+            color: #1565c0 !important;
+            border-color: #1565c0 !important;
         }
 
         .header-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 20px; /* Adjust margin as needed */
+            margin-bottom: 18px;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            gap: 16px;
         }
 
-        footer {
-            background-color:#5689a2d7;
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+            padding-top: 6px; /* Add a bit of top padding */
+        }
+        .search-form input[type="text"] {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 2px solid #90caf9;
+            font-size: 1.08em;
+            background: #e3f2fd;
+            transition: border-color 0.2s;
+            margin-top: 2px; /* Tiny bit of top margin */
+        }
+        .search-form input[type="text"]:focus {
+            border-color: #1976d2;
+            outline: none;
+        }
+        .button.search-button {
+            padding: 10px 26px;
+            background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
             color: #fff;
-            text-align: center;
-            margin-top: 10vh;
-            padding: 20px;
-            width: 100%;            
+            border: none;
+            border-radius: 8px;
+            font-size: 1.08em;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(33,150,243,0.09);
+            transition: background 0.2s, box-shadow 0.2s;
+            margin-top: 2px; /* Tiny bit of top margin */
+        }
+        .button.search-button:hover {
+            background: linear-gradient(90deg, #1565c0 60%, #42a5f5 100%);
+            box-shadow: 0 4px 18px rgba(33,150,243,0.18);
         }
 
         .sorting {
-            padding: 10px;
+            padding: 10px 0 18px 0;
             margin-bottom: 10px;
-        }
-
-        .title {
-            margin-top: 20px; /* Adjust margin as needed */
-        }
-
-        .container {
-            padding: 0px;
-            background-color: #f9f9f9;
-            width: 100%; 
-            box-sizing: border-box; 
-        }
-
-        .content {
-            display: flex; 
-            align-items: center; 
-            justify-content: flex-start; 
-            padding: 10px 10px; 
-        }
-
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            align-items: right;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        /* styles login/logout button */
-        .button.login {
-            background-color: red;
-        }
-
-        .button.login:hover {
-            background-color: #ec5008;
-        }
-
-        /* styles logout button */
-        .button.logout {
-            background-color: rgba(0, 145, 255, 0.272);
-        }
-
-        .button.logout:hover {
-            background-color: #0889ec48;
-        }
-
-        .button-container {
-            margin-left: auto;
-            text-align: right;
-        }
-
-        .minigame-container {
             display: flex;
-            align-items: center;
-            flex-wrap: wrap; /* Allow wrapping */
-            justify-content: center; /* Center the items */
-            gap: 20px; /* Gap between minigame items */
+            justify-content: center;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .options-menu {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 2px solid #90caf9;
+            font-size: 1.08em;
+            background: #e3f2fd;
+            color: #1976d2;
+            min-width: 170px;
+            transition: border-color 0.2s;
+        }
+        .options-menu:focus {
+            border-color: #1976d2;
+            outline: none;
         }
 
+        /* Minigames grid - academic/gamified blue theme */
+        #minigames-list {
+            width: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 40px 40px;
+            justify-items: center;
+            align-items: stretch;
+            max-width: 1200px;
+            margin: 0;
+        }
         .minigame {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-        }
-
-        .minigame img {
-            width: 250px; /* Set a fixed width */
-            height: auto; /* Set a fixed height */
-            cursor: pointer; /* Change cursor to pointer */
-            border-radius: 5px; /* Add border radius */
-            transition: transform 0.3s ease; /* Add transition effect */
-            border: 2px solid #000000; /* Add border */
-        }
-
-        .minigame img:hover {
-            transform: scale(1.1); /* Enlarge on hover */
-        }
-
-        .minigame span {
-            margin-top: 10px; /* Adjust margin */
-        }
-
-        /* Button color for deck*/
-        .buttonslol {
-            background-color: red !important;
-        }
-
-        .buttonslol:hover {
-            background-color: rgb(182, 0, 0) !important;
-        }
-
-        .title {
-            text-align: center;
-        }
-        .main-title {
-            font-size: 42px;
-            font-weight: bold; 
-            margin-bottom: 0;
-            margin-top: 5vh;
-        }
-        .under-title {
-            font-size: 24px;
-            font-weight: lighter;
-        }
-
-        .dropdown {
+            background: linear-gradient(120deg, #e3f2fd 60%, #bbdefb 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(33,150,243,0.13), 0 1.5px 0 #90caf9;
+            padding: 28px 18px 20px 18px;
+            min-width: 220px;
+            max-width: 260px;
+            transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+            cursor: pointer;
+            border: 2.5px solid #90caf9;
             position: relative;
         }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            min-width: 110px;
-            box-shadow: 10px 8px 16px 10px rgba(0,0,0,0.2);
-            left: 50%;
-            transform: translateX(-50%);
+        .minigame:hover {
+            box-shadow: 0 8px 32px rgba(33,150,243,0.22), 0 2px 0 #1976d2;
+            transform: translateY(-10px) scale(1.05) rotate(-1deg);
+            border-color: #1976d2;
+            z-index: 1;
+        }
+        .minigame img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            background: #e3f2fd;
+            border: 2.5px solid #90caf9;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .minigame:hover img {
+            border-color: #1976d2;
+            box-shadow: 0 4px 16px rgba(33,150,243,0.15);
+        }
+        .minigame span {
+            margin-top: 12px;
+            font-size: 1.18em;
+            color: #1976d2;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            text-shadow: 0 1px 0 #e3f2fd;
         }
 
-        .dropdown-content a {
-            color: black;
-            padding: 10px 16px;
-            text-decoration: none;
-            display: block;
+        /* Center the search results and titles */
+        #search-results-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+        #search-results-container h3 {
+            text-align: center;
+            width: 100%;
+        }
+        #minigames-list > h3 {
+            text-align: center;
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: 16px;
         }
 
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
+        /* Footer full width, academic style */
+        footer {
+            background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+            color: #fff;
+            text-align: center;
+            margin-top: 0;
+            padding: 28px 0 22px 0;
+            width: 100vw;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0px -4px 18px rgba(33,150,243,0.10);
+            font-size: 1.08em;
+            font-family: 'Segoe UI Semibold', 'Segoe UI', Arial, sans-serif;
+            letter-spacing: 1.2px;
+            flex-shrink: 0;
         }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .main-content-wrapper {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 0;
+                padding-bottom: 100px;
+                max-width: 100vw;
+                justify-content: flex-end;
+            }
+            .settings-container.deck-settings-global {
+                position: static;
+                border-radius: 18px;
+                margin-top: 24px;
+                margin-bottom: 32px;
+                width: 90vw;
+                max-width: 260px;
+            }
+            .minigames-section {
+                align-items: flex-end;
+                width: 100vw;
+                margin-bottom: 60px;
+                padding-bottom: 60px;
+            }
+            #minigames-list {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 600px;
+                gap: 28px 18px;
+            }
         }
-
-        /* Style the main title */
-        h1 {
-            font-size: 36px; /* Increase font size */
-            margin-bottom: 5px; /* Add some margin bottom */
+        @media (max-width: 900px) {
+            #minigames-list {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+                gap: 18px 0;
+            }
+            .settings-container.deck-settings-global {
+                padding: 16px 6px;
+            }
+            .main-content-wrapper {
+                padding-bottom: 120px;
+            }
+            .minigames-section {
+                margin-bottom: 80px;
+                padding-bottom: 80px;
+            }
         }
-
-        /* Style the sub title */
-        h4 {
-            font-size: 18px; /* Increase font size */
-            font-weight: normal; /* Remove bold style */
-            margin-top: 5px; /* Add some margin top */
+        @media (max-width: 600px) {
+            .settings-container.deck-settings-global {
+                padding: 10px 2vw;
+            }
+            .main-content-wrapper {
+                padding-bottom: 140px;
+            }
+            .minigames-section {
+                margin-bottom: 100px;
+                padding-bottom: 100px;
+            }
         }
-
-        .button.search-button {
-            padding: 5px 10px;
-            background-color: rgb(169, 169, 169);
-            color: #000000; /* White text color */            
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 500;
-            border: 1px solid #d3d3d3;
-            transition: background-color 0.3s ease;
-        }
-
-        .button.search-button:hover {
-            background-color: #d4d4d4; /* Darker shade of blue on hover */
-        }
-
     </style>
     <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
@@ -228,70 +397,170 @@
         </div>
     </div>
     <header>
-        <h1>Minigames</h1>
+        <h1>Study and Play Minigames</h1>
         <h4>Transforming education through playful learning experiences</h4>
     </header>
-    <div class="header-container">
-        <!-- Search form on the left -->
-        <form action="/search" method="POST" class="search-form">
-            <input type="text" name="search" placeholder="Search games...">
-            <button type="submit" class="button search-button">Search</button>
-        </form>        
-        <!-- Sorting dropdown on the right -->
-    </div>
-    <div class="sorting">
-        <select id="options" name="options" class="options-menu">
-            <option value="" disabled selected>Select sorting</option>
-            <option value="easy">Alphabetically</option>
-            <option value="medium">Recently played</option>
-            <option value="hard">Newest</option>
-        </select>
-    </div>
-    <div class="minigame-container">
-        <div class="minigame">
-            <a href="{{ url_for('flashcards_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
-            <span>Flashcards</span>
+
+    <div class="main-content-wrapper">
+        <!-- Minigames section (left) -->
+        <div class="minigames-section">
+            <div class="header-container">
+                <form onsubmit="event.preventDefault(); searchMinigames();" class="search-form">
+                    <input type="text" id="search-input" placeholder="Search games...">
+                    <button type="submit" class="button search-button">🔍 Search</button>
+                </form>
+            </div>
+            <div class="sorting">
+                <select id="options" name="options" class="options-menu" onchange="sortMinigames()">
+                    <option value="" disabled selected>Sort minigames</option>
+                    <option value="alphabetical">Alphabetically</option>
+                    <option value="recent">Recently played</option>
+                    <option value="recommended">Recommended</option>
+                </select>
+            </div>
+            <div id="search-results-container"></div>
+            <div id="minigames-list">
+                <div class="minigame" data-name="Flashcards" data-date="2024-01-01" data-recent="3">
+                    <a href="{{ url_for('flashcards_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
+                    <span>Flashcards</span>
+                </div>
+                <div class="minigame" data-name="Quiz" data-date="2024-02-01" data-recent="2">
+                    <a href="{{ url_for('quiz_settings') }}"><img src="{{ url_for('static', filename='quiz.png') }}" class="resized-img"></a>
+                    <span>Quiz</span>
+                </div>
+                <div class="minigame" data-name="Flashmatch" data-date="2024-03-01" data-recent="1">
+                    <a href="{{ url_for('flashmatch_settings') }}"><img src="{{ url_for('static', filename='flashmatch.png') }}" class="resized-img"></a>
+                    <span>Flashmatch</span>
+                </div>
+                <div class="minigame" data-name="MemoryGrid" data-date="2024-04-01" data-recent="6">
+                    <a href="{{ url_for('memorygrid_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
+                    <span>MemoryGrid</span>
+                </div>
+                <div class="minigame" data-name="CardChase" data-date="2024-05-01" data-recent="5">
+                    <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
+                    <span>CardChase</span>
+                </div>
+                <div class="minigame" data-name="TimeWarp" data-date="2024-06-01" data-recent="4">
+                    <a href="{{ url_for('timewarp_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
+                    <span>TimeWarp</span>
+                </div>
+                <div class="minigame" data-name="TetriCards" data-date="2024-07-01" data-recent="9">
+                    <a href="{{ url_for('tetris_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
+                    <span>TetriCards</span>
+                </div>
+                <div class="minigame" data-name="TermTime" data-date="2024-08-01" data-recent="8">
+                    <a href="{{ url_for('termtime_settings') }}"><img src="{{ url_for('static', filename='term.png') }}" class="resized-img"></a>
+                    <span>TermTime</span>
+                </div>
+                <div class="minigame" data-name="DefineDash" data-date="2024-09-01" data-recent="7">
+                    <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='define.png') }}" class="resized-img"></a>
+                    <span>DefineDash</span>
+                </div>
+            </div>
         </div>
-        <div class="minigame">
-            <a href="{{ url_for('quiz_settings') }}"><img src="{{ url_for('static', filename='quiz.png') }}" class="resized-img"></a>
-            <span>Quiz</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('flashmatch_settings') }}"><img src="{{ url_for('static', filename='flashmatch.png') }}" class="resized-img"></a>
-            <span>Flashmatch</span>
-        </div>
-    </div>
-    <p> </p>
-    <div class="minigame-container">
-        <div class="minigame">
-            <a href="{{ url_for('memorygrid_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
-            <span>MemoryGrid</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
-            <span>CardChase</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('timewarp_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
-            <span>TimeWarp</span>
-        </div>
-    </div>
-    <div class="minigame-container">
-        <div class="minigame">
-            <a href="{{ url_for('tetris_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
-            <span>TetriCards</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('termtime_settings') }}"><img src="{{ url_for('static', filename='term.png') }}" class="resized-img"></a>
-            <span>TermTime</span>
-        </div>
-        <div class="minigame">
-            <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='define.png') }}" class="resized-img"></a>
-            <span>DefineDash</span>
+        <!-- Study deck settings (right) -->
+        <div class="settings-container deck-settings-global">
+            <h2>Current Study Deck</h2>
+            <div class="containernew">
+                <div class="deck-box">
+                    Cognitive Science
+                </div>
+                <div class="button-containerdeck">
+                    <a href="{{ url_for('deck_one') }}" class="button deck-action-btn">View deck</a>
+                    <a href="{{ url_for('deck_one') }}" class="button deck-action-btn">Edit deck</a>
+                    <a href="{{ url_for('mydecks') }}" class="button deck-action-btn">Change deck</a>
+                </div>
+            </div>
         </div>
     </div>
     <footer>
         <p>&copy; 2024 CogCards. All rights reserved.</p>
     </footer>
+    <script>
+        // Store the original minigames on page load
+        let originalMinigames = [];
+        document.addEventListener('DOMContentLoaded', function() {
+            originalMinigames = Array.from(document.querySelectorAll('.minigame'));
+        });
+
+        // Render minigames in a flat grid (no rows)
+        function renderMinigames(minigames, container) {
+            container.innerHTML = '';
+            minigames.forEach(mg => container.appendChild(mg));
+        }
+
+        function searchMinigames() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const searchResultsContainer = document.getElementById('search-results-container');
+            const minigamesList = document.getElementById('minigames-list');
+
+            // Always search from the original list
+            let filtered = originalMinigames.filter(mg =>
+                mg.dataset.name.toLowerCase().includes(query)
+            );
+            let others = originalMinigames.filter(mg =>
+                !mg.dataset.name.toLowerCase().includes(query)
+            );
+
+            // If query is empty, show only the original grid, clear search results
+            if (!query) {
+                searchResultsContainer.innerHTML = '';
+                renderMinigames(originalMinigames, minigamesList);
+                return;
+            }
+
+            // Show search results above, and "Other games" below
+            searchResultsContainer.innerHTML = '';
+            if (filtered.length > 0) {
+                const searchTitle = document.createElement('h3');
+                searchTitle.textContent = 'Search Result';
+                searchResultsContainer.appendChild(searchTitle);
+
+                const filteredWrapper = document.createElement('div');
+                filteredWrapper.style.display = 'grid';
+                filteredWrapper.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                filteredWrapper.style.gap = '40px 40px';
+                filteredWrapper.style.maxWidth = '900px';
+                filteredWrapper.style.margin = '0 auto';
+                renderMinigames(filtered, filteredWrapper);
+                searchResultsContainer.appendChild(filteredWrapper);
+            } else {
+                const noResults = document.createElement('div');
+                noResults.textContent = 'No minigames found.';
+                searchResultsContainer.appendChild(noResults);
+            }
+
+            minigamesList.innerHTML = '';
+            if (others.length > 0) {
+                const otherTitle = document.createElement('h3');
+                otherTitle.textContent = 'Other Games';
+                minigamesList.appendChild(otherTitle);
+
+                const othersWrapper = document.createElement('div');
+                othersWrapper.style.display = 'grid';
+                othersWrapper.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                othersWrapper.style.gap = '40px 40px';
+                othersWrapper.style.maxWidth = '900px';
+                othersWrapper.style.margin = '0 auto';
+                renderMinigames(others, othersWrapper);
+                minigamesList.appendChild(othersWrapper);
+            }
+        }
+
+        function sortMinigames() {
+            const sortValue = document.getElementById('options').value;
+            const minigamesList = document.getElementById('minigames-list');
+            let minigames = [...originalMinigames];
+            if (sortValue === 'alphabetical') {
+                minigames.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+            } else if (sortValue === 'recent') {
+                minigames.sort((a, b) => Number(a.dataset.recent) - Number(b.dataset.recent));
+            } else if (sortValue === 'recommended') {
+                minigames.sort((a, b) => new Date(a.dataset.date) - new Date(b.dataset.date));
+            }
+            document.getElementById('search-results-container').innerHTML = '';
+            renderMinigames(minigames, minigamesList);
+        }
+    </script>
 </body>
 </html>
