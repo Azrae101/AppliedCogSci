@@ -177,6 +177,10 @@ def timewarp():
 def memorygrid():
     return render_template('games/memorygrid.html')
 
+@app.route('/escaperoom')
+def escaperoom():
+    return render_template('games/escape_room.html') 
+
 # Game settings
 @app.route('/cardchase_settings')
 def cardchase_settings():
@@ -519,10 +523,10 @@ def register():
         return render_template('register.html')
 
 # for testing:
-#if __name__ == '__main__':
-#    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
 
 # for deployment:
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))  # Render uses $PORT
-    app.run(host="0.0.0.0", port=port, debug=False)  # Must bind to 0.0.0.0
+#if __name__ == '__main__':
+#    port = int(os.environ.get("PORT", 10000))  # Render uses $PORT
+#    app.run(host="0.0.0.0", port=port, debug=False)  # Must bind to 0.0.0.0

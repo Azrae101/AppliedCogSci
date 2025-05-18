@@ -1,0 +1,914 @@
+<!-- ...Escape Room Flashcard Minigame... -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KROZ: Escape the Mystery Mansion</title>
+    <style>
+        body {
+            background: #181818;
+            color: #e0e0e0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+        }
+        .terminal {
+            max-width: 780px;
+            margin: 40px auto;
+            background: #232323;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px #000a;
+            padding: 32px 32px 24px 32px;
+            min-height: 540px;
+        }
+        .title {
+            color: #4cc9f0;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-family: 'Poppins', monospace;
+            letter-spacing: 2px;
+        }
+        .intro {
+            color: #bdbdbd;
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+        }
+        .desc {
+            margin-bottom: 18px;
+            color: #fff;
+            font-size: 1.13rem;
+            border-left: 4px solid #4cc9f0;
+            padding-left: 12px;
+        }
+        .message {
+            color: #f72585;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .inventory, .status, .directions, .prompt, .hint {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .inventory strong, .status strong, .directions strong, .hint strong {
+            color: #ffd700;
+        }
+        .status-bar {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 10px;
+            font-size: 1.02rem;
+        }
+        .directions {
+            color: #4cc9f0;
+            margin-bottom: 8px;
+        }
+        .hint {
+            color: #ff9800;
+            margin-bottom: 8px;
+        }
+        .history {
+            color: #bdbdbd;
+            margin-bottom: 8px;
+            max-height: 160px;
+            overflow-y: auto;
+            background: #181818;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 1rem;
+            border: 1px solid #333;
+        }
+        .prompt {
+            color: #4cc9f0;
+            margin-bottom: 8px;
+        }
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+            background: #181818;
+            color: #fff;
+            font-size: 1.08rem;
+            font-family: inherit;
+        }
+        button {
+            padding: 8px 18px;
+            border-radius: 4px;
+            border: none;
+            background: #4361ee;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        button:hover {
+            background: #3a0ca3;
+        }
+        .restart {
+            margin-top: 18px;
+            background: #f44336;
+        }
+        .restart:hover {
+            background: #b71c1c;
+        }
+        .back {
+            margin-top: 18px;
+            background: #888;
+        }
+        .back:hover {
+            background: #444;
+        }
+        .instructions {
+            color: #aaa;
+            font-size: 0.98em;
+            margin-bottom: 18px;
+        }
+        .terminal hr {
+            border: none;
+            border-top: 1px solid #444;
+            margin: 18px 0;
+        }
+        details {
+            margin-bottom: 10px;
+        }
+        summary {
+            color: #4cc9f0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .room-label {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .health-bar {
+            display: inline-block;
+            background: #333;
+            border-radius: 6px;
+            overflow: hidden;
+            vertical-align: middle;
+            width: 120px;
+            height: 16px;
+            margin-left: 8px;
+        }
+        .health-fill {
+            background: linear-gradient(90deg, #4caf50, #ffd700 80%, #f44336 100%);
+            height: 100%;
+            transition: width 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="title">KROZ: Escape the Mystery Mansion</div>
+        <div class="intro">
+            Copywrong (!) 2023, Escape room company, Inc. All rights reserved.<br>
+            KROZ is a registered trademark of Escape room company, Inc.<br>
+            Revision 1 / Serial number 000001
+        </div>
+        <div class="instructions">
+            <b>Type commands</b> like <b>look</b>, <b>take leaflet</b>, <b>north</b>, <b>open door</b>, <b>use key</b>, etc.<br>
+            When prompted with a puzzle, answer with the correct term.<br>
+            <b>Type 'inventory'</b> to check your items. <b>Type 'restart'</b> to start over.
+        </div>
+        <details>
+            <summary>Show Command Reference</summary>
+            <ul>
+                <li><b>look</b> / <b>l</b> - Look around the room</li>
+                <li><b>north/south/east/west/middle</b> - Move in a direction</li>
+                <li><b>take &lt;item&gt;</b>, <b>drop &lt;item&gt;</b>, <b>use &lt;item&gt;</b></li>
+                <li><b>read leaflet</b>, <b>open door</b>, <b>examine &lt;object&gt;</b></li>
+                <li><b>inventory</b> / <b>inv</b> / <b>i</b> - Show inventory</li>
+                <li><b>hint</b> / <b>h</b> - Get a hint</li>
+                <li><b>health</b> / <b>status</b> - Show health</li>
+                <li><b>quit</b> - Exit game</li>
+            </ul>
+        </details>
+        <hr>
+        <div class="status-bar">
+            <div class="status">
+                <span class="room-label">Room:</span> <span id="room-label">Lobby</span>
+            </div>
+            <div class="status">
+                <span class="room-label">Health:</span>
+                <span id="health-value">100/100</span>
+                <span class="health-bar">
+                    <span id="health-fill" class="health-fill" style="width:100%"></span>
+                </span>
+            </div>
+            <div class="inventory">
+                <strong>Inventory:</strong>
+                <span id="inventory-list">(empty)</span>
+            </div>
+        </div>
+        <div class="directions" id="directions"></div>
+        <div class="hint" id="hint"></div>
+        <div class="desc" id="desc"></div>
+        <div class="message" id="message"></div>
+        <div class="history" id="history"></div>
+        <form id="command-form" class="input-row" autocomplete="off" onsubmit="return false;">
+            <input type="text" id="command-input" placeholder="What do you do?" autofocus required autocomplete="off">
+            <button type="submit">Go</button>
+        </form>
+        <div id="flashcard-prompt" style="display:none; margin-top:18px;">
+            <div class="prompt"><strong>Puzzle:</strong> <span id="flashcard-question"></span></div>
+            <form id="flashcard-form" class="input-row" autocomplete="off" onsubmit="return false;">
+                <input type="text" id="flashcard-answer" placeholder="Your answer..." autofocus required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <button type="button" class="restart" onclick="restartGame()">Restart Game</button>
+        <a href="/minigames"><button class="back">Back to Minigames</button></a>
+    </div>
+    <script>
+    // --- FLASHCARDS ---
+    const flashcards = [
+        {"definition": "Condition: Can see but not recognize visuals", "answer": "Visual Agnosia"},
+        {"definition": "Attention needed to bind features", "answer": "Feature Integration Theory"},
+        {"definition": "Skill becomes automatic through practice", "answer": "Proceduralization"},
+        {"definition": "Brain structure for fear/emotions", "answer": "Amygdala"},
+        {"definition": "Memory for skills and procedures", "answer": "Procedural Memory"},
+        {"definition": "Memory for facts and events", "answer": "Declarative Memory"},
+        {"definition": "Tendency to remember first items in list", "answer": "Primacy Effect"},
+        {"definition": "Tendency to remember last items in list", "answer": "Recency Effect"},
+        {"definition": "Mental framework for organizing information", "answer": "Schema"},
+        {"definition": "Mental shortcuts for problem solving", "answer": "Heuristics"},
+        {"definition": "Inability to form new memories", "answer": "Anterograde Amnesia"},
+        {"definition": "Loss of past memories", "answer": "Retrograde Amnesia"},
+        {"definition": "Brain area for forming new memories", "answer": "Hippocampus"},
+        {"definition": "Mental representation of physical space", "answer": "Cognitive Map"},
+        {"definition": "Learning through consequences", "answer": "Operant Conditioning"},
+        {"definition": "Learning through association", "answer": "Classical Conditioning"},
+        {"definition": "Decreasing response to repeated stimulus", "answer": "Habituation"},
+        {"definition": "Mental processes of thinking/knowing", "answer": "Cognition"},
+        {"definition": "Mental categories for grouping things", "answer": "Concepts"},
+        {"definition": "Simple thinking strategy for problem solving", "answer": "Algorithm"}
+    ];
+
+    // --- GAME STATE ---
+    function initialState() {
+        return {
+            room: "lobby",
+            location: 0,
+            health: 100,
+            inventory: [],
+            history: [],
+            leaflet: false,
+            leaflet_read: false,
+            look_first: false,
+            destroyed_paintings: false,
+            sofa: false,
+            on_table: false,
+            warm: false,
+            moves: 0,
+            window: 0,
+            key: false,
+            door: 0,
+            door_handle: false,
+            heating_coils: false,
+            ovendial: false,
+            secretary_door: false,
+            mirror: 0,
+            book: false,
+            screwdriver: false,
+            handle: false,
+            hint: "",
+            directions: ["north", "east", "south", "west", "middle"],
+            message: "",
+            desc: "",
+            puzzle: null,
+            gameover: false,
+            flashcardPuzzle: null,
+            flashcardSolved: false
+        };
+    }
+
+    let state = initialState();
+
+    // --- FLASHCARD PUZZLE LOGIC ---
+    function triggerFlashcardPuzzle(callback) {
+        // Pick a random flashcard
+        const card = flashcards[Math.floor(Math.random() * flashcards.length)];
+        state.flashcardPuzzle = card;
+        state.flashcardSolved = false;
+        document.getElementById("flashcard-question").textContent = card.definition;
+        document.getElementById("flashcard-prompt").style.display = "";
+        document.getElementById("command-form").style.display = "none";
+        document.getElementById("flashcard-answer").value = "";
+        document.getElementById("flashcard-answer").focus();
+
+        // Handler for answer
+        document.getElementById("flashcard-form").onsubmit = function() {
+            const userAnswer = document.getElementById("flashcard-answer").value.trim().toLowerCase();
+            if (userAnswer === card.answer.toLowerCase()) {
+                state.flashcardSolved = true;
+                document.getElementById("flashcard-prompt").style.display = "none";
+                document.getElementById("command-form").style.display = "";
+                showMessage("Correct! Puzzle solved.");
+                if (callback) callback(true);
+            } else {
+                showMessage("Incorrect. Try again.");
+                document.getElementById("flashcard-answer").value = "";
+                document.getElementById("flashcard-answer").focus();
+            }
+            return false;
+        };
+    }
+
+    // --- ROOM DESCRIPTIONS ---
+    function updateRoomDesc() {
+        let desc = "";
+        if (state.room === "lobby") {
+            if (!state.look_first) {
+                desc += "You are in a sprawling, old and decrepit mansion that has a dark and foreboding atmosphere.<br>";
+                desc += "The mansion is surrounded by a large estate with overgrown gardens and a creepy forest, giving it a sense of isolation.<br>";
+                desc += "The interior of the mansion is just as eerie, with dimly lit halls, creaky floorboards, and musty furnishings.<br>";
+                desc += "The walls are adorned with old paintings and portraits, some of which seem to have faces that move or change expression.<br>";
+                desc += "There are secret passageways, locked doors, and hidden rooms to be discovered, each of which holds a piece of the mystery that needs to be unraveled.<br><br>";
+            }
+            if (state.location === 0 && !state.inventory.includes("leaflet")) {
+                desc += "The Lobby<br>You are standing in a lobby, there is a leaflet on the coffee table.<br>There is a door in the south direction.";
+            } else if (state.location === 0) {
+                desc += "The Lobby<br>You are standing in a lobby.<br>There is a door in the south direction.";
+            } else if (state.location === 1) {
+                desc += "You are standing in front of a bookshelf.<br>";
+                desc += state.inventory.includes("book") ? "All the books are lined up perfectly." : "All the books are lined up perfectly except for one book in particular.";
+            } else if (state.location === 2) {
+                desc += "You are standing in front of a window.<br>";
+                desc += state.inventory.includes("fire extinguisher") ? "The fire extinguisher was here." : "There is a fire extinguisher in front of the window.";
+            } else if (state.location === 3) {
+                desc += "You are standing in front of a door.<br>";
+                if (!state.door_handle) desc += "";
+                else if (!state.heating_coils) desc += "The oven dial flashes red.";
+                else desc += "The handle is missing, an oven dial appears instead.";
+            } else if (state.location === 4) {
+                desc += "You are standing in front of the secretary's door, " + (state.door === 0 ? "this is locked." : "it is open.") + "<br>There is a window and a mirror here";
+            }
+        }
+        // Add more rooms as needed
+        state.desc = desc;
+        document.getElementById("desc").innerHTML = desc;
+    }
+
+    // --- INVENTORY ---
+    function updateInventory() {
+        let inv = state.inventory.length ? state.inventory.join(", ") : "(empty)";
+        document.getElementById("inventory-list").textContent = inv;
+    }
+
+    // --- HEALTH ---
+    function updateHealth() {
+        document.getElementById("health-value").textContent = `${state.health}/100`;
+        document.getElementById("health-fill").style.width = Math.max(0, Math.min(100, state.health)) + "%";
+    }
+
+    // --- HISTORY ---
+    function updateHistory() {
+        let hist = state.history.slice(-10).map(cmd => `<div>&gt; ${cmd}</div>`).join("");
+        document.getElementById("history").innerHTML = hist;
+        let histDiv = document.getElementById("history");
+        if(histDiv) histDiv.scrollTop = histDiv.scrollHeight;
+    }
+
+    // --- DIRECTIONS ---
+    function updateDirections() {
+        document.getElementById("directions").innerHTML = "<strong>Available directions:</strong> " + state.directions.join(", ");
+    }
+
+    // --- HINT ---
+    function updateHint() {
+        document.getElementById("hint").innerHTML = state.hint ? `<strong>Hint:</strong> ${state.hint}` : "";
+    }
+
+    // --- MESSAGE ---
+    function showMessage(msg) {
+        state.message = msg;
+        document.getElementById("message").textContent = msg;
+    }
+
+    // --- ROOM LABEL ---
+    function updateRoomLabel() {
+        document.getElementById("room-label").textContent = state.room.charAt(0).toUpperCase() + state.room.slice(1);
+    }
+
+    // --- MAIN UPDATE ---
+    function updateUI() {
+        updateRoomDesc();
+        updateInventory();
+        updateHealth();
+        updateHistory();
+        updateDirections();
+        updateHint();
+        updateRoomLabel();
+        showMessage(state.message);
+    }
+
+    // --- GAME LOGIC ---
+    function processCommand(input) {
+        if (state.gameover) return;
+        let cmd = input.trim().toLowerCase();
+        state.history.push(cmd);
+        state.message = "";
+
+        // --- Movement and look ---
+        // Directions
+        if (
+            [
+                "n", "north", "go north", "go n", "go to bookshelf", "walk towards bookshelf",
+                "walk to bookshelf", "walk north"
+            ].includes(cmd)
+        ) {
+            state.location = 1;
+            updateRoomDesc();
+            showMessage("You move north.");
+            return;
+        }
+        if (
+            [
+                "e", "east", "go east", "go to fire extinguisher", "walk towards fire extinguisher", "go e",
+                "walk to fire extinguisher", "walk east"
+            ].includes(cmd)
+        ) {
+            state.location = 2;
+            updateRoomDesc();
+            showMessage("You move east.");
+            return;
+        }
+        if (
+            [
+                "s", "south", "go south", "go to door", "walk towards door", "go s",
+                "walk to door", "walk south"
+            ].includes(cmd)
+        ) {
+            state.location = 3;
+            updateRoomDesc();
+            showMessage("You move south.");
+            return;
+        }
+        if (
+            [
+                "w", "west", "go west", "go to secretary's door", "walk towards secretary's door", "go w",
+                "walk to secretary's door", "walk west"
+            ].includes(cmd)
+        ) {
+            state.location = 4;
+            updateRoomDesc();
+            showMessage("You move west.");
+            return;
+        }
+        if (
+            [
+                "m", "middle", "mid", "go to coffee table", "walk towards coffee table", "go to lobby", "go to middle", "go middle", "go m",
+                "walk to coffee table", "walk middle"
+            ].includes(cmd)
+        ) {
+            state.location = 0;
+            updateRoomDesc();
+            showMessage("You move to the middle of the lobby.");
+            return;
+        }
+
+        // Look
+        if (
+            [
+                "look", "look around", "l", "view room", "examine room", "inspect room"
+            ].includes(cmd)
+        ) {
+            state.look_first = true;
+            updateRoomDesc();
+            showMessage("You look around carefully.");
+            return;
+        }
+
+        // --- Lobby/General actions ---
+        // Take fire extinguisher
+        if (
+            [
+                "take fire extinguisher", "pick up fire extinguisher", "grab fire extinguisher", "take fe", "gather fire extinguisher",
+                "pick up fe", "grab fe"
+            ].includes(cmd)
+        ) {
+            if (state.location === 2 && !state.inventory.includes("fire extinguisher")) {
+                triggerFlashcardPuzzle(function(success) {
+                    if (success) {
+                        state.inventory.push("fire extinguisher");
+                        showMessage("Taken. The fire extinguisher looks funny.");
+                        updateInventory();
+                    }
+                });
+            } else if (state.inventory.includes("fire extinguisher")) {
+                showMessage("You already took the fire extinguisher");
+            } else {
+                showMessage("You are not near any fire extinguisher");
+            }
+            return;
+        }
+
+        // Look at fire extinguisher (reveal key)
+        if (
+            [
+                "look at fire extinguisher", "examine fire extinguisher", "inspect fire extinguisher", "examine fe",
+                "look at fe", "inspect fe"
+            ].includes(cmd)
+        ) {
+            if (state.location === 2 && !state.inventory.includes("key")) {
+                showMessage("A key taped under the fire extinguisher is revealed");
+            } else if (state.inventory.includes("key")) {
+                showMessage("There was a key here");
+            } else {
+                showMessage("You are not near any fire extinguisher");
+            }
+            return;
+        }
+
+        // Take key (under fire extinguisher)
+        if (
+            [
+                "take key", "pick up key", "grab key"
+            ].includes(cmd)
+        ) {
+            if (state.location === 2 && !state.inventory.includes("key")) {
+                triggerFlashcardPuzzle(function(success) {
+                    if (success) {
+                        state.inventory.push("key");
+                        showMessage("Taken.");
+                        updateInventory();
+                    }
+                });
+            } else if (state.inventory.includes("key")) {
+                showMessage("You already have the key");
+            } else {
+                showMessage("There is no key here");
+            }
+            return;
+        }
+
+        // Take book
+        if (
+            [
+                "take book", "pick up book", "grab the book", "grab book"
+            ].includes(cmd)
+        ) {
+            if (state.location === 1 && !state.inventory.includes("book")) {
+                triggerFlashcardPuzzle(function(success) {
+                    if (success) {
+                        state.inventory.push("book");
+                        state.book = true;
+                        showMessage("Taken.");
+                        updateInventory();
+                    }
+                });
+            } else if (state.inventory.includes("book")) {
+                showMessage("You are already carrying a book");
+            } else {
+                showMessage("You are not near any book");
+            }
+            return;
+        }
+
+        // Look at book
+        if (
+            [
+                "look at book", "examine book", "read book", "open book", "inspect book"
+            ].includes(cmd)
+        ) {
+            if (state.inventory.includes("book") && !state.inventory.includes("screwdriver")) {
+                showMessage("The book is called: 'Fahrenheit 451' and contains a screwdriver.");
+            } else if (state.inventory.includes("book") && state.inventory.includes("screwdriver")) {
+                showMessage("The book is called: 'Fahrenheit 451' and is empty.");
+            } else {
+                showMessage("You are not carrying a book");
+            }
+            return;
+        }
+
+        // Take screwdriver (from book)
+        if (
+            [
+                "take screwdriver", "pick up screwdriver", "grab screwdriver"
+            ].includes(cmd)
+        ) {
+            if (state.location === 1 && state.inventory.includes("book") && !state.inventory.includes("screwdriver")) {
+                triggerFlashcardPuzzle(function(success) {
+                    if (success) {
+                        state.inventory.push("screwdriver");
+                        state.screwdriver = true;
+                        showMessage("Taken.");
+                        updateInventory();
+                    }
+                });
+            } else if (!state.inventory.includes("book")) {
+                showMessage("You are not near any screwdriver");
+            } else if (state.inventory.includes("screwdriver")) {
+                showMessage("You are already carrying a screwdriver");
+            }
+            return;
+        }
+
+        // Look at screwdriver
+        if (
+            [
+                "look at screwdriver", "examine screwdriver", "view screwdriver", "screwdriver", "inspect screwdriver"
+            ].includes(cmd)
+        ) {
+            if (state.inventory.includes("screwdriver")) {
+                showMessage("It is a normal screwdriver");
+            } else {
+                showMessage("You are not carrying a screwdriver");
+            }
+            return;
+        }
+
+        // Drop book
+        if (
+            [
+                "drop book", "leave book"
+            ].includes(cmd)
+        ) {
+            if (state.inventory.includes("book")) {
+                state.inventory = state.inventory.filter(x => x !== "book");
+                state.book = false;
+                showMessage("Dropped.");
+            } else {
+                showMessage("You are not carrying a book");
+            }
+            updateInventory();
+            return;
+        }
+
+        // Drop screwdriver
+        if (
+            [
+                "drop screwdriver", "leave screwdriver"
+            ].includes(cmd)
+        ) {
+            if (state.inventory.includes("screwdriver")) {
+                state.inventory = state.inventory.filter(x => x !== "screwdriver");
+                state.screwdriver = false;
+                showMessage("Dropped.");
+            } else {
+                showMessage("You are not carrying a screwdriver");
+            }
+            updateInventory();
+            return;
+        }
+
+        // Look in mirror
+        if (
+            [
+                "look in mirror", "look at self in mirror", "look at mirror", "look at the mirror", "look in the mirror", "inspect mirror"
+            ].includes(cmd)
+        ) {
+            if (state.location === 4) {
+                if (state.mirror === 0) {
+                    showMessage("You look yourself in the eyes for the first time in a while. You remember what you did... You remember all those people, whose lives you ruined. The guilt makes your stomach turn and twist. You got hurt by the trauma and guilt.");
+                    state.health -= 10;
+                    state.mirror = 1;
+                    updateHealth();
+                } else {
+                    showMessage("You are reminded of all those people, whose lives you ruined. You got hurt by the trauma and guilt.");
+                    state.health -= 10;
+                    updateHealth();
+                }
+            } else {
+                showMessage("There is no mirror here.");
+            }
+            return;
+        }
+
+        // Jump
+        if (
+            [
+                "jump", "jump up", "jump around"
+            ].includes(cmd)
+        ) {
+            showMessage("WEEEEEOOOO");
+            state.health -= 10;
+            updateHealth();
+            return;
+        }
+
+        // Use screwdriver on window (break window)
+        if (
+            (
+                cmd === "open window with screwdriver" || cmd === "use screwdriver on window" || cmd === "break window" || cmd === "smash window" ||
+                cmd === "hit window" || cmd === "kick window"
+            ) &&
+            state.location === 2 && state.inventory.includes("screwdriver") && state.window === 0
+        ) {
+            showMessage("You broke the window");
+            state.window = 1;
+            return;
+        }
+
+        // Examine window
+        if (
+            (
+                cmd === "examine window" || cmd === "inspect window" || cmd === "look at window" || cmd === "view window"
+            ) &&
+            state.location === 2
+        ) {
+            showMessage(state.window === 0 ? "Here is a window" : "This window is broken");
+            return;
+        }
+
+        // Escape through window
+        if (
+            (
+                cmd === "escape through window" || cmd === "go through window" || cmd === "go out of window" || cmd === "crawl out of window" ||
+                cmd === "jump through window" || cmd === "jump out of the window"
+            ) &&
+            state.location === 2
+        ) {
+            if (state.window === 0) {
+                showMessage("This window is closed.");
+            } else {
+                showMessage("You fell 2 stories. You died.");
+                state.gameover = true;
+            }
+            return;
+        }
+
+        // Use fire extinguisher
+        if (
+            (
+                cmd === "use fire extinguisher" || cmd === "use fe" || cmd === "spray fire extinguisher"
+            ) && state.inventory.includes("fire extinguisher")
+        ) {
+            showMessage("The fire extinguisher only cools you down for a bit, but does not stop the oven from continuing to warm up.");
+            state.health += 10;
+            updateHealth();
+            return;
+        }
+
+        // Drop fire extinguisher
+        if (
+            [
+                "drop fire extinguisher", "leave fire extinguisher"
+            ].includes(cmd)
+        ) {
+            if (state.inventory.includes("fire extinguisher")) {
+                state.inventory = state.inventory.filter(x => x !== "fire extinguisher");
+                showMessage("Dropped.");
+            } else {
+                showMessage("You do not have a fire extinguisher.");
+            }
+            updateInventory();
+            return;
+        }
+
+        // Oven dial logic
+        if (
+            (
+                cmd === "turn oven dial" || cmd === "turn dial" || cmd === "use oven dial" || cmd === "use dial" || cmd === "use oven" ||
+                cmd === "set oven dial" || cmd === "adjust oven dial"
+            ) &&
+            state.location === 3
+        ) {
+            showMessage("How many degrees?");
+            state.ovendial = true;
+            return;
+        }
+        if ((cmd === "451" || cmd === "fahrenheit 451") && state.ovendial) {
+            showMessage("Turning the oven dial to 451 activated heating coils in the room, turning it into a giant oven, you are heating up, and have limited moves");
+            state.heating_coils = true;
+            state.moves = 0;
+            state.warm = true;
+            return;
+        }
+
+        // Secretary's door logic (flashcard puzzle)
+        if (
+            (
+                cmd === "open door" || cmd === "use key" || cmd === "unlock door" || cmd === "open key with door" || cmd === "use the key"
+            ) &&
+            state.location === 4 && state.door === 0 && state.inventory.includes("key")
+        ) {
+            triggerFlashcardPuzzle(function(success) {
+                if (success) {
+                    state.door = 1;
+                    state.secretary_door = 1;
+                    showMessage("The door is unlocked! You may now enter.");
+                    updateUI();
+                }
+            });
+            return;
+        }
+
+        // Enter secretary's office if door is unlocked
+        if (
+            (
+                cmd === "enter door" || cmd === "go through door"
+            ) &&
+            state.location === 4 && state.door === 1
+        ) {
+            state.room = "secretary_office";
+            state.location = 0;
+            showMessage("You enter the secretary's office. You have escaped the lobby!");
+            updateUI();
+            return;
+        }
+
+        // Quit
+        if (
+            [
+                "q", "quit", "exit", "quit game", "exit game"
+            ].includes(cmd)
+        ) {
+            showMessage("Thanks for playing KROZ!");
+            state.gameover = true;
+            return;
+        }
+        // Inventory
+        if (
+            [
+                "i", "inv", "inventory"
+            ].includes(cmd)
+        ) {
+            showMessage(state.inventory.length ? "You are carrying: " + state.inventory.join(", ") : "You are not carrying anything");
+            return;
+        }
+        // Health
+        if (
+            [
+                "diagnostic", "health", "hp", "health power", "status"
+            ].includes(cmd)
+        ) {
+            showMessage(state.health === 100 ? "Your health is perfect" : `Your health is: ${state.health}/100`);
+            return;
+        }
+        // Look
+        if (
+            [
+                "look", "look around", "l", "view room", "examine room", "inspect room"
+            ].includes(cmd)
+        ) {
+            state.look_first = true;
+            updateRoomDesc();
+            showMessage("You look around carefully.");
+            return;
+        }
+        // Hint
+        if (
+            [
+                "h", "hint"
+            ].includes(cmd)
+        ) {
+            state.hint = "Try to examine the door to the south or look around for items.";
+            updateHint();
+            showMessage("Hint provided.");
+            return;
+        }
+        // Help/manual
+        if (
+            [
+                "i dont know", "idk", "i do not know", "what to do", "help", "manual"
+            ].includes(cmd)
+        ) {
+            showMessage("If you don't know where to begin, you can try the following commands: 'look', 'take leaflet' and 'read leaflet', 'middle','south', 'west', 'east' or 'north'. If this doesn't help, you can always ask for a 'hint'");
+            return;
+        }
+        // Restart
+        if (
+            [
+                "restart", "start over"
+            ].includes(cmd)
+        ) {
+            restartGame();
+            return;
+        }
+        // Default
+        showMessage("Nothing happens.");
+    }
+
+    // --- FORM HANDLING ---
+    document.getElementById("command-form").onsubmit = function() {
+        if (state.gameover) return false;
+        let input = document.getElementById("command-input").value;
+        if (!input.trim()) return false;
+        processCommand(input);
+        updateUI();
+        document.getElementById("command-input").value = "";
+        return false;
+    };
+
+    // --- RESTART ---
+    function restartGame() {
+        state = initialState();
+        updateUI();
+        showMessage("Game restarted.");
+        document.getElementById("flashcard-prompt").style.display = "none";
+        document.getElementById("command-form").style.display = "";
+    }
+
+    // --- INIT ---
+    updateUI();
+    document.getElementById("command-input").focus();
+    </script>
+</body>
+</html>
