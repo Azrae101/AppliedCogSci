@@ -216,15 +216,43 @@
         </form>
         <div id="flashcard-prompt" style="display:none; margin-top:18px;">
             <div class="prompt"><strong>Puzzle:</strong> <span id="flashcard-question"></span></div>
-            <form id="flashcard-form" class="input-row" autocomplete="off" onsubmit="return false;">
+            <form id="flashcard-form" class="input-row" autocomplete="off">
                 <input type="text" id="flashcard-answer" placeholder="Your answer..." autofocus required>
                 <button type="submit">Submit</button>
             </form>
         </div>
+        <form id="commandForm" autocomplete="off" style="margin-top:32px;">
+            <input type="text" id="commandInput" autocomplete="off" />
+            <input type="submit" value="Submit" />
+        </form>
+        <div id="messageArea"></div>
         <button type="button" class="restart" onclick="restartGame()">Restart Game</button>
         <a href="/minigames"><button class="back">Back to Minigames</button></a>
     </div>
     <script>
+    document.getElementById('commandForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        processCommand();
+    });
+    function processCommand() {
+        const input = document.getElementById('commandInput');
+        const command = input.value.trim();
+        input.value = "";
+        let response = handleCommand(command);
+        const messageArea = document.getElementById('messageArea');
+        messageArea.innerHTML += `<div>&gt; ${command}</div><div>${response}</div>`;
+    }
+    function handleCommand(cmd) {
+        // Basic sample logic, expand as needed
+        if (cmd.toLowerCase() === "look") {
+            return "You are in a lobby. There is a leaflet on the coffee table.";
+        } else if (cmd.toLowerCase() === "inventory") {
+            return "Your inventory is empty.";
+        } else {
+            return "I don't understand that command.";
+        }
+    }
+
     // --- FLASHCARDS ---
     const flashcards = [
         {"definition": "Condition: Can see but not recognize visuals", "answer": "Visual Agnosia"},
@@ -283,20 +311,32 @@
             puzzle: null,
             gameover: false,
             flashcardPuzzle: null,
-            flashcardSolved: false
+            flashcardSolved: false,
+            drawerOpened: false,
+            piggyBankOpened: false,
+            safeOpened: false,
+            paintingCompartmentOpened: false,
+            boxOpened: false,
+            registerOpened: false,
+            sofaCompartmentOpened: false,
+            cabinetOpened: false,
+            slotMachineUsed: false,
+            diaryOpened: false,
+            points: 0
         };
     }
 
     let state = initialState();
 
     // --- FORM HANDLING ---
-    document.getElementById("command-form").onsubmit = function() {
+    document.getElementById("command-form").onsubmit = function(event) { // Add event parameter
+        event.preventDefault(); // Explicitly prevent reload
         if (state.gameover) return false;
-        let input = document.getElementById("command-input").value;
-        if (!input.trim()) return false;
+        let input = document.getElementById("command-input").value.trim();
+        if (!input) return false;
         processCommand(input);
+        updateUI();
         document.getElementById("command-input").value = "";
-        updateUI(); // <-- moved after processCommand and clearing input
         return false;
     };
 
@@ -494,8 +534,21 @@
         updateDirections();
         updateHint();
         updateRoomLabel();
-       // showMessage(state.message);
+        showMessage(state.message);
+        document.getElementById("message").textContent = state.message; 
     }
+
+    function processCommand() {
+        const input = document.getElementById('commandInput');
+        const command = input.value.trim();
+        input.value = ""; // Clear input
+
+        let response = handleCommand(command); // Your game logic here
+
+        // Display the response in a message area
+        const messageArea = document.getElementById('messageArea');
+        messageArea.innerHTML += `<div>> ${command}</div><div>${response}</div>`;
+        }
 
     // --- GAME LOGIC ---
     function processCommand(input) {
