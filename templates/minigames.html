@@ -588,8 +588,11 @@
                 <option value="" disabled selected>Sorting</option>
                 <option value="alphabetical">Alphabetically</option>
                 <option value="recent">Recommended</option>
-                <option value="recommended">Easiest First</option>
+                <option value="difficulty">Difficulty: easiest first</option>
             </select>
+            <button id="sort-order-btn" type="button" onclick="toggleSortOrder()" style="margin-left:8px;font-size:1.2em;background:none;border:none;cursor:pointer;" title="Toggle sort order">
+                <span id="sort-arrow">▲</span>
+            </button>
         </div>
     </div>
 
@@ -695,7 +698,8 @@
     <script>
     let originalMinigames = [];
     let currentMinigames = [];
-    
+    let sortAscending = true;
+
     document.addEventListener('DOMContentLoaded', function() {
             const header = document.querySelector('header');
             const stickyNav = document.querySelector('.sticky-nav');
@@ -734,6 +738,7 @@
             const minigamesList = document.getElementById('minigames-list');
             originalMinigames = Array.from(minigamesList.querySelectorAll('.minigame'));
             currentMinigames = [...originalMinigames];
+            updateDifficultyLabel();
         });
 
         // Render minigames in a flat grid (no rows)
@@ -794,17 +799,38 @@
             }
         }
 
+        function toggleSortOrder() {
+            sortAscending = !sortAscending;
+            document.getElementById('sort-arrow').textContent = sortAscending ? '▲' : '▼';
+            updateDifficultyLabel();
+            sortMinigames();
+        }
+
+        function updateDifficultyLabel() {
+            const options = document.getElementById('options');
+            const difficultyOption = Array.from(options.options).find(opt => opt.value === 'difficulty');
+            if (difficultyOption) {
+                difficultyOption.textContent = sortAscending ? 'Difficulty: easiest first' : 'Difficulty: hardest first';
+            }
+        }
+
         function sortMinigames() {
             const sortValue = document.getElementById('options').value;
             const minigamesList = document.getElementById('minigames-list');
-            minigamesList.style.display = 'grid'; // <-- Add this line
+            minigamesList.style.display = 'grid';
             let minigames = [...originalMinigames];
             if (sortValue === 'alphabetical') {
-                minigames.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+                minigames.sort((a, b) => sortAscending
+                    ? a.dataset.name.localeCompare(b.dataset.name)
+                    : b.dataset.name.localeCompare(a.dataset.name));
             } else if (sortValue === 'recent') {
-                minigames.sort((a, b) => Number(a.dataset.recent) - Number(b.dataset.recent));
-            } else if (sortValue === 'recommended') {
-                minigames.sort((a, b) => new Date(a.dataset.date) - new Date(b.dataset.date));
+                minigames.sort((a, b) => sortAscending
+                    ? Number(a.dataset.recent) - Number(b.dataset.recent)
+                    : Number(b.dataset.recent) - Number(a.dataset.recent));
+            } else if (sortValue === 'difficulty') {
+                minigames.sort((a, b) => sortAscending
+                    ? new Date(a.dataset.date) - new Date(b.dataset.date)
+                    : new Date(b.dataset.date) - new Date(a.dataset.date));
             }
             document.getElementById('search-results-container').innerHTML = '';
             renderMinigames(minigames, minigamesList);
