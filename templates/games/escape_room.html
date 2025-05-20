@@ -213,7 +213,6 @@
         <div class="history" id="history"></div>
         <form id="command-form" class="input-row" autocomplete="off" onsubmit="return false;">
             <input type="text" id="command-input" placeholder="What do you do?" autofocus required autocomplete="off">
-            <button type="submit">Go</button>
         </form>
         <div id="flashcard-prompt" style="display:none; margin-top:18px;">
             <div class="prompt"><strong>Puzzle:</strong> <span id="flashcard-question"></span></div>
@@ -320,6 +319,49 @@
         };
     }
 
+    // --- Enhance the "look" command to mention these objects in the room description ---
+    if (
+        [
+            "look", "look around", "l", "view room", "examine room", "inspect room"
+        ].includes(cmd)
+    ) {
+        if (!state.look_first) {
+            // First look: show the long, atmospheric description
+            let intro = [
+                "You are in a sprawling, old and decrepit mansion that has a dark and foreboding atmosphere.",
+                "The mansion is surrounded by a large estate with overgrown gardens and a creepy forest, giving it a sense of isolation.",
+                "The interior of the mansion is just as eerie, with dimly lit halls, creaky floorboards, and musty furnishings.",
+                "The walls are adorned with old paintings and portraits, some of which seem to have faces that move or change expression.",
+                "There are secret passageways, locked doors, and hidden rooms to be discovered, each of which holds a piece of the mystery that needs to be unraveled.",
+                "",
+                "You are standing in a lobby, there is a leaflet on the coffee table.",
+                "There is a door in the south direction."
+            ];
+            showMessage(intro.join(" "));
+            state.look_first = true;
+        } else {
+            // Subsequent looks: show a shorter, practical description
+            let extraObjects = [];
+            if (!state.drawerOpened) extraObjects.push("a locked drawer");
+            if (!state.piggyBankOpened) extraObjects.push("a piggy bank");
+            if (!state.safeOpened) extraObjects.push("a safe with a number pad");
+            if (!state.paintingCompartmentOpened) extraObjects.push("a mysterious painting");
+            if (!state.boxOpened) extraObjects.push("a locked box on the bookshelf");
+            if (!state.registerOpened) extraObjects.push("an old cash register");
+            if (!state.sofaCompartmentOpened) extraObjects.push("a suspicious sofa");
+            if (state.room === "secretary_office" && !state.cabinetOpened) extraObjects.push("a locked cabinet");
+            if (!state.slotMachineUsed) extraObjects.push("an ancient coin slot machine");
+            if (!state.diaryOpened) extraObjects.push("a mysterious diary with a lock");
+            let desc = "You look around carefully.";
+            if (extraObjects.length) {
+                desc += " You notice " + extraObjects.join(", ") + ".";
+            }
+            updateRoomDesc();
+            showMessage(desc);
+        }
+        return;
+    }
+
     // --- ROOM DESCRIPTIONS ---
     function updateRoomDesc() {
         let desc = "";
@@ -415,6 +457,215 @@
         state.history.push(cmd);
         state.message = "";
 
+            // --- PUZZLES THAT TRIGGER FLASHCARD PUZZLES ---
+
+            // 1. Locked Drawer in the Lobby
+            if (
+                [
+                    "inspect drawer", "open drawer", "unlock drawer", "look at drawer", "examine drawer"
+                ].includes(cmd)
+            ) {
+                if (!state.drawerOpened) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.drawerOpened = true;
+                            state.inventory.push("note");
+                            showMessage("You solved the puzzle and opened the drawer! Inside you find a mysterious note.");
+                            updateInventory();
+                        }
+                    });
+                } else {
+                    showMessage("The drawer is already open. You see the note inside.");
+                }
+                return;
+            }
+
+            // 2. Piggy Bank / Money Bank
+            if (
+                [
+                    "inspect piggy bank", "break piggy bank", "open piggy bank", "look at piggy bank", "examine piggy bank"
+                ].includes(cmd)
+            ) {
+                if (!state.piggyBankOpened) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.piggyBankOpened = true;
+                            state.points = (state.points || 0) + 10;
+                            showMessage("You solved the puzzle and broke open the piggy bank! You find 10 shiny coins (points).");
+                        }
+                    });
+                } else {
+                    showMessage("The piggy bank is already broken. You took the coins.");
+                }
+                return;
+            }
+
+            // 3. Safe with a Number Pad
+            if (
+                [
+                    "inspect safe", "open safe", "unlock safe", "look at safe", "examine safe"
+                ].includes(cmd)
+            ) {
+                if (!state.safeOpened) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.safeOpened = true;
+                            state.inventory.push("clue");
+                            showMessage("You solved the puzzle and opened the safe! Inside you find a cryptic clue.");
+                            updateInventory();
+                        }
+                    });
+                } else {
+                    showMessage("The safe is already open. You see the clue inside.");
+                }
+                return;
+            }
+
+            // 4. Mysterious Painting
+            if (
+                [
+                    "inspect painting", "move painting", "look behind painting", "examine painting"
+                ].includes(cmd)
+            ) {
+                if (!state.paintingCompartmentOpened) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.paintingCompartmentOpened = true;
+                            state.inventory.push("small key");
+                            showMessage("You solved the puzzle and found a hidden compartment behind the painting! You get a small key.");
+                            updateInventory();
+                        }
+                    });
+                } else {
+                    showMessage("The compartment behind the painting is already open.");
+                }
+                return;
+            }
+
+            // 5. Locked Box on Bookshelf
+            if (
+                [
+                    "inspect box", "open box", "unlock box", "look at box", "examine box"
+                ].includes(cmd)
+            ) {
+                if (!state.boxOpened) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.boxOpened = true;
+                            state.inventory.push("gem");
+                            showMessage("You solved the puzzle and opened the box! Inside is a sparkling gem.");
+                            updateInventory();
+                        }
+                    });
+                } else {
+                    showMessage("The box is already open. You see the gem inside.");
+                }
+                return;
+            }
+
+            // 6. Old Cash Register
+            if (
+                [
+                    "inspect register", "open register", "use register", "look at register", "examine register"
+                ].includes(cmd)
+            ) {
+                if (!state.registerOpened) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.registerOpened = true;
+                            state.points = (state.points || 0) + 5;
+                            showMessage("You solved the puzzle and opened the cash register! You find 5 coins (points).");
+                        }
+                    });
+                } else {
+                    showMessage("The register is already open. You took the coins.");
+                }
+                return;
+            }
+
+            // 7. Secret Compartment in the Sofa
+            if (
+                [
+                    "inspect sofa", "search sofa", "look under sofa", "examine sofa"
+                ].includes(cmd)
+            ) {
+                if (!state.sofaCompartmentOpened) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.sofaCompartmentOpened = true;
+                            state.inventory.push("strange token");
+                            showMessage("You solved the puzzle and found a secret compartment in the sofa! You get a strange token.");
+                            updateInventory();
+                        }
+                    });
+                } else {
+                    showMessage("You already found the secret compartment in the sofa.");
+                }
+                return;
+            }
+
+            // 8. Locked Cabinet in Secretary’s Office
+            if (
+                [
+                    "inspect cabinet", "open cabinet", "unlock cabinet", "look at cabinet", "examine cabinet"
+                ].includes(cmd) && state.room === "secretary_office"
+            ) {
+                if (!state.cabinetOpened) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.cabinetOpened = true;
+                            state.inventory.push("mysterious file");
+                            showMessage("You solved the puzzle and opened the cabinet! Inside is a mysterious file.");
+                            updateInventory();
+                        }
+                    });
+                } else {
+                    showMessage("The cabinet is already open. You see the file inside.");
+                }
+                return;
+            }
+
+            // 9. Ancient Coin Slot Machine
+            if (
+                [
+                    "inspect slot machine", "use slot machine", "insert coin", "look at slot machine", "examine slot machine"
+                ].includes(cmd)
+            ) {
+                if (!state.slotMachineUsed) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.slotMachineUsed = true;
+                            state.points = (state.points || 0) + 15;
+                            showMessage("You solved the puzzle and the slot machine dispenses 15 coins (points)!");
+                        }
+                    });
+                } else {
+                    showMessage("The slot machine is empty now.");
+                }
+                return;
+            }
+
+            // 10. Mysterious Diary with a Lock
+            if (
+                [
+                    "inspect diary", "open diary", "unlock diary", "look at diary", "examine diary"
+                ].includes(cmd)
+            ) {
+                if (!state.diaryOpened) {
+                    triggerFlashcardPuzzle(function(success) {
+                        if (success) {
+                            state.diaryOpened = true;
+                            showMessage("You solved the puzzle and unlocked the diary! It contains cryptic notes about the mansion's secrets.");
+                        }
+                    });
+                } else {
+                    showMessage("You already unlocked and read the diary.");
+                }
+                return;
+            }
+
+            // --- END OF PUZZLE TRIGGERS ---
+
         // --- Movement and look ---
         // Directions
         if (
@@ -479,9 +730,40 @@
                 "look", "look around", "l", "view room", "examine room", "inspect room"
             ].includes(cmd)
         ) {
-            state.look_first = true;
-            updateRoomDesc();
-            showMessage("You look around carefully.");
+            if (!state.look_first) {
+                // First look: show the long, atmospheric description
+                let intro = [
+                    "You are in a sprawling, old and decrepit mansion that has a dark and foreboding atmosphere.",
+                    "The mansion is surrounded by a large estate with overgrown gardens and a creepy forest, giving it a sense of isolation.",
+                    "The interior of the mansion is just as eerie, with dimly lit halls, creaky floorboards, and musty furnishings.",
+                    "The walls are adorned with old paintings and portraits, some of which seem to have faces that move or change expression.",
+                    "There are secret passageways, locked doors, and hidden rooms to be discovered, each of which holds a piece of the mystery that needs to be unraveled.",
+                    "",
+                    "You are standing in a lobby, there is a leaflet on the coffee table.",
+                    "There is a door in the south direction."
+                ];
+                showMessage(intro.join(" "));
+                state.look_first = true;
+            } else {
+                // Subsequent looks: show a shorter, practical description
+                let extraObjects = [];
+                if (!state.drawerOpened) extraObjects.push("a locked drawer");
+                if (!state.piggyBankOpened) extraObjects.push("a piggy bank");
+                if (!state.safeOpened) extraObjects.push("a safe with a number pad");
+                if (!state.paintingCompartmentOpened) extraObjects.push("a mysterious painting");
+                if (!state.boxOpened) extraObjects.push("a locked box on the bookshelf");
+                if (!state.registerOpened) extraObjects.push("an old cash register");
+                if (!state.sofaCompartmentOpened) extraObjects.push("a suspicious sofa");
+                if (state.room === "secretary_office" && !state.cabinetOpened) extraObjects.push("a locked cabinet");
+                if (!state.slotMachineUsed) extraObjects.push("an ancient coin slot machine");
+                if (!state.diaryOpened) extraObjects.push("a mysterious diary with a lock");
+                let desc = "You look around carefully.";
+                if (extraObjects.length) {
+                    desc += " You notice " + extraObjects.join(", ") + ".";
+                }
+                updateRoomDesc();
+                showMessage(desc);
+            }
             return;
         }
 
@@ -598,28 +880,14 @@
                     if (success) {
                         state.inventory.push("screwdriver");
                         state.screwdriver = true;
-                        showMessage("Taken.");
+                        showMessage("Taken. The screwdriver was hidden inside the book.");
                         updateInventory();
                     }
                 });
             } else if (!state.inventory.includes("book")) {
-                showMessage("You are not near any screwdriver");
+                showMessage("You are not near any screwdriver.");
             } else if (state.inventory.includes("screwdriver")) {
-                showMessage("You are already carrying a screwdriver");
-            }
-            return;
-        }
-
-        // Look at screwdriver
-        if (
-            [
-                "look at screwdriver", "examine screwdriver", "view screwdriver", "screwdriver", "inspect screwdriver"
-            ].includes(cmd)
-        ) {
-            if (state.inventory.includes("screwdriver")) {
-                showMessage("It is a normal screwdriver");
-            } else {
-                showMessage("You are not carrying a screwdriver");
+                showMessage("You are already carrying a screwdriver.");
             }
             return;
         }
@@ -701,7 +969,7 @@
             ) &&
             state.location === 2 && state.inventory.includes("screwdriver") && state.window === 0
         ) {
-            showMessage("You broke the window");
+            showMessage("You broke the window.");
             state.window = 1;
             return;
         }
@@ -775,11 +1043,19 @@
             return;
         }
         if ((cmd === "451" || cmd === "fahrenheit 451") && state.ovendial) {
-            showMessage("Turning the oven dial to 451 activated heating coils in the room, turning it into a giant oven, you are heating up, and have limited moves");
+            showMessage("Turning the oven dial to 451 activated heating coils in the room, turning it into a giant oven. The room is now hot!");
             state.heating_coils = true;
             state.moves = 0;
             state.warm = true;
+            state.ovendial = false;
             return;
+        }
+
+        // --- SECRETARY'S DOOR ESCAPE LOGIC ---
+        // Add a helper to check if player can survive entering the secretary's office
+        function canSurviveSecretaryOffice() {
+            // Must have turned oven dial to 451 (room is hot)
+            return state.heating_coils === true;
         }
 
         // Secretary's door logic (flashcard puzzle)
@@ -807,10 +1083,100 @@
             ) &&
             state.location === 4 && state.door === 1
         ) {
-            state.room = "secretary_office";
-            state.location = 0;
-            showMessage("You enter the secretary's office. You have escaped the lobby!");
-            updateUI();
+            if (canSurviveSecretaryOffice()) {
+                state.room = "secretary_office";
+                state.location = 0;
+                state.heating_coils = false; // reset heat
+                showMessage("You enter the secretary's office. You have escaped the lobby! You step in a small water puddle, but the room is warm enough to survive.");
+                updateUI();
+            } else {
+                showMessage("You enter the secretary's office, but slip on a frozen puddle and hit your head. You died.");
+                state.gameover = true;
+            }
+            return;
+        }
+
+        // Take leaflet
+        if (
+            [
+                "take leaflet", "grab the leaflet", "grab leaflet", "take the leaflet", "pick up the leaflet", "pick up leaflet"
+            ].includes(cmd)
+        ) {
+            if (state.location === 0 && !state.inventory.includes("leaflet")) {
+                state.inventory.push("leaflet");
+                state.leaflet = true;
+                showMessage("Taken. The leaflet feels slightly warm.");
+                updateInventory();
+            } else if (state.inventory.includes("leaflet")) {
+                showMessage("You already have the leaflet.");
+            } else {
+                showMessage("There is no leaflet here.");
+            }
+            return;
+        }
+
+        // Drop leaflet
+        if (
+            [
+                "drop leaflet", "leave leaflet"
+            ].includes(cmd)
+        ) {
+            if (state.inventory.includes("leaflet")) {
+                state.inventory = state.inventory.filter(x => x !== "leaflet");
+                state.leaflet = false;
+                state.leaflet_read = false;
+                showMessage("Dropped.");
+                updateInventory();
+            } else {
+                showMessage("You are not carrying a leaflet.");
+            }
+            return;
+        }
+
+        // Examine leaflet
+        if (
+            [
+                "inspect leaflet", "examine leaflet", "look at leaflet"
+            ].includes(cmd)
+        ) {
+            showMessage("It is a normal leaflet. Maybe try reading it?");
+            return;
+        }
+
+        // Read leaflet
+        if (
+            [
+                "read leaflet", "open leaflet", "read the leaflet", "open the leaflet", "look in the leaflet"
+            ].includes(cmd)
+        ) {
+            if (state.inventory.includes("leaflet")) {
+                state.leaflet_read = true;
+                showMessage("You open the leaflet. It has two pages: Page 1: 'Welcome to KROZ! Escape the mansion.' Page 2: 'Remember: Sometimes you need to turn up the heat to escape.'");
+            } else {
+                showMessage("You are not carrying a leaflet.");
+            }
+            return;
+        }
+
+        // Read leaflet pages
+        if (
+            (["turn to page 1", "read page 1", "page 1", "1"].includes(cmd)) && state.leaflet_read
+        ) {
+            if (state.inventory.includes("leaflet")) {
+                showMessage("Page 1: 'Welcome to KROZ! Escape the mansion.'");
+            } else {
+                showMessage("You are not carrying a leaflet.");
+            }
+            return;
+        }
+        if (
+            (["turn to page 2", "read page 2", "page 2", "2"].includes(cmd)) && state.leaflet_read
+        ) {
+            if (state.inventory.includes("leaflet")) {
+                showMessage("Page 2: 'Remember: Sometimes you need to turn up the heat to escape.'");
+            } else {
+                showMessage("You are not carrying a leaflet.");
+            }
             return;
         }
 
@@ -848,9 +1214,40 @@
                 "look", "look around", "l", "view room", "examine room", "inspect room"
             ].includes(cmd)
         ) {
-            state.look_first = true;
-            updateRoomDesc();
-            showMessage("You look around carefully.");
+            if (!state.look_first) {
+                // First look: show the long, atmospheric description
+                let intro = [
+                    "You are in a sprawling, old and decrepit mansion that has a dark and foreboding atmosphere.",
+                    "The mansion is surrounded by a large estate with overgrown gardens and a creepy forest, giving it a sense of isolation.",
+                    "The interior of the mansion is just as eerie, with dimly lit halls, creaky floorboards, and musty furnishings.",
+                    "The walls are adorned with old paintings and portraits, some of which seem to have faces that move or change expression.",
+                    "There are secret passageways, locked doors, and hidden rooms to be discovered, each of which holds a piece of the mystery that needs to be unraveled.",
+                    "",
+                    "You are standing in a lobby, there is a leaflet on the coffee table.",
+                    "There is a door in the south direction."
+                ];
+                showMessage(intro.join(" "));
+                state.look_first = true;
+            } else {
+                // Subsequent looks: show a shorter, practical description
+                let extraObjects = [];
+                if (!state.drawerOpened) extraObjects.push("a locked drawer");
+                if (!state.piggyBankOpened) extraObjects.push("a piggy bank");
+                if (!state.safeOpened) extraObjects.push("a safe with a number pad");
+                if (!state.paintingCompartmentOpened) extraObjects.push("a mysterious painting");
+                if (!state.boxOpened) extraObjects.push("a locked box on the bookshelf");
+                if (!state.registerOpened) extraObjects.push("an old cash register");
+                if (!state.sofaCompartmentOpened) extraObjects.push("a suspicious sofa");
+                if (state.room === "secretary_office" && !state.cabinetOpened) extraObjects.push("a locked cabinet");
+                if (!state.slotMachineUsed) extraObjects.push("an ancient coin slot machine");
+                if (!state.diaryOpened) extraObjects.push("a mysterious diary with a lock");
+                let desc = "You look around carefully.";
+                if (extraObjects.length) {
+                    desc += " You notice " + extraObjects.join(", ") + ".";
+                }
+                updateRoomDesc();
+                showMessage(desc);
+            }
             return;
         }
         // Hint
@@ -884,31 +1281,235 @@
         }
         // Default
         showMessage("Nothing happens.");
-    }
 
-    // --- FORM HANDLING ---
-    document.getElementById("command-form").onsubmit = function() {
-        if (state.gameover) return false;
-        let input = document.getElementById("command-input").value;
-        if (!input.trim()) return false;
-        processCommand(input);
+        // --- More flavor and puzzle commands from game.py ---
+
+        // Table and coffee table
+        if (
+            [
+                "look at table", "look at the table", "look at coffee table", "look at the coffee table",
+                "examine table", "examine the table", "examine the coffee table"
+            ].includes(cmd)
+        ) {
+            showMessage("There is a leaflet on the coffee table.");
+            return;
+        }
+        if (
+            [
+                "go to table", "go to the table", "go to the coffee table", "look around coffee table",
+                "look around table", "walk around table"
+            ].includes(cmd)
+        ) {
+            showMessage("You are standing beside the oval coffee table made out of mahogany wood. There is a leaflet on the coffee table.");
+            return;
+        }
+        if (
+            [
+                "look under table", "go under table"
+            ].includes(cmd)
+        ) {
+            showMessage("There is only dust under the table. The dust makes you uncomfortable.");
+            state.health -= 10;
+            updateHealth();
+            return;
+        }
+
+        // Sofas
+        if (
+            [
+                "sit in sofas", "go in sofas", "sit in sofa", "jump on sofa", "jump on sofas"
+            ].includes(cmd)
+        ) {
+            if (!state.sofa) {
+                state.sofa = true;
+                showMessage("You relax for a bit in the sofas in the lobby. You remind yourself you don't have unlimited time to escape. Better get going.");
+                state.health += 10;
+                updateHealth();
+            } else {
+                showMessage("You are a bit tired and just sitting in this sofa again made you fall asleep. You never woke up again for unknown reasons.");
+                state.gameover = true;
+            }
+            return;
+        }
+
+        // Paintings and portraits
+        if (
+            [
+                "look at paintings", "look at painting", "look at portraits", "look at portrait"
+            ].includes(cmd)
+        ) {
+            showMessage("It feels like the old paintings and portraits are looking at you, and are following your every step. You better watch your back.");
+            return;
+        }
+        if (
+            [
+                "destroy paintings", "destroy painting", "destroy portraits", "destroy portrait"
+            ].includes(cmd)
+        ) {
+            if (state.destroyed_paintings) {
+                showMessage("You have already destroyed all of the paintings and portraits. The evil spirits hurt you again.");
+                state.health -= 10;
+            } else {
+                state.destroyed_paintings = true;
+                showMessage("You ruined the old and creepy paintings and portraits. You have got a bad omen now. The evil spirits hurt you.");
+                state.health -= 10;
+            }
+            updateHealth();
+            return;
+        }
+
+        // Table violence
+        if (
+            [
+                "punch table", "attack table", "kick table", "destroy table", "eat leaflet", "eat the leaflet", "eat table", "eat the table"
+            ].includes(cmd)
+        ) {
+            showMessage("Why would you do that? You hurt yourself.");
+            state.health -= 10;
+            updateHealth();
+            return;
+        }
+
+        // Try to take table
+        if (
+            [
+                "take table", "grab table"
+            ].includes(cmd)
+        ) {
+            showMessage("You cannot do that. The table is too heavy for you to carry.");
+            return;
+        }
+
+        // Escape attempts
+        if (
+            [
+                "leave lobby", "go out of lobby", "escape the mansion", "escape the lobby", "escape", "escape the mystery mansion", "escape lobby"
+            ].includes(cmd)
+        ) {
+            showMessage("You cannot leave the lobby from here. There is an exit via the door in the south direction.");
+            return;
+        }
+
+        // Who am I
+        if (
+            [
+                "who am i", "me"
+            ].includes(cmd)
+        ) {
+            showMessage("You are a retired pilot.");
+            return;
+        }
+
+        // KROZ/Zork
+        if (
+            [
+                "what is kroz", "kroz", "zork"
+            ].includes(cmd)
+        ) {
+            showMessage("You will know, if you read the leaflet on the coffee table.");
+            return;
+        }
+
+        // Go up on table (instant death)
+        if (
+            [
+                "go up on table", "jump up on the table", "jump on table", "go on table", "walk on table"
+            ].includes(cmd)
+        ) {
+            showMessage("You feel like the king of the world... ...or at least this tiny lonesome lobby... ...It's actually a bit scary to be standing here... ...You feel the anxiety and fear kick in from being so high up... You fainted, because you are scared of heights. You died.");
+            state.gameover = true;
+            return;
+        }
+
+        // Mouse under bookshelf
+        if (
+            [
+                "look under bookshelf"
+            ].includes(cmd)
+        ) {
+            showMessage("A mouse attacks you from under the bookshelf. You lose some health.");
+            state.health -= 10;
+            updateHealth();
+            return;
+        }
+
+        // Bookshelf alignment
+        if (
+            [
+                "align bookshelf", "fix bookshelf", "repair bookshelf", "orient bookshelf", "line books up"
+            ].includes(cmd)
+        ) {
+            showMessage("You try to orient the books and they are now lined up perfectly. One book messes up the bookshelf alignment once again. All the books are again lined up perfectly except for one book in particular.");
+            return;
+        }
+
+        // Try to take coffee table
+        if (
+            [
+                "take coffee table", "grab coffee table"
+            ].includes(cmd)
+        ) {
+            showMessage("You cannot do that. The coffee table is too heavy for you to carry.");
+            return;
+        }
+
+        // Are there any humans here
+        if (
+            [
+                "are there any humans here", "is there anyone here", "anyone here"
+            ].includes(cmd)
+        ) {
+            showMessage("No, you are here by yourself. All alone.");
+            return;
+        }
+
+        // --- FORM HANDLING ---
+        // This ensures pressing Enter in the input box processes the command
+        document.getElementById("command-form").onsubmit = function() {
+            if (state.gameover) return false;
+            let input = document.getElementById("command-input").value;
+            if (!input.trim()) return false;
+            processCommand(input);
+            updateUI();
+            document.getElementById("command-input").value = "";
+            return false; // Prevent form submission/reload
+        };
+
+        // --- RESTART ---
+        function restartGame() {
+            state = initialState();
+            updateUI();
+            showMessage("Game restarted.");
+            document.getElementById("flashcard-prompt").style.display = "none";
+            document.getElementById("command-form").style.display = "";
+        }
+
+        // --- INIT ---
         updateUI();
-        document.getElementById("command-input").value = "";
-        return false;
-    };
+        document.getElementById("command-input").focus();
 
-    // --- RESTART ---
-    function restartGame() {
-        state = initialState();
-        updateUI();
-        showMessage("Game restarted.");
-        document.getElementById("flashcard-prompt").style.display = "none";
-        document.getElementById("command-form").style.display = "";
+        // --- SHOW INITIAL ROOM DESCRIPTION ON LOAD ---
+        window.onload = function() {
+            updateUI();
+            // Long introduction (only on first load)
+            let intro = [
+                "You are in a sprawling, old and decrepit mansion that has a dark and foreboding atmosphere.",
+                "The mansion is surrounded by a large estate with overgrown gardens and a creepy forest, giving it a sense of isolation.",
+                "The interior of the mansion is just as eerie, with dimly lit halls, creaky floorboards, and musty furnishings.",
+                "The walls are adorned with old paintings and portraits, some of which seem to have faces that move or change expression.",
+                "There are secret passageways, locked doors, and hidden rooms to be discovered, each of which holds a piece of the mystery that needs to be unraveled.",
+                "",
+                "You are standing in a lobby, there is a leaflet on the coffee table.",
+                "There is a door in the south direction.",
+                "",
+                "What are you going to do?"
+            ];
+            showMessage(intro.join(" "));
+            document.getElementById("command-input").focus();
+            state.look_first = false; // Ensure first look is special
+        };
+
     }
-
-    // --- INIT ---
-    updateUI();
-    document.getElementById("command-input").focus();
     </script>
 </body>
 </html>

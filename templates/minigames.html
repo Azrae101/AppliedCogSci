@@ -251,61 +251,83 @@
             outline: none;
         }
 
-        /* Minigames grid - academic/gamified blue theme */
+        /* NYT Games-inspired minigame grid */
         #minigames-list {
-            width: auto;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-auto-rows: 1fr;
-            gap: 40px 40px;
-            justify-items: center;
-            align-items: stretch;
-            max-width: 1200px;
-            margin: 0;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px 32px;
+            max-width: 1500px; /* wider grid */
+            margin: 0 auto;
+            padding: 40px 0 20px 0;
         }
         .minigame {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(60,60,60,0.08), 0 1.5px 0 #e0e0e0;
+            padding: 26px 28px 22px 28px; /* wider padding */
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
-            background: linear-gradient(120deg, #e3f2fd 60%, #bbdefb 100%);
-            border-radius: 16px;
-            box-shadow: 0 4px 18px rgba(33,150,243,0.13), 0 1.5px 0 #90caf9;
-            padding: 28px 18px 20px 18px;
-            min-width: 220px;
-            max-width: 260px;
-            transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
-            cursor: pointer;
-            border: 2.5px solid #90caf9;
+            transition: box-shadow 0.2s, transform 0.2s;
+            min-height: 275px;
+            min-width: 0;
             position: relative;
+            max-width: 375px; /* make each card wider */
+            width: 100%;
         }
         .minigame:hover {
-            box-shadow: 0 8px 32px rgba(33,150,243,0.22), 0 2px 0 #1976d2;
-            transform: translateY(-10px) scale(1.05) rotate(-1deg);
-            border-color: #1976d2;
-            z-index: 1;
+            box-shadow: 0 8px 32px rgba(60,60,60,0.16), 0 2px 0 #bdbdbd;
+            transform: translateY(-4px) scale(1.02);
         }
+        .minigame-image-link img,
         .minigame img {
-            width: 120px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             object-fit: contain;
+            margin-bottom: 18px;
             border-radius: 12px;
-            margin-bottom: 14px;
-            background: #e3f2fd;
-            border: 2.5px solid #90caf9;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #f7f7f7;
+            box-shadow: 0 1px 6px rgba(33,150,243,0.07);
         }
-        .minigame:hover img {
-            border-color: #1976d2;
-            box-shadow: 0 4px 16px rgba(33,150,243,0.15);
-        }
-        .minigame span {
-            margin-top: 12px;
-            font-size: 1.18em;
-            color: #1976d2;
+        .minigame-title, .minigame span {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.45em;
             font-weight: 700;
-            letter-spacing: 0.7px;
-            text-shadow: 0 1px 0 #e3f2fd;
+            color: #22223b;
+            margin-bottom: 10px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .minigame-desc {
+            font-size: 1.08em;
+            color: #555;
+            margin-bottom: 18px;
+            text-align: center;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            min-height: 48px;
+        }
+        .play-btn-link {
+            margin-top: auto;
+        }
+        .play-btn {
+            background: #22223b;
+            color: #fff;
+            border-radius: 6px;
+            padding: 12px 32px;
+            font-size: 1.08em;
+            font-weight: 600;
+            border: none;
+            box-shadow: 0 1px 6px rgba(33,150,243,0.07);
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+            min-width: 225px;   /* Add this line */
+            width: 180px;       /* Add this line */
+            text-align: center; /* Ensure text is centered */
+            box-sizing: border-box;
+        }
+        .play-btn:hover {
+            background: #1976d2;
+            color: #fff;
         }
 
         /* Center the search results and titles */
@@ -369,15 +391,17 @@
             }
             #minigames-list {
                 grid-template-columns: repeat(2, 1fr);
-                max-width: 600px;
-                gap: 28px 18px;
+                max-width: 900px;
             }
         }
         @media (max-width: 900px) {
             #minigames-list {
                 grid-template-columns: 1fr;
-                max-width: 320px;
-                gap: 18px 0;
+                max-width: 98vw;
+            }
+            .minigame {
+                max-width: 98vw;
+                padding: 24px 8vw 24px 8vw;
             }
             .settings-container.deck-settings-global {
                 padding: 16px 6px;
@@ -429,47 +453,94 @@
                 <select id="options" name="options" class="options-menu" onchange="sortMinigames()">
                     <option value="" disabled selected>Sort minigames</option>
                     <option value="alphabetical">Alphabetically</option>
-                    <option value="recent">Recently played</option>
-                    <option value="recommended">Recommended</option>
+                    <option value="recent">Recommended</option>
+                    <option value="recommended">Difficulty: Easiest First</option>
                 </select>
             </div>
             <div id="search-results-container"></div>
             <div id="minigames-list">
-                <div class="minigame" data-name="Flashcards" data-date="2024-01-01" data-recent="3">
-                    <a href="{{ url_for('flashcards_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
-                    <span>Flashcards</span>
+                <div class="minigame" data-name="TetriCards" data-date="2024-07-01" data-recent="1">
+                    <a href="{{ url_for('tetris_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
+                    <span class="minigame-title">TetriCards</span>
+                    <div class="minigame-desc">A Tetris-inspired game where you clear lines by answering questions correctly.</div>
+                    <a href="{{ url_for('tetris_settings') }}" class="play-btn-link">
+                        <button class="play-btn">Play TetriCards</button>
+                    </a>
                 </div>
-                <div class="minigame" data-name="Quiz" data-date="2024-02-01" data-recent="2">
-                    <a href="{{ url_for('quiz_settings') }}"><img src="{{ url_for('static', filename='quiz.png') }}" class="resized-img"></a>
-                    <span>Quiz</span>
-                </div>
-                <div class="minigame" data-name="Flashmatch" data-date="2024-03-01" data-recent="1">
+                <div class="minigame" data-name="Flashmatch" data-date="2024-03-01" data-recent="2">
                     <a href="{{ url_for('flashmatch_settings') }}"><img src="{{ url_for('static', filename='flashmatch.png') }}" class="resized-img"></a>
-                    <span>Flashmatch</span>
+                    <span class="minigame-title">Flashmatch</span>
+                    <div class="minigame-desc">Match terms and definitions as quickly as you can. Great for rapid review and memory training.</div>
+                    <a href="{{ url_for('flashmatch_settings') }}" class="play-btn-link">
+                        <button class="play-btn">Play Flashmatch</button>
+                    </a>
                 </div>
-                <div class="minigame" data-name="MemoryGrid" data-date="2024-04-01" data-recent="6">
-                    <a href="{{ url_for('memorygrid_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
-                    <span>MemoryGrid</span>
-                </div>
-                <div class="minigame" data-name="CardChase" data-date="2024-05-01" data-recent="5">
-                    <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
-                    <span>CardChase</span>
+                <div class="minigame" data-name="EscapeRoom" data-date="2024-10-01" data-recent="3">
+                    <a href="{{ url_for('escaperoom') }}">
+                        <img src="{{ url_for('static', filename='escaperoom.png') }}" class="resized-img">
+                    </a>
+                    <span class="minigame-title">Escape Room</span>
+                    <div class="minigame-desc">Solve puzzles and unlock clues to escape the room. Can you beat the challenge?</div>
+                    <a href="{{ url_for('escaperoom') }}" class="play-btn-link">
+                        <button class="play-btn">Play Escape Room</button>
+                    </a>
                 </div>
                 <div class="minigame" data-name="TimeWarp" data-date="2024-06-01" data-recent="4">
                     <a href="{{ url_for('timewarp_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
-                    <span>TimeWarp</span>
+                    <span class="minigame-title">TimeWarp</span>
+                    <div class="minigame-desc">Test your recall under time pressure. How fast can you answer?</div>
+                    <a href="{{ url_for('timewarp_settings') }}" class="play-btn-link">
+                        <button class="play-btn">Play TimeWarp</button>
+                    </a>
                 </div>
-                <div class="minigame" data-name="TetriCards" data-date="2024-07-01" data-recent="9">
-                    <a href="{{ url_for('tetris_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
-                    <span>TetriCards</span>
+                <div class="minigame" data-name="CardChase" data-date="2024-05-01" data-recent="5">
+                    <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
+                    <span class="minigame-title">CardChase</span>
+                    <div class="minigame-desc">Race against the clock to find the right cards. Fast-paced and fun!</div>
+                    <a href="{{ url_for('cardchase_settings') }}" class="play-btn-link">
+                        <button class="play-btn">Play CardChase</button>
+                    </a>
                 </div>
-                <div class="minigame" data-name="TermTime" data-date="2024-08-01" data-recent="8">
+                <!-- The rest of the games, keep their data-recent as 6+ -->
+                <div class="minigame" data-name="Flashcards" data-date="2024-01-01" data-recent="6">
+                    <a href="{{ url_for('flashcards_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
+                    <span class="minigame-title">Flashcards</span>
+                    <div class="minigame-desc">Classic study tool for memorizing terms and definitions. Flip cards, test yourself, and track your progress.</div>
+                    <a href="{{ url_for('flashcards_settings') }}" class="play-btn-link">
+                        <button class="play-btn">Play Flashcards</button>
+                    </a>
+                </div>
+                <div class="minigame" data-name="Quiz" data-date="2024-02-01" data-recent="7">
+                    <a href="{{ url_for('quiz_settings') }}"><img src="{{ url_for('static', filename='quiz.png') }}" class="resized-img"></a>
+                    <span class="minigame-title">Quiz</span>
+                    <div class="minigame-desc">Test your knowledge with multiple-choice questions. Challenge yourself and see how much you remember!</div>
+                    <a href="{{ url_for('quiz_settings') }}" class="play-btn-link">
+                        <button class="play-btn">Play Quiz</button>
+                    </a>
+                </div>
+                <div class="minigame" data-name="MemoryGrid" data-date="2024-04-01" data-recent="8">
+                    <a href="{{ url_for('memorygrid_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
+                    <span class="minigame-title">MemoryGrid</span>
+                    <div class="minigame-desc">A memory game where you match pairs of cards. Sharpen your memory while you study.</div>
+                    <a href="{{ url_for('memorygrid_settings') }}" class="play-btn-link">
+                        <button class="play-btn">Play MemoryGrid</button>
+                    </a>
+                </div>
+                <div class="minigame" data-name="TermTime" data-date="2024-08-01" data-recent="9">
                     <a href="{{ url_for('termtime_settings') }}"><img src="{{ url_for('static', filename='term.png') }}" class="resized-img"></a>
-                    <span>TermTime</span>
+                    <span class="minigame-title">TermTime</span>
+                    <div class="minigame-desc">Practice key terms in a timed challenge. Perfect for quick revision sessions.</div>
+                    <a href="{{ url_for('termtime_settings') }}" class="play-btn-link">
+                        <button class="play-btn">Play TermTime</button>
+                    </a>
                 </div>
-                <div class="minigame" data-name="DefineDash" data-date="2024-09-01" data-recent="7">
+                <div class="minigame" data-name="DefineDash" data-date="2024-09-01" data-recent="10">
                     <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='define.png') }}" class="resized-img"></a>
-                    <span>DefineDash</span>
+                    <span class="minigame-title">DefineDash</span>
+                    <div class="minigame-desc">How many definitions can you get right in a row? Test your knowledge!</div>
+                    <a href="{{ url_for('definedash_settings') }}" class="play-btn-link">
+                        <button class="play-btn">Play DefineDash</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -579,4 +650,3 @@
     </script>
 </body>
 </html>
-``` 
