@@ -308,53 +308,81 @@
         }
         .minigame-image-link img,
         .minigame img {
-            width: 90px;
-            height: 90px;
-            object-fit: contain;
-            margin-bottom: 18px;
-            border-radius: 12px;
-            background: #f7f7f7;
-            box-shadow: 0 1px 6px rgba(33,150,243,0.07);
+            width: 120px;
+            height: 120px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.08));
+        }
+        .minigame:hover img {
+            transform: rotate(-5deg) scale(1.1);
         }
         .minigame-title, .minigame span {
             font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 1.45em;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: #22223b;
+            color: #1A237E;
             margin-bottom: 10px;
             text-align: center;
             letter-spacing: 0.5px;
+            display: inline-block;
         }
         .minigame-desc {
-            font-size: 1.08em;
-            color: #555;
+            font-size: 1.1rem;
+            color: #424242;
             margin-bottom: 18px;
             text-align: center;
             font-family: 'Georgia', 'Times New Roman', serif;
             min-height: 48px;
         }
+        /* Add subtle background animation */
+        .minigame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, 
+                rgba(33,150,243,0.08) 0%,
+                rgba(255,255,255,0.2) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 18px;
+        }
+
+        .minigame:hover::before {
+            opacity: 1;
+        }
         .play-btn-link {
             margin-top: auto;
         }
         .play-btn {
-            background: #22223b;
+            background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
             color: #fff;
-            border-radius: 6px;
-            padding: 12px 32px;
-            font-size: 1.08em;
-            font-weight: 600;
+            border-radius: 8px;
+            padding: 14px 32px;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
             border: none;
-            box-shadow: 0 1px 6px rgba(33,150,243,0.07);
-            transition: background 0.2s, color 0.2s;
-            cursor: pointer;
-            min-width: 225px;   /* Add this line */
-            width: 180px;       /* Add this line */
-            text-align: center; /* Ensure text is centered */
-            box-sizing: border-box;
+            transition: all 0.3s ease;
         }
+
+        .play-btn::after {
+            margin-left: 8px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
         .play-btn:hover {
-            background: #1976d2;
-            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(25,118,210,0.25);
+        }
+
+        .play-btn:hover::after {
+            transform: translateX(4px);
         }
 
         /* Center the search results and titles */
@@ -540,6 +568,19 @@
                 padding-bottom: 80px;
             }
         }
+
+        .minigame-title::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: #42A5F5; /* Accent line */
+            border-radius: 2px;
+        }
+
         @media (max-width: 600px) {
             .settings-container.deck-settings-global {
                 padding: 10px 2vw;
@@ -551,6 +592,48 @@
                 margin-bottom: 100px;
                 padding-bottom: 100px;
             }
+        }
+        .difficulty-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .difficulty-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e0e0e0;
+        }
+
+        /* Dynamic coloring based on data attribute */
+        .minigame[data-difficulty="easy"] .difficulty-dot:nth-child(1),
+        .minigame[data-difficulty="medium"] .difficulty-dot:nth-child(-n+2),
+        .minigame[data-difficulty="hard"] .difficulty-dot {
+            background: #4CAF50; /* Green for active dots */
+        }
+
+        .minigame[data-difficulty="medium"] .difficulty-dot:nth-child(1) {
+            background: #FFC107; /* Yellow for medium */
+        }
+
+        .minigame[data-difficulty="hard"] .difficulty-dot {
+            background: #F44336; /* Red for hard */
+        }
+
+        .completion-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            color: #1976d2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            backdrop-filter: blur(4px);
         }
     </style>
     <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
@@ -606,7 +689,12 @@
             </div>
             <div id="search-results-container"></div>
             <div id="minigames-list">
-                <div class="minigame" data-name="TetriCards" data-date="2024-07-01" data-recent="1">
+                <div class="minigame" data-name="TetriCards" data-date="2024-07-01" data-recent="1" data-difficulty="hard">
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('tetris_settings') }}"><img src="{{ url_for('static', filename='tetricards.png') }}" class="resized-img"></a>
                     <span class="minigame-title">TetriCards</span>
                     <div class="minigame-desc">A Tetris-inspired game where you clear lines by answering questions correctly.</div>
@@ -614,7 +702,12 @@
                         <button class="play-btn">Play TetriCards</button>
                     </a>
                 </div>
-                <div class="minigame" data-name="Flashmatch" data-date="2024-03-01" data-recent="2">
+                <div class="minigame" data-name="Flashmatch" data-date="2024-03-01" data-recent="2" data-difficulty="medium">
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('flashmatch_settings') }}"><img src="{{ url_for('static', filename='flashmatch.png') }}" class="resized-img"></a>
                     <span class="minigame-title">Flashmatch</span>
                     <div class="minigame-desc">Match terms and definitions as quickly as you can. Great for rapid review and memory training.</div>
@@ -622,7 +715,12 @@
                         <button class="play-btn">Play Flashmatch</button>
                     </a>
                 </div>
-                <div class="minigame" data-name="EscapeRoom" data-date="2024-10-01" data-recent="3">
+                <div class="minigame" data-name="EscapeRoom" data-date="2024-10-01" data-recent="3" data-difficulty="hard">
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('escaperoom') }}">
                         <img src="{{ url_for('static', filename='escaperoom.png') }}" class="resized-img">
                     </a>
@@ -632,7 +730,12 @@
                         <button class="play-btn">Play Escape Room</button>
                     </a>
                 </div>
-                <div class="minigame" data-name="TimeWarp" data-date="2024-06-01" data-recent="4">
+                <div class="minigame" data-name="TimeWarp" data-date="2024-06-01" data-recent="4" data-difficulty="medium>
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('timewarp_settings') }}"><img src="{{ url_for('static', filename='timewarpss.png') }}" class="resized-img"></a>
                     <span class="minigame-title">TimeWarp</span>
                     <div class="minigame-desc">Test your recall under time pressure. How fast can you answer?</div>
@@ -640,7 +743,12 @@
                         <button class="play-btn">Play TimeWarp</button>
                     </a>
                 </div>
-                <div class="minigame" data-name="CardChase" data-date="2024-05-01" data-recent="5">
+                <div class="minigame" data-name="CardChase" data-date="2024-05-01" data-recent="5" data-difficulty="medium>
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('cardchase_settings') }}"><img src="{{ url_for('static', filename='cardchase.png') }}" class="resized-img"></a>
                     <span class="minigame-title">CardChase</span>
                     <div class="minigame-desc">Race against the clock to find the right cards. Fast-paced and fun!</div>
@@ -649,7 +757,12 @@
                     </a>
                 </div>
                 <!-- The rest of the games, keep their data-recent as 6+ -->
-                <div class="minigame" data-name="Flashcards" data-date="2024-01-01" data-recent="6">
+                <div class="minigame" data-name="Flashcards" data-date="2024-01-01" data-recent="6" data-difficulty="easy">
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('flashcards_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
                     <span class="minigame-title">Flashcards</span>
                     <div class="minigame-desc">Classic study tool for memorizing terms and definitions. Flip cards, test yourself, and track your progress.</div>
@@ -657,7 +770,12 @@
                         <button class="play-btn">Play Flashcards</button>
                     </a>
                 </div>
-                <div class="minigame" data-name="Quiz" data-date="2024-02-01" data-recent="7">
+                <div class="minigame" data-name="Quiz" data-date="2024-02-01" data-recent="7" data-difficulty="easy">
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('quiz_settings') }}"><img src="{{ url_for('static', filename='quiz.png') }}" class="resized-img"></a>
                     <span class="minigame-title">Quiz</span>
                     <div class="minigame-desc">Test your knowledge with multiple-choice questions. Challenge yourself and see how much you remember!</div>
@@ -665,7 +783,12 @@
                         <button class="play-btn">Play Quiz</button>
                     </a>
                 </div>
-                <div class="minigame" data-name="MemoryGrid" data-date="2024-04-01" data-recent="8">
+                <div class="minigame" data-name="MemoryGrid" data-date="2024-04-01" data-recent="8" data-difficulty="medium">
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('memorygrid_settings') }}"><img src="{{ url_for('static', filename='memorygrid.png') }}" class="resized-img"></a>
                     <span class="minigame-title">MemoryGrid</span>
                     <div class="minigame-desc">A memory game where you match pairs of cards. Sharpen your memory while you study.</div>
@@ -673,7 +796,12 @@
                         <button class="play-btn">Play MemoryGrid</button>
                     </a>
                 </div>
-                <div class="minigame" data-name="TermTime" data-date="2024-08-01" data-recent="9">
+                <div class="minigame" data-name="TermTime" data-date="2024-08-01" data-recent="9" data-difficulty="hard">
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('termtime_settings') }}"><img src="{{ url_for('static', filename='term.png') }}" class="resized-img"></a>
                     <span class="minigame-title">TermTime</span>
                     <div class="minigame-desc">Practice key terms in a timed challenge. Perfect for quick revision sessions.</div>
@@ -681,7 +809,12 @@
                         <button class="play-btn">Play TermTime</button>
                     </a>
                 </div>
-                <div class="minigame" data-name="DefineDash" data-date="2024-09-01" data-recent="10">
+                <div class="minigame" data-name="DefineDash" data-date="2024-09-01" data-recent="10" data-difficulty="hard">
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-dot easy"></span>
+                        <span class="difficulty-dot medium"></span>
+                        <span class="difficulty-dot hard"></span>
+                    </div>
                     <a href="{{ url_for('definedash_settings') }}"><img src="{{ url_for('static', filename='define.png') }}" class="resized-img"></a>
                     <span class="minigame-title">DefineDash</span>
                     <div class="minigame-desc">How many definitions can you get right in a row? Test your knowledge!</div>
