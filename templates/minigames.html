@@ -693,6 +693,49 @@
         <p>&copy; 2024 CogCards. All rights reserved.</p>
     </footer>
     <script>
+    let originalMinigames = [];
+    let currentMinigames = [];
+    
+    document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('header');
+            const stickyNav = document.querySelector('.sticky-nav');
+            const placeholder = document.createElement('div');
+            placeholder.className = 'nav-placeholder';
+            
+            if (stickyNav) {
+                // Insert placeholder after header
+                header.insertAdjacentElement('afterend', placeholder);
+                
+                const navOffset = stickyNav.offsetTop;
+                const navHeight = stickyNav.offsetHeight;
+                
+                window.addEventListener('scroll', () => {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    // Calculate when nav is about to leave viewport
+                    const shouldStick = scrollTop > navOffset - navHeight;
+                    
+                    if (shouldStick) {
+                        if (!stickyNav.classList.contains('sticky')) {
+                            placeholder.style.display = 'block';
+                            placeholder.style.height = `${navHeight}px`;
+                            stickyNav.classList.add('sticky');
+                        }
+                    } else {
+                        if (stickyNav.classList.contains('sticky')) {
+                            placeholder.style.display = 'none';
+                            stickyNav.classList.remove('sticky');
+                        }
+                    }
+                });
+            }
+
+            // Initialize minigame arrays after DOM is ready
+            const minigamesList = document.getElementById('minigames-list');
+            originalMinigames = Array.from(minigamesList.querySelectorAll('.minigame'));
+            currentMinigames = [...originalMinigames];
+        });
+
         // Render minigames in a flat grid (no rows)
         function renderMinigames(minigames, container) {
             container.innerHTML = '';
@@ -766,40 +809,7 @@
             document.getElementById('search-results-container').innerHTML = '';
             renderMinigames(minigames, minigamesList);
         }
-        document.addEventListener('DOMContentLoaded', function() {
-            const header = document.querySelector('header');
-            const stickyNav = document.querySelector('.sticky-nav');
-            const placeholder = document.createElement('div');
-            placeholder.className = 'nav-placeholder';
-            
-            if (stickyNav) {
-                // Insert placeholder after header
-                header.insertAdjacentElement('afterend', placeholder);
-                
-                const navOffset = stickyNav.offsetTop;
-                const navHeight = stickyNav.offsetHeight;
-                
-                window.addEventListener('scroll', () => {
-                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    
-                    // Calculate when nav is about to leave viewport
-                    const shouldStick = scrollTop > navOffset - navHeight;
-                    
-                    if (shouldStick) {
-                        if (!stickyNav.classList.contains('sticky')) {
-                            placeholder.style.display = 'block';
-                            placeholder.style.height = `${navHeight}px`;
-                            stickyNav.classList.add('sticky');
-                        }
-                    } else {
-                        if (stickyNav.classList.contains('sticky')) {
-                            placeholder.style.display = 'none';
-                            stickyNav.classList.remove('sticky');
-                        }
-                    }
-                });
-            }
-        });
+        
     </script>
 </body>
 </html>
