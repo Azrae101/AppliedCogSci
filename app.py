@@ -179,7 +179,7 @@ def memorygrid():
 
 @app.route('/escaperoom')
 def escaperoom():
-    return render_template('games/escape_room.html') 
+    return render_template('games/escaperoom.html') 
 
 # Game settings
 @app.route('/cardchase_settings')

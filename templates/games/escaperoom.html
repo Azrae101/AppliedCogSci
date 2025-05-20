@@ -211,7 +211,7 @@
         <div class="desc" id="desc"></div>
         <div class="message" id="message"></div>
         <div class="history" id="history"></div>
-        <form id="command-form" class="input-row" autocomplete="off" onsubmit="return false;">
+        <form id="command-form" class="input-row" autocomplete="off">
             <input type="text" id="command-input" placeholder="What do you do?" autofocus required autocomplete="off">
         </form>
         <div id="flashcard-prompt" style="display:none; margin-top:18px;">
@@ -288,6 +288,54 @@
     }
 
     let state = initialState();
+
+    // --- FORM HANDLING ---
+    document.getElementById("command-form").onsubmit = function() {
+        if (state.gameover) return false;
+        let input = document.getElementById("command-input").value;
+        if (!input.trim()) return false;
+        processCommand(input);
+        document.getElementById("command-input").value = "";
+        updateUI(); // <-- moved after processCommand and clearing input
+        return false;
+    };
+
+    // --- RESTART ---
+    function restartGame() {
+        state = initialState();
+        updateUI();
+        showMessage("Game restarted.");
+        document.getElementById("flashcard-prompt").style.display = "none";
+        document.getElementById("command-form").style.display = "";
+    }
+
+    // --- INIT ---
+    updateUI();
+    document.getElementById("command-input").focus();
+
+    // --- SHOW INITIAL ROOM DESCRIPTION ON LOAD ---
+    window.onload = function() {
+        updateUI();
+        // Long introduction (only on first load)
+        let intro = [
+            "You are in a sprawling, old and decrepit mansion that has a dark and foreboding atmosphere.",
+            "The mansion is surrounded by a large estate with overgrown gardens and a creepy forest, giving it a sense of isolation.",
+            "The interior of the mansion is just as eerie, with dimly lit halls, creaky floorboards, and musty furnishings.",
+            "The walls are adorned with old paintings and portraits, some of which seem to have faces that move or change expression.",
+            "There are secret passageways, locked doors, and hidden rooms to be discovered, each of which holds a piece of the mystery that needs to be unraveled.",
+            "",
+            "You are standing in a lobby, there is a leaflet on the coffee table.",
+            "There is a door in the south direction.",
+            "",
+            "What are you going to do?"
+        ];
+        showMessage(intro.join(" "));
+        state.desc = intro.join(" ");
+        document.getElementById("desc").innerHTML = state.desc;
+        document.getElementById("command-input").focus();
+        state.look_first = false; // Ensure first look is special
+    };
+
 
     // --- FLASHCARD PUZZLE LOGIC ---
     function triggerFlashcardPuzzle(callback) {
@@ -416,7 +464,6 @@
         let histDiv = document.getElementById("history");
         if(histDiv) histDiv.scrollTop = histDiv.scrollHeight;
     }
-
     // --- DIRECTIONS ---
     function updateDirections() {
         document.getElementById("directions").innerHTML = "<strong>Available directions:</strong> " + state.directions.join(", ");
@@ -447,7 +494,7 @@
         updateDirections();
         updateHint();
         updateRoomLabel();
-        showMessage(state.message);
+       // showMessage(state.message);
     }
 
     // --- GAME LOGIC ---
@@ -1463,52 +1510,15 @@
             return;
         }
 
-        // --- FORM HANDLING ---
-        // This ensures pressing Enter in the input box processes the command
-        document.getElementById("command-form").onsubmit = function() {
-            if (state.gameover) return false;
-            let input = document.getElementById("command-input").value;
-            if (!input.trim()) return false;
-            processCommand(input);
-            updateUI();
-            document.getElementById("command-input").value = "";
-            return false; // Prevent form submission/reload
-        };
-
-        // --- RESTART ---
-        function restartGame() {
-            state = initialState();
-            updateUI();
-            showMessage("Game restarted.");
-            document.getElementById("flashcard-prompt").style.display = "none";
-            document.getElementById("command-form").style.display = "";
+        // Are there any animals here
+        if (
+            [
+                "are there any animals here", "is there any animal here", "any animals here"
+            ].includes(cmd)
+        ) {
+            showMessage("No, you are here by yourself. All alone.");
+            return;
         }
-
-        // --- INIT ---
-        updateUI();
-        document.getElementById("command-input").focus();
-
-        // --- SHOW INITIAL ROOM DESCRIPTION ON LOAD ---
-        window.onload = function() {
-            updateUI();
-            // Long introduction (only on first load)
-            let intro = [
-                "You are in a sprawling, old and decrepit mansion that has a dark and foreboding atmosphere.",
-                "The mansion is surrounded by a large estate with overgrown gardens and a creepy forest, giving it a sense of isolation.",
-                "The interior of the mansion is just as eerie, with dimly lit halls, creaky floorboards, and musty furnishings.",
-                "The walls are adorned with old paintings and portraits, some of which seem to have faces that move or change expression.",
-                "There are secret passageways, locked doors, and hidden rooms to be discovered, each of which holds a piece of the mystery that needs to be unraveled.",
-                "",
-                "You are standing in a lobby, there is a leaflet on the coffee table.",
-                "There is a door in the south direction.",
-                "",
-                "What are you going to do?"
-            ];
-            showMessage(intro.join(" "));
-            document.getElementById("command-input").focus();
-            state.look_first = false; // Ensure first look is special
-        };
-
     }
     </script>
 </body>

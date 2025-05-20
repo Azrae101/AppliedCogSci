@@ -191,10 +191,12 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            justify-content: center;
-            width: 100%;
-            padding-top: 6px; /* Add a bit of top padding */
+            justify-content: flex-start;
+            width: auto;
+            padding-top: 0;
+            margin: 0;
         }
+
         .search-form input[type="text"] {
             padding: 10px 18px;
             border-radius: 8px;
@@ -227,15 +229,14 @@
         }
 
         .sorting {
-            padding: 10px 0 18px 0;
-            margin-bottom: 10px;
             display: flex;
-            justify-content: center;
-            width: 100%;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            align-items: center;
+            justify-content: flex-end;
+            width: auto;
+            padding: 0;
+            margin: 0;
         }
+
         .options-menu {
             padding: 10px 18px;
             border-radius: 8px;
@@ -251,15 +252,39 @@
             outline: none;
         }
 
-        /* NYT Games-inspired minigame grid */
+        .minigames-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto 18px auto;
+            padding: 0 8px;
+            gap: 20px;
+        }
+
         #minigames-list {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 40px 32px;
-            max-width: 1500px; /* wider grid */
+            max-width: 1500px;
             margin: 0 auto;
-            padding: 40px 0 20px 0;
+            padding: 0;
+            width: 100%;
+            box-sizing: border-box;
         }
+
+        .others-wrapper {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 40px 32px !important;
+            max-width: 1500px !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+
         .minigame {
             background: #fff;
             border-radius: 18px;
@@ -365,6 +390,88 @@
             flex-shrink: 0;
         }
 
+        /* Sticky navigation bar styles */
+        .sticky-nav {
+            position: sticky;
+            top: 60px; /* Set this to your header's height */
+            left: 0;
+            width: 100vw;
+            background: linear-gradient(120deg, #e3f2fd 60%, #bbdefb 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 40px;
+            box-shadow: 0 4px 18px rgba(33,150,243,0.10);
+            z-index: 1000;
+            gap: 20px;
+        }
+
+        .main-content-wrapper {
+            padding-top: 0px;
+        }
+
+        .deck-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .deck-name-block {
+            background: linear-gradient(120deg, #ffffff 70%, #e3f2fd 100%);
+            color: #1976d2;
+            border-radius: 12px;
+            padding: 10px 26px;
+            font-size: 1.18em;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(33,150,243,0.08);
+            margin-right: 18px;
+            border: 1.5px solid #bbdefb;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .deck-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1976d2;
+        }
+
+        .deck-info span:first-child {
+            font-weight: 600;
+        }
+
+        .deck-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .deck-actions a {
+            padding: 8px 16px;
+            background: #2196F3;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: background 0.2s;
+        }
+
+        .deck-actions a:hover {
+            background: #1565c0;
+        }
+
+        /* Adjust main content spacing */
+        .main-content-wrapper {
+            padding-top: 20px;
+        }
+
+        /* Move sorting into nav */
+        .sorting {
+            padding: 0;
+            margin: 0;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 1200px) {
             .main-content-wrapper {
@@ -389,14 +496,9 @@
                 margin-bottom: 60px;
                 padding-bottom: 60px;
             }
-            #minigames-list {
-                grid-template-columns: repeat(2, 1fr);
-                max-width: 900px;
-            }
         }
         @media (max-width: 900px) {
             #minigames-list {
-                grid-template-columns: 1fr;
                 max-width: 98vw;
             }
             .minigame {
@@ -440,27 +542,39 @@
         <h4>Transforming education through playful learning experiences</h4>
     </header>
 
+    <nav class="sticky-nav">
+        <div class="deck-controls">
+            <div class="deck-name-block">
+                <span>Cognitive Science</span>
+            </div>
+            <div class="deck-actions">
+                <a href="{{ url_for('deck_one') }}">View</a>
+                <a href="{{ url_for('deck_one') }}">Edit</a>
+                <a href="{{ url_for('mydecks') }}">Change</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="main-content-wrapper">
-        <!-- Minigames section (left) -->
         <div class="minigames-section">
-            <div class="header-container">
+            <div class="minigames-toolbar">
                 <form onsubmit="event.preventDefault(); searchMinigames();" class="search-form">
                     <input type="text" id="search-input" placeholder="Search games...">
                     <button type="submit" class="button search-button">🔍 Search</button>
                 </form>
-            </div>
-            <div class="sorting">
-                <select id="options" name="options" class="options-menu" onchange="sortMinigames()">
-                    <option value="" disabled selected>Sort minigames</option>
-                    <option value="alphabetical">Alphabetically</option>
-                    <option value="recent">Recommended</option>
-                    <option value="recommended">Difficulty: Easiest First</option>
-                </select>
+                <div class="sorting">
+                    <select id="options" name="options" class="options-menu" onchange="sortMinigames()">
+                        <option value="" disabled selected>Sorting</option>
+                        <option value="alphabetical">Alphabetically</option>
+                        <option value="recent">Recommended</option>
+                        <option value="recommended">Easiest First</option>
+                    </select>
+                </div>
             </div>
             <div id="search-results-container"></div>
             <div id="minigames-list">
                 <div class="minigame" data-name="TetriCards" data-date="2024-07-01" data-recent="1">
-                    <a href="{{ url_for('tetris_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
+                    <a href="{{ url_for('tetris_settings') }}"><img src="{{ url_for('static', filename='tetricards.png') }}" class="resized-img"></a>
                     <span class="minigame-title">TetriCards</span>
                     <div class="minigame-desc">A Tetris-inspired game where you clear lines by answering questions correctly.</div>
                     <a href="{{ url_for('tetris_settings') }}" class="play-btn-link">
@@ -486,7 +600,7 @@
                     </a>
                 </div>
                 <div class="minigame" data-name="TimeWarp" data-date="2024-06-01" data-recent="4">
-                    <a href="{{ url_for('timewarp_settings') }}"><img src="{{ url_for('static', filename='flashcards.png') }}" class="resized-img"></a>
+                    <a href="{{ url_for('timewarp_settings') }}"><img src="{{ url_for('static', filename='timewarpss.png') }}" class="resized-img"></a>
                     <span class="minigame-title">TimeWarp</span>
                     <div class="minigame-desc">Test your recall under time pressure. How fast can you answer?</div>
                     <a href="{{ url_for('timewarp_settings') }}" class="play-btn-link">
@@ -519,7 +633,7 @@
                     </a>
                 </div>
                 <div class="minigame" data-name="MemoryGrid" data-date="2024-04-01" data-recent="8">
-                    <a href="{{ url_for('memorygrid_settings') }}"><img src="{{ url_for('static', filename='tetriss.png') }}" class="resized-img"></a>
+                    <a href="{{ url_for('memorygrid_settings') }}"><img src="{{ url_for('static', filename='memorygrid.png') }}" class="resized-img"></a>
                     <span class="minigame-title">MemoryGrid</span>
                     <div class="minigame-desc">A memory game where you match pairs of cards. Sharpen your memory while you study.</div>
                     <a href="{{ url_for('memorygrid_settings') }}" class="play-btn-link">
@@ -541,20 +655,6 @@
                     <a href="{{ url_for('definedash_settings') }}" class="play-btn-link">
                         <button class="play-btn">Play DefineDash</button>
                     </a>
-                </div>
-            </div>
-        </div>
-        <!-- Study deck settings (right) -->
-        <div class="settings-container deck-settings-global">
-            <h2>Current Study Deck</h2>
-            <div class="containernew">
-                <div class="deck-box">
-                    Cognitive Science
-                </div>
-                <div class="button-containerdeck">
-                    <a href="{{ url_for('deck_one') }}" class="button deck-action-btn">View deck</a>
-                    <a href="{{ url_for('deck_one') }}" class="button deck-action-btn">Edit deck</a>
-                    <a href="{{ url_for('mydecks') }}" class="button deck-action-btn">Change deck</a>
                 </div>
             </div>
         </div>
@@ -591,6 +691,7 @@
             // If query is empty, show only the original grid, clear search results
             if (!query) {
                 searchResultsContainer.innerHTML = '';
+                minigamesList.style.display = ''; // <-- Add this line to reset to CSS default (grid)
                 renderMinigames(originalMinigames, minigamesList);
                 return;
             }
@@ -603,11 +704,7 @@
                 searchResultsContainer.appendChild(searchTitle);
 
                 const filteredWrapper = document.createElement('div');
-                filteredWrapper.style.display = 'grid';
-                filteredWrapper.style.gridTemplateColumns = 'repeat(3, 1fr)';
-                filteredWrapper.style.gap = '40px 40px';
-                filteredWrapper.style.maxWidth = '900px';
-                filteredWrapper.style.margin = '0 auto';
+                filteredWrapper.className = 'others-wrapper'; // Use the same class for grid
                 renderMinigames(filtered, filteredWrapper);
                 searchResultsContainer.appendChild(filteredWrapper);
             } else {
@@ -617,17 +714,14 @@
             }
 
             minigamesList.innerHTML = '';
+            minigamesList.style.display = 'block'; // This is important!
             if (others.length > 0) {
                 const otherTitle = document.createElement('h3');
                 otherTitle.textContent = 'Other Games';
                 minigamesList.appendChild(otherTitle);
 
                 const othersWrapper = document.createElement('div');
-                othersWrapper.style.display = 'grid';
-                othersWrapper.style.gridTemplateColumns = 'repeat(3, 1fr)';
-                othersWrapper.style.gap = '40px 40px';
-                othersWrapper.style.maxWidth = '900px';
-                othersWrapper.style.margin = '0 auto';
+                othersWrapper.className = 'others-wrapper';
                 renderMinigames(others, othersWrapper);
                 minigamesList.appendChild(othersWrapper);
             }
@@ -636,6 +730,7 @@
         function sortMinigames() {
             const sortValue = document.getElementById('options').value;
             const minigamesList = document.getElementById('minigames-list');
+            minigamesList.style.display = 'grid'; // <-- Add this line
             let minigames = [...originalMinigames];
             if (sortValue === 'alphabetical') {
                 minigames.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
